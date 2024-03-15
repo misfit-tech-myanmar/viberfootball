@@ -8,7 +8,7 @@ function PredictionService(){
 }
 
 PredictionService.prototype = {
-    userPredict: (userId) => {
+    userPredict: () => {
         return new Promise(async(resolve, reject) => {
             const userPredicts = await self.getUserPredictionsByUserId(userId);
             if(userPredicts.length > 0) {
@@ -158,6 +158,16 @@ PredictionService.prototype = {
                 }else{
                     reject('There is no user.')
                 }
+            }catch(err){
+                reject(err)
+            }
+        })
+    },
+    getAllUsers: () => {
+        return new Promise( async(resolve, reject)=> {
+            try{
+                const userResponse = await self.Axios.get('/stable/bots/labs/2241/entries');
+                console.log(userResponse.data)
             }catch(err){
                 reject(err)
             }

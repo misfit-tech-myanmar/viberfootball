@@ -18,16 +18,16 @@ app.get('/', (req, res, next)=>{
     res.send("Welcome using WSL ON Window!!!")
 })
 
-everyMonday();
-everySecond();
+// everyMonday();
+// everySecond();
 
 app.use("/viber/webhook", bot.middleware());
 
 app.listen(port, (err) => {
     if(!err) console.log(`Server is running on ${port}`);
-    // bot.setWebhook(`${process.env.EXPOSE_URL}/viber/webhook`).catch(error => {
-    //     console.log('Can not set webhook on following server. Is it running?');
-    //     console.error(error);
-    //     process.exit(1);
-    // });
+    bot.setWebhook(`${process.env.EXPOSE_URL}/viber/webhook`).catch(error => {
+        console.log('Can not set webhook on following server. Is it running?');
+        console.error(error);
+        process.exit(1);
+    });
 })

@@ -10,7 +10,7 @@ function FootBallService(){
 
 FootBallService.prototype = {
     getFixtureFromApiAndPostToMyaliceDataLab: async(from, to) => {
-        const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=c2bc49cee81e8a76bd939c1741aa9f67002beb8dca1d40b1d883f815ef9027a5`);
+        const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=9c92778893a39c04bed8c7404628dbbae2cd9ed5923ded9c192121f28a643a70`);
 
         let fixtures = footballResponse.data.map( fixture => {
             return {
@@ -25,20 +25,47 @@ FootBallService.prototype = {
                 match_hometeam_score: fixture.match_hometeam_score,
                 match_awayteam_id: fixture.match_awayteam_id,
                 match_awayteam_name: fixture.match_awayteam_name,
-                match_awayteam_score: fixture.match_awayteam_score
+                match_awayteam_score: fixture.match_awayteam_score,
+                match_stadium:fixture.match_stadium,
+                match_referee: fixture.match_referee,
+                league_logo: fixture.league_logo,
+                team_home_badge: fixture.team_home_badge,
+                team_away_badge: fixture.team_away_badge
             }
         });
-        console.log(fixtures)
 
-        // fixtures.forEach(async fixture=> {
-        //     const response = await self.Axios.post('/fixtures', fixture);
-        // })
+        fixtures.forEach(async fixture=> {
+            const response = await self.Axios.post('/stable/bots/labs/2247/entries', {
+                    "5766": fixture.match_id, //match_id
+                    "5767": fixture.country_id, //country_id
+                    "5768": fixture.league_name, //league_name
+                    "5769": fixture.match_date, //match_date
+                    "5778": fixture.match_status, //match_status
+                    "5779": fixture.match_time, //match_time
+                    "5780": fixture.match_hometeam_name, //match_hometeam_name
+                    "5781": fixture.match_hometeam_score, //match_hometeam_ft_score
+                    "5782": fixture.match_awayteam_name, //match_awayteam_name
+                    "5783": fixture.match_awayteam_score, //match_awayteam_ft_score
+                    "5784":fixture.match_stadium, //match_stadium
+                    "5785": fixture.match_referee, //match_referee
+                    "5788":  fixture.league_logo, //league_logo
+                    "5786": fixture.team_home_badge, //team_home_badge
+                    "5787": fixture.team_away_badge //team_away_badge,
+            });
+            if(response.data.success){
+                console.log("successful created fixtures.");
+            }
+        })
     },
     getFixtures: () => {
         return new Promise(async(resolve, reject) => {
             try{
-                const response = await self.Axios.get('fixtures');
-                // console.log(response.data)
+                const response = await self.Axios.get('/stable/bots/labs/2247/entries');
+                if(response.data.success){
+                    resolve(response.data);
+                }else{
+                    reject("Something went wrong.")
+                }
             }catch(err){
                 reject(err)
             }

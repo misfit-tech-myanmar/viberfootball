@@ -42,8 +42,21 @@ bot.onTextMessage(/^hi$/i, async(message, response) => {
     // })
     const KEYBOARD_JSON = {
         "Type": "keyboard",
-        "Buttons": [{
-            "Columns": 2,
+        "Buttons": [
+            {
+                "Columns": 6,
+                "Rows": 1,
+                "Text": "<br><font color=\"#494E67\"><b>Prediction</b></font>",
+                "TextSize": "large",
+                "TextHAlign": "center",
+                "TextVAlign": "middle",
+                "ActionType": "reply",
+                "ActionBody": "PREDICT",
+                "BgColor": "#f7bb3f",
+                "Image": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fletsenhance.io%2F&psig=AOvVaw22K_Je3FiJUoo7KDYfOHzi&ust=1710498265312000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCPCb-d7E84QDFQAAAAAdAAAAABAE"
+            },
+            {
+            "Columns": 6,
             "Rows": 2,
             "Text": "<br><font color=\"#494E67\"><b>Prediction</b></font>",
             "TextSize": "large",
@@ -52,9 +65,9 @@ bot.onTextMessage(/^hi$/i, async(message, response) => {
             "ActionType": "reply",
             "ActionBody": "PREDICT",
             "BgColor": "#f7bb3f",
-            "Image": "https://s18.postimg.org/9tncn0r85/sushi.png"
+            "Image": "https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/5a953e9ee1e811ee943946c7a05a34b4.png"
         }, {
-            "Columns": 2,
+            "Columns": 6,
             "Rows": 2,
             "Text": "<br><font color=\"#494E67\"><b>Status</b></font>",
             "TextSize": "large",
@@ -63,9 +76,9 @@ bot.onTextMessage(/^hi$/i, async(message, response) => {
             "ActionType": "reply",
             "ActionBody": "STATUS",
             "BgColor": "#7eceea",
-            "Image": "https://s18.postimg.org/ntpef5syd/french.png"
+            "Image": "https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/5d131768e1e811eebd70d64fe0d5d2c9.png"
         }, {
-            "Columns": 2,
+            "Columns": 6,
             "Rows": 2,
             "Text": "<br><font color=\"#494E67\"><b>News</b></font>",
             "TextSize": "large",
@@ -76,7 +89,7 @@ bot.onTextMessage(/^hi$/i, async(message, response) => {
             "BgColor": "#f6f7f9",
             "Image": "https://s18.postimg.org/t8y4g4kid/mexican.png"
         }, {
-            "Columns": 2,
+            "Columns": 6,
             "Rows": 2,
             "Text": "<br><font color=\"#494E67\"><b>Rating</b></font>",
             "TextSize": "large",
@@ -87,7 +100,7 @@ bot.onTextMessage(/^hi$/i, async(message, response) => {
             "BgColor": "#dd8157",
             "Image": "https://s18.postimg.org/x41iip3o5/itallian.png"
         }, {
-            "Columns": 2,
+            "Columns": 6,
             "Rows": 2,
             "Text": "<br><font color=\"#494E67\"><b>Prizes</b></font>",
             "TextSize": "large",
@@ -98,7 +111,7 @@ bot.onTextMessage(/^hi$/i, async(message, response) => {
             "BgColor": "#f6f7f9",
             "Image": "https://s18.postimg.org/wq06j3jkl/indi.png"
         }, {
-            "Columns": 2,
+            "Columns": 6,
             "Rows": 2,
             "Text": "<br><font color=\"#494E67\"><b>Other</b></font>",
             "TextSize": "large",
@@ -111,7 +124,6 @@ bot.onTextMessage(/^hi$/i, async(message, response) => {
         }]
     }
     const your_message = new KeyboardMessage(KEYBOARD_JSON, null, null, null, 3); // If it didn't work with min_api_version 3, try 4
-    console.log(message.text)
     if(message.text === 'Prediction'){
         response.send(new TextMessage('This feature is constructing'))
     }else{
@@ -119,5 +131,11 @@ bot.onTextMessage(/^hi$/i, async(message, response) => {
     }
     
 });
+// Perfect! Now here's the key part:
+// bot.on(BotEvents.MESSAGE_RECEIVED, (message, response) => {
+// 	// Echo's back the message to the client. Your bot logic should sit here.
+//     console.log(message)
+// 	response.send(message);
+// });
 
 module.exports = bot;
