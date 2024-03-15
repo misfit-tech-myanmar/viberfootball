@@ -70,6 +70,35 @@ FootBallService.prototype = {
                 reject(err)
             }
         })
+    },
+    getTeams: async() => {
+        return new Promise(async(resolve, reject)=> {
+            try{
+                const teamResponses = await self.Axios.get('/stable/bots/labs/2261/entries')
+                console.log(teamResponses.data)
+            }catch(err){
+                console.log(err)
+            }
+        })
+    },
+    addTeamToMyalice: async() => {
+        return new Promise(async(resolve, reject)=> {
+            try{
+                const teamsResponse = await axios.get('https://apiv3.apifootball.com/?action=get_teams&league_id=152&APIkey=9c92778893a39c04bed8c7404628dbbae2cd9ed5923ded9c192121f28a643a70')
+                if(teamsResponse.data.length > 0){
+                    teamsResponse.data.forEach(async team=> {
+                        await self.Axios.post('/stable/bots/labs/2261/entries',{
+                            "5810": team.team_name,
+                            "5811": team.team_key,
+                            "5812": team.team_badge
+                        })
+                        console.log("completed")
+                    })
+                }
+            }catch(err){
+                console.log(err)
+            }
+        })
     }
 }
 

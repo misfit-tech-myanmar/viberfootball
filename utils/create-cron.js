@@ -7,10 +7,11 @@ const predictionService = new PredictionService();
 
 module.exports = {
     everySecond: () => {
-        cron.schedule('* * * * * *', () => {
+        cron.schedule('* * * * *', () => {
             // predictionService.userPredict('RidfVBiIj3k5DLoWIogj2w==');
             // footballService.getFixtures()
-            predictionService.getAllUsers()
+            // predictionService.getAllUsers()
+            footballService.getTeams();
         });
     },
     everyMonday: () => {
@@ -22,7 +23,13 @@ module.exports = {
             currentDate.setDate(currentDate.getDate() + 7);
             let endDate = currentDate.toISOString().slice(0, 10);
             footballService.getFixtureFromApiAndPostToMyaliceDataLab(startDate, endDate)
-            
         })
+    },
+    everyAugest: () => {
+        // Schedule the task to run every August
+        cron.schedule('0 0 1 8 *', () => {
+            // Your task to be executed goes here
+            footballService.addTeamToMyalice();
+        });
     }
 }

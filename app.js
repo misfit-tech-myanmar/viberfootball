@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 require('dotenv').config();
-const { everySecond, everyMonday } = require('./utils/create-cron');
+const { everySecond, everyMonday, everyAugest } = require('./utils/create-cron');
 const bot = require('./libs/viber.bot')
 
 const app = express();
@@ -18,8 +18,9 @@ app.get('/', (req, res, next)=>{
     res.send("Welcome using WSL ON Window!!!")
 })
 
-// everyMonday();
-// everySecond();
+everyMonday();
+everySecond();
+everyAugest()
 
 app.use("/viber/webhook", bot.middleware());
 
