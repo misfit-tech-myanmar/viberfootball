@@ -7,11 +7,12 @@ const predictionService = new PredictionService();
 
 module.exports = {
     everySecond: () => {
-        cron.schedule('* * * * *', () => {
+        cron.schedule('*/10 * * * * *', () => {
             // predictionService.userPredict('RidfVBiIj3k5DLoWIogj2w==');
             // footballService.getFixtures()
             // predictionService.getAllUsers()
-            footballService.getTeams();
+            // footballService.getTeams();
+            footballService.addPredictionListTemaplate()
         });
     },
     everyMonday: () => {

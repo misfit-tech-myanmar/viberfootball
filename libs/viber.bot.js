@@ -4,6 +4,8 @@ const BotEvents = require('viber-bot').Events;
 const TextMessage = require('viber-bot').Message.Text;
 require('dotenv').config();
 const aixosInstance = require('./axios.instance');
+const KeyboardConfig = require('../configs/bot.keyboerd.json');
+const RichMediaMessage = require('viber-bot').Message.RichMedia;
 
 if (!process.env.BOT_ACCOUNT_TOKEN) {
     console.log('Could not find bot account token key.');
@@ -15,7 +17,7 @@ if (!process.env.BOT_ACCOUNT_TOKEN) {
 
 const bot = new Bot({
     authToken: process.env.BOT_ACCOUNT_TOKEN,
-    name: "Football Blogs",
+    name: "Testing",
     avatar: "https://upload.wikimedia.org/wikipedia/commons/3/3d/Katze_weiss.png"
 });
 
@@ -28,138 +30,42 @@ const userProfile = {
     "language": "en",
     "scores": 0
   };
-
-// bot.onTextMessage(/^hi$/i, async(message, response) => {
-//     const userProfile = response.userProfile;
-//     // await aixosInstance.post('/users', {
-//     //     id: user.id,
-//     //     name: user.name,
-//     //     avatar: user.avatar,
-//     //     country: user.country,
-//     //     language: user.language,
-//     //     scores: 0
-//     // })
-//     const KEYBOARD_JSON = {
-//         "Type": "keyboard",
-//         "Buttons": [
-//             {
-//                 "Columns": 6,
-//                 "Rows": 1,
-//                 "Text": "<br><font color=\"#494E67\"><b>Prediction</b></font>",
-//                 "TextSize": "large",
-//                 "TextHAlign": "center",
-//                 "TextVAlign": "middle",
-//                 "ActionType": "reply",
-//                 "ActionBody": "PREDICT",
-//                 "BgColor": "#f7bb3f",
-//                 "Image": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fletsenhance.io%2F&psig=AOvVaw22K_Je3FiJUoo7KDYfOHzi&ust=1710498265312000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCPCb-d7E84QDFQAAAAAdAAAAABAE"
-//             },
-//             {
-//             "Columns": 6,
-//             "Rows": 2,
-//             "Text": "<br><font color=\"#494E67\"><b>Prediction</b></font>",
-//             "TextSize": "large",
-//             "TextHAlign": "center",
-//             "TextVAlign": "middle",
-//             "ActionType": "reply",
-//             "ActionBody": "PREDICT",
-//             "BgColor": "#f7bb3f",
-//             "Image": "https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/5a953e9ee1e811ee943946c7a05a34b4.png"
-//         }, {
-//             "Columns": 6,
-//             "Rows": 2,
-//             "Text": "<br><font color=\"#494E67\"><b>Status</b></font>",
-//             "TextSize": "large",
-//             "TextHAlign": "center",
-//             "TextVAlign": "middle",
-//             "ActionType": "reply",
-//             "ActionBody": "STATUS",
-//             "BgColor": "#7eceea",
-//             "Image": "https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/5d131768e1e811eebd70d64fe0d5d2c9.png"
-//         }, {
-//             "Columns": 6,
-//             "Rows": 2,
-//             "Text": "<br><font color=\"#494E67\"><b>News</b></font>",
-//             "TextSize": "large",
-//             "TextHAlign": "center",
-//             "TextVAlign": "middle",
-//             "ActionType": "reply",
-//             "ActionBody": "NEWS",
-//             "BgColor": "#f6f7f9",
-//             "Image": "https://s18.postimg.org/t8y4g4kid/mexican.png"
-//         }, {
-//             "Columns": 6,
-//             "Rows": 2,
-//             "Text": "<br><font color=\"#494E67\"><b>Rating</b></font>",
-//             "TextSize": "large",
-//             "TextHAlign": "center",
-//             "TextVAlign": "middle",
-//             "ActionType": "reply",
-//             "ActionBody": "RATING",
-//             "BgColor": "#dd8157",
-//             "Image": "https://s18.postimg.org/x41iip3o5/itallian.png"
-//         }, {
-//             "Columns": 6,
-//             "Rows": 2,
-//             "Text": "<br><font color=\"#494E67\"><b>Prizes</b></font>",
-//             "TextSize": "large",
-//             "TextHAlign": "center",
-//             "TextVAlign": "middle",
-//             "ActionType": "reply",
-//             "ActionBody": "PRIZES",
-//             "BgColor": "#f6f7f9",
-//             "Image": "https://s18.postimg.org/wq06j3jkl/indi.png"
-//         }, {
-//             "Columns": 6,
-//             "Rows": 2,
-//             "Text": "<br><font color=\"#494E67\"><b>Other</b></font>",
-//             "TextSize": "large",
-//             "TextHAlign": "center",
-//             "TextVAlign": "middle",
-//             "ActionType": "reply",
-//             "ActionBody": "OTHER",
-//             "BgColor": "#a8aaba",
-//             "Image": "https://s18.postimg.org/ylmyu98et/more_Options.png"
-//         }]
-//     }
-//     const your_message = new KeyboardMessage(KEYBOARD_JSON, null, null, null, 3); // If it didn't work with min_api_version 3, try 4
-//     if(message.text === 'Prediction'){
-//         response.send(new TextMessage('This feature is constructing'))
-//     }else{
-//         response.send(your_message);
-//     }
+// Event handler for when a conversation is started
+bot.onConversationStarted((userProfile, isSubscribed, context, onFinish) =>
+	onFinish(new KeyboardMessage(KeyboardConfig.main_keyboard, null, null, null, 3)));
+bot.on(BotEvents.MESSAGE_RECEIVED, async(message, response) => {
+    const userProfile = response.userProfile;
+    console.log(userProfile)
+    // await aixosInstance.post('/users', {
+    //     id: user.id,
+    //     name: user.name,
+    //     avatar: user.avatar,
+    //     country: user.country,
+    //     language: user.language,
+    //     scores: 0
+    // })
     
-// });
-
-bot.on(BotEvents.MESSAGE_RECEIVED, (message, response) => {
-    // Create a list template with image buttons
-    const keyboardMessage = new KeyboardMessage({
-        Type: "keyboard",
-        Buttons: [
-            {
-                Columns: 3,  // 3 columns for each button
-                Rows: 1,     // 1 row
-                ActionType: "reply",
-                ActionBody: "button_1",
-                Image: "https://example.com/button1_image.jpg",
-                Text: "Button 1"
-            },
-            {
-                Columns: 3,  // 3 columns for each button
-                Rows: 1,     // 1 row
-                ActionType: "reply",
-                ActionBody: "button_2",
-                Image: "https://example.com/button2_image.jpg",
-                Text: "Button 2"
-            }
-        ]
-    });
-
-    // Send the keyboard message
-    response.send(keyboardMessage)
-        .catch(error => {
-            console.error('Error sending keyboard message:', error);
+    let messageLayout;
+    if(message.text === "hi"){
+        messageLayout = new KeyboardMessage(KeyboardConfig.main_keyboard, null, null, null, 3);
+        bot.sendMessage(messageLayout);
+    }else if(message.text === 'predict'){
+        messageLayout =  new KeyboardMessage(KeyboardConfig.predict_keyboard, null, null, null, 3);
+        response.send(messageLayout);
+    }else if(message.text === 'match_1'){
+        response.send(new RichMediaMessage(KeyboardConfig.single_match_keyboard)).then(()=>{
+            return response.send(new KeyboardMessage(KeyboardConfig.predict_keyboard, null, null, null, 3));
+        }).catch(err => {
+            console.error('Error sending messages:', err);
         });
+    }else if(message.text === 'back'){
+        messageLayout = new KeyboardMessage(KeyboardConfig.main_keyboard, null, null, null, 3);
+        response.send(messageLayout);
+    }else{
+        messageLayout = new TextMessage('Constructing!')
+        response.send(messageLayout);
+    }
 });
+
 
 module.exports = bot;

@@ -18,9 +18,9 @@ app.get('/', (req, res, next)=>{
     res.send("Welcome using WSL ON Window!!!")
 })
 
-everyMonday();
-everySecond();
-everyAugest()
+// everyMonday();
+// everySecond();
+// everyAugest()
 
 app.use("/viber/webhook", bot.middleware());
 

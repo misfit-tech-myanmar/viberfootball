@@ -62,7 +62,7 @@ FootBallService.prototype = {
             try{
                 const response = await self.Axios.get('/stable/bots/labs/2247/entries');
                 if(response.data.success){
-                    resolve(response.data);
+                    resolve(response.data.dataSource);
                 }else{
                     reject("Something went wrong.")
                 }
@@ -98,6 +98,16 @@ FootBallService.prototype = {
             }catch(err){
                 console.log(err)
             }
+        })
+    },
+    addPredictionListTemaplate: async() => {
+        return new Promise(async(resolve, reject)=>{
+            const fixtures = await self.getFixtures();
+            fixtures.forEach(async(fixture)=> {
+               if(fixture['5778'] === ''){
+                    console.log(fixture['5767'])
+               }
+            })
         })
     }
 }
