@@ -6,7 +6,7 @@ const axiosInstance = axios.create({
     timeout: 5000, // Optional: Set request timeout in milliseconds
     headers: {
       'Content-Type': 'application/json', // Optional: Set default headers,
-      'Authorization': 'Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzEwNzU0NzEyLCJpYXQiOjE3MTA3MzMxMTIsImp0aSI6IjdiNDdiYjI2ZjUwODQ2MjQ4Zjc3NTc4NzVjYzcwYTVlIiwidXNlcl9pZCI6ODF9.ZUXIQ3GE87HMwqTpJsHv0EKjC6nuNocboOigHjqaYV8'
+      'Authorization': 'Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzEwODYwNzYyLCJpYXQiOjE3MTA4MzkxNjIsImp0aSI6IjFmMTdiY2MzYzFjYzQ0ODZhNWZiOTJiYWJlMGQzZjM5IiwidXNlcl9pZCI6ODF9.t_5KfN4labIEvbeaXxOG9cSMYSYVhp55X99PJ8lobHI'
     }
   });
 

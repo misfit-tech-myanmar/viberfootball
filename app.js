@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 const { everySecond, everyMonday, everyAugest } = require('./utils/create-cron');
 const bot = require('./libs/viber.bot')
+const indexRouter = require('./routes/index')
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.get('/', (req, res, next)=>{
 // everyMonday();
 // everySecond();
 // everyAugest()
+app.use('/api/v1.0', indexRouter)
 
 app.use("/viber/webhook", bot.middleware());
 

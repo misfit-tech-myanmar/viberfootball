@@ -6,6 +6,9 @@ require('dotenv').config();
 const aixosInstance = require('./axios.instance');
 const KeyboardConfig = require('../configs/bot.keyboerd.json');
 const RichMediaMessage = require('viber-bot').Message.RichMedia;
+const FootballService = require('../services/football.service');
+
+const footballService = new FootballService();
 
 if (!process.env.BOT_ACCOUNT_TOKEN) {
     console.log('Could not find bot account token key.');
@@ -31,33 +34,95 @@ const userProfile = {
     "scores": 0
   };
 // Event handler for when a conversation is started
-bot.onConversationStarted((userProfile, isSubscribed, context, onFinish) =>
-	onFinish(new KeyboardMessage(KeyboardConfig.main_keyboard, null, null, null, 3)));
+bot.onConversationStarted((userProfile, isSubscribed, context, onFinish) =>{
+    console.log(userProfile)
+    onFinish(new KeyboardMessage(KeyboardConfig.main_keyboard, null, null, null, 3));
+})
+
 bot.on(BotEvents.MESSAGE_RECEIVED, async(message, response) => {
     const userProfile = response.userProfile;
-    console.log(userProfile)
-    // await aixosInstance.post('/users', {
-    //     id: user.id,
-    //     name: user.name,
-    //     avatar: user.avatar,
-    //     country: user.country,
-    //     language: user.language,
-    //     scores: 0
-    // })
+    
     
     let messageLayout;
     if(message.text === "hi"){
         messageLayout = new KeyboardMessage(KeyboardConfig.main_keyboard, null, null, null, 3);
-        bot.sendMessage(messageLayout);
-    }else if(message.text === 'predict'){
-        messageLayout =  new KeyboardMessage(KeyboardConfig.predict_keyboard, null, null, null, 3);
         response.send(messageLayout);
+    }else if(message.text === 'predict'){
+        const fixtures = await footballService.getFixtures();
+        fixtures.forEach(fixture=>{
+            console.log(fixture)
+            if(fixture['5778'] === ''){
+                response.send(new RichMediaMessage({
+                    "Type": "rich_media",
+                    "ButtonsGroupColumns": 6,
+                    "ButtonsGroupRows": 6,
+                    "BgColor": "#FFFFFF", 
+                    "BgMedia": "https://www.sofascore.com/news/wp-content/uploads/2017/07/Int.png",
+                    "Buttons": [
+                        {
+                            "Columns": 6,
+                            "Rows": 1,
+                            "ActionType": "none",
+                            "Text": `<font color="#0000FF">${fixture['5768']}</font>`,
+                            "TextSize": "small",
+                            "TextVAlign": "middle",
+                            "TextHAlign": "center"
+                        },
+                        {
+                            "Columns": 6,
+                            "Rows": 1,
+                            "ActionType": "none",
+                            "Text": `${fixture['5769']} ${fixture['5779']}`,
+                            "TextSize": "small",
+                            "TextVAlign": "middle",
+                            "TextHAlign": "center"
+                        },
+                        {
+                            "Columns": 6,
+                            "Rows": 2,
+                            "ActionType": "none",
+                            "Text": `${ fixture['5780'] }  -  ${fixture['5782']}`,
+                            "TextSize": "small",
+                            "TextVAlign": "middle",
+                            "TextHAlign": "center"
+                        },
+                        {
+                            "ActionBody": "w1", 
+                            "Columns": 2,
+                            "Rows": 1,
+                            "BgColor": "#5c9c14",
+                            "Text": "<font color='#ffffff'>W1</font>",
+                            "Image": "https://example.com/image_with_button.jpg"
+                        },
+                        {
+                            "ActionBody": "draw", 
+                            "Columns": 2,
+                            "Rows": 1,
+                            "BgColor": "#5c9c14",
+                            "Text": "<font color='#ffffff'>Draw</font>",
+                            "Image": "https://example.com/image_with_button.jpg"
+                        },
+                        {
+                            "ActionBody": "w2", 
+                            "Columns": 2,
+                            "Rows": 1,
+                            "BgColor": "#5c9c14",
+                            "Text": "<font color='#ffffff'>W2</font>",
+                            "Image": "https://example.com/image_with_button.jpg"
+                        }
+                    ]
+                }))
+            }
+        })
+        response.send(new KeyboardMessage(KeyboardConfig.main_keyboard, null, null, null, 3))
     }else if(message.text === 'match_1'){
-        response.send(new RichMediaMessage(KeyboardConfig.single_match_keyboard)).then(()=>{
-            return response.send(new KeyboardMessage(KeyboardConfig.predict_keyboard, null, null, null, 3));
-        }).catch(err => {
-            console.error('Error sending messages:', err);
-        });
+        KeyboardConfig.single_match_keyboard.forEach(singleMatch=>{
+            response.send(new RichMediaMessage(singleMatch)).then(()=>{
+                return response.send(new KeyboardMessage(KeyboardConfig.predict_keyboard, null, null, null, 3));
+            }).catch(err => {
+                console.error('Error sending messages:', err);
+            });
+        })
     }else if(message.text === 'back'){
         messageLayout = new KeyboardMessage(KeyboardConfig.main_keyboard, null, null, null, 3);
         response.send(messageLayout);
