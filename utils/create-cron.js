@@ -13,9 +13,9 @@ let endDate = currentDate.toISOString().slice(0, 10);
 module.exports = {
     everySecond: () => {
         cron.schedule('*/30 * * * * *', async() => {
-            // footballService.updateFixtureAfterFinishedMatches(startDate, startDate);
-            // predictionService.predict();
-            // footballService.getTeams();
+            footballService.updateFixtureAfterFinishedMatches(startDate, startDate);
+            predictionService.predict();
+            footballService.getTeams();
             // footballService.getFixtureFromApiAndPostToMyaliceDataLab("2024-03-26", "2024-04-1")
         });
     },
