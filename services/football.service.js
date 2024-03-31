@@ -170,6 +170,7 @@ FootBallService.prototype = {
     updateFixtureAfterFinishedMatches: async(from, to) => {
         return new Promise(async(resolve, reject)=>{
             const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=9c92778893a39c04bed8c7404628dbbae2cd9ed5923ded9c192121f28a643a70`);
+            console.log(footballResponse.data)
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
                     const singleMatch = await self.getSingleLabFixture(match.match_id)
