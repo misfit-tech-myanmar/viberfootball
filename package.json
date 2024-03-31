@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "concurrently \"ngrok http 5000\" \"node app.js\"",
+    "start": "node app.js",
     "dev": "nodemon app.js --ignore configs/token.json",
     "json-server": "json-server --watch data.json --port 4000"
   },
