@@ -169,7 +169,7 @@ FootBallService.prototype = {
     },
     updateFixtureAfterFinishedMatches: async(from, to) => {
         return new Promise(async(resolve, reject)=>{
-            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c`);
+            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c`);
             console.log(footballResponse.data)
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
