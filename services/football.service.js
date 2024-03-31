@@ -170,16 +170,18 @@ FootBallService.prototype = {
     updateFixtureAfterFinishedMatches: async(from, to) => {
         return new Promise(async(resolve, reject)=>{
             const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c`);
-            console.log(footballResponse.data)
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
                     const singleMatch = await self.getSingleLabFixture(match.match_id)
+                    console.log("url => ", `/stable/bots/labs/2247/entries/${singleMatch[0].id}`)
                     if(match.match_status === 'Finished'){
-                        self.Axios.put(`/stable/bots/labs/2247/entries/${singleMatch.id}`, {
+                        console.log("Match finisheeeed")
+                        self.Axios.put(`/stable/bots/labs/2247/entries/${singleMatch[0].id}`, {
                             "5778": match.match_status,
                             "5781": match.match_hometeam_ft_score,
                             "5783": match.match_awayteam_ft_score
                         }).then(response => {
+                            console.log("updated")
                             resolve()
                         }).catch(err=> {
                             console.log('Error updating data: ')
