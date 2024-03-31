@@ -1,5 +1,4 @@
-const axiosInstance = require('../libs/axios.instance');
-
+const { axiosInstance } = require('../libs/axios.instance');
 
 let self;
 function PredictionService(){
@@ -8,51 +7,57 @@ function PredictionService(){
 }
 
 PredictionService.prototype = {
-    userPredict: () => {
+    singlePredict: (userId) => {
         return new Promise(async(resolve, reject) => {
-            const userPredicts = await self.getUserPredictionsByUserId(userId);
+            const user = await self.getUserInfoByUserId(userId);
+            const userPredicts = await self.getUserPredictionsByUserId(user.creator_id);
             if(userPredicts.length > 0) {
                 userPredicts.forEach(async userPredict => {
-                    const fixture = await self.getFixtureByMatchId(userPredict.match_id);
-                    const result = await self.checkW1W2D(fixture, userPredict)
-                    const user = await self.getUserInfoByUserId(userId);
-                    if((result==="Draw" || result==="W1" || result==="W2")){
-                        if(result === userPredict.predict){
-                            await self.updateUserPredict('Win', userPredict)
-                            await self.updateUserScore((parseInt(user.scores) + 1), user.id)
+                    if(userPredict.win_lose === undefined){
+                        const fixture = await self.getFixtureByMatchId(userPredict.match_id);
+                        if(fixture.match_status === 'Finished'){
+                            const result = await self.checkW1W2D(fixture, userPredict);
+                            console.log("result", result)
+                            if((result==="Draw" || result==="W1" || result==="W2")){
+                                if(result === userPredict.predict){
+                                    await self.updateUserPredict('Win', userPredict)
+                                    await self.updateUserScore((parseInt(user['5755']===''?0:user['5755']) + 1), user.id)
+                                }else{
+                                    await self.updateUserPredict('Lose', userPredict)
+                                }
+                            }else{
+                                console.log(result)
+                            }
                         }else{
-                            await self.updateUserPredict('Lose', userPredict)
+                            console.log("Fixture finished not yet!")
                         }
                     }else{
-                        console.log(result)
+                        console.log("already determine user predict.")
                     }
                 })
+            }else{
+                console.log(user['5751'],"no user predict")
             }
         })
     },
     getUserPredictionsByUserId: (userId) => {
         return new Promise(async(resolve, reject) => {
             try{
-                const userPredicts = await self.Axios.get(`/user-prediction-histories`);
-                if(userPredicts.data.length > 0){
-                    const predicts = [];
-                    userPredicts.data.forEach(predict => {
-                        if(predict.user_id === userId){
-                            predicts.push({
-                                id: predict.id,
-                                user_id: predict.user_id,
-                                match_id: predict.match_id,
-                                win_lose:predict.win_lose,
-                                date: predict.date,
-                                predict: predict.predict,
-                                match_finished: predict.match_finished
-                            })
-                        }
-                    })
-                    resolve(predicts)
-                }else{
-                    reject('There is no prediction for this user.')
-                }
+                const userPredicts = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+                const predicts = [];
+                userPredicts.data.dataSource.forEach(predict => {
+                    // console.log(predict)
+                    if(predict['5861'] === userId && predict['5897'] === undefined){
+                        predicts.push({
+                            id: predict.id,
+                            user_id: predict['5861'],
+                            match_id: predict['5860'],
+                            win_lose: predict['5897'],
+                            predict: predict['5862'],
+                        })
+                    }
+                })
+                resolve(predicts)
             }catch(err){
                 reject(err)
             }
@@ -61,29 +66,27 @@ PredictionService.prototype = {
     getFixtureByMatchId: (matchId)=> {
         return new Promise(async(resolve, reject) => {
             try{
-                const fixture = await self.Axios.get(`/fixtures`);
-                if(fixture.data.length > 0){
-                    fixture.data.forEach( fixture => {
-                        if(fixture.match_id === matchId){
-                           resolve({
-                            "id": fixture.id,
-                            "match_id": fixture.match_id,
-                            "country_id": fixture.country_id,
-                            "league_name": fixture.league_name,
-                            "match_date": fixture.match_date,
-                            "match_status": fixture.match_status,
-                            "match_time": fixture.match_time,
-                            "match_hometeam_id": fixture.match_hometeam_id,
-                            "match_hometeam_name": fixture.match_hometeam_name,
-                            "match_hometeam_score": fixture.match_hometeam_score,
-                            "match_awayteam_id": fixture.match_awayteam_id,
-                            "match_awayteam_name": fixture.match_awayteam_name,
-                            "match_awayteam_score": fixture.match_awayteam_score
-                          })
+                const fixture = await self.Axios.get(`/stable/bots/labs/2247/entries`);
+                if(fixture.data.dataSource.length > 0){
+                    fixture.data.dataSource.forEach( fixture => {
+                        if(fixture['5766'] === matchId){
+                            const singleFixture = {
+                                "match_id": fixture['5766'],
+                                "country_id": fixture['5767'],
+                                "league_name": fixture['5768'],
+                                "match_date": fixture['5769'],
+                                "match_status": fixture['5778'],
+                                "match_time": fixture['5779'],
+                                "match_hometeam_name": fixture['5780'],
+                                "match_hometeam_score": fixture['5781'],
+                                "match_awayteam_name": fixture['5782'],
+                                "match_awayteam_score": fixture['5783']
+                            }
+                            resolve(singleFixture)
                         }
                     })
                 }else{
-                    reject('There is no fixture')
+                    resolve('There is no fixture')
                 }
             }catch(err){
                 reject(err)
@@ -91,45 +94,42 @@ PredictionService.prototype = {
         })
     },
     checkW1W2D: (fixture, userPredict) => {
-        try{
-            if(fixture.match_id === userPredict.match_id){
-                if(fixture.match_status === "Finished"){
-                    const homeScore = parseInt(fixture.match_hometeam_score);
-                    const awayScore = parseInt(fixture.match_awayteam_score);
-                    let  result;
-                    if(homeScore===awayScore){
-                        result="Draw";
-                    }else if(homeScore > awayScore){
-                        result="W1";
-                    }else if(homeScore < awayScore){
-                        result="W2";
+        return new Promise(async(resolve, reject)=>{
+            try{
+                if(fixture.match_id === userPredict.match_id){
+                    if(fixture.match_status === "Finished"){
+                        const homeScore = parseInt(fixture.match_hometeam_score);
+                        const awayScore = parseInt(fixture.match_awayteam_score);
+                        let  result;
+                        if(homeScore===awayScore){
+                            result="Draw";
+                        }else if(homeScore > awayScore){
+                            result="W1";
+                        }else if(homeScore < awayScore){
+                            result="W2";
+                        }
+                        resolve(result);
+                    }else{
+                         return "match not finished yet."
                     }
-                    return result;
                 }else{
-                     return "match not finished yet."
+                    return 'no prediction.'
                 }
-            }else{
-                return 'no prediction.'
+            }catch(err){
+                return err;
             }
-        }catch(err){
-            return err;
-        }
+        })
     },
     updateUserPredict: (result, userPredict) => {
         return new Promise(async(resolve, reject)=> {
             try{
-                if(userPredict.match_finished === false){
-                    console.log(userPredict.user_id)
-                    self.Axios.patch(`/user-prediction-histories/${userPredict.id}`, {
-                        win_lose: result,
-                        match_finished: true
-                    }).then(response => {
-                        console.log(response.data)
-                        resolve()
-                    }).catch(err=> {
-                        console.log('Error updating data: ')
-                    })
-                }
+                self.Axios.put(`/stable/bots/labs/2268/entries/${userPredict.id}`, {
+                    "5897": result
+                }).then(response => {
+                    resolve()
+                }).catch(err=> {
+                    console.log('Error updating data: ')
+                })
             }catch(err){
                 reject(err)
             }
@@ -138,8 +138,8 @@ PredictionService.prototype = {
     updateUserScore: (scores, userId) => {
         return new Promise(async(resolve, reject)=> {
             try{
-                self.Axios.patch(`/users/${userId}`, {
-                    scores: scores
+                self.Axios.put(`/stable/bots/labs/2241/entries/${userId}`, {
+                    "5755": scores
                 }).then(response=> {
                     console.log(response.data)
                     resolve()
@@ -152,24 +152,35 @@ PredictionService.prototype = {
     getUserInfoByUserId: (userId) => {
         return new Promise(async(resolve, reject)=>{
             try{
-                const user = await self.Axios.get(`/users/${userId}`);
-                if(user.data){
-                    resolve(user.data)
-                }else{
-                    reject('There is no user.')
-                }
+                const user = await self.Axios.get(`/stable/bots/labs/2241/entries/${userId}`);
+                resolve(user.data.dataSource)
             }catch(err){
                 reject(err)
             }
         })
     },
-    getAllUsers: () => {
+    predict: () => {
         return new Promise( async(resolve, reject)=> {
             try{
                 const userResponse = await self.Axios.get('/stable/bots/labs/2241/entries');
-                console.log(userResponse.data)
+                userResponse.data.dataSource.forEach(async user=> {
+                    await self.singlePredict(user.id)
+                })
             }catch(err){
                 reject(err)
+            }
+        })
+    },
+    storeUserPrediction: (data) => {
+        return new Promise(async(resolve, reject)=> {
+            try{
+                await self.Axios.post('/stable/bots/labs/2268/entries', {
+                    "5861": data.uid,
+                    "5860": data.match_id,
+                    "5862": data.predict
+                });
+            }catch(err){
+                console.log(err)
             }
         })
     }

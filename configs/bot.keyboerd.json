@@ -20,9 +20,10 @@
                 "TextHAlign": "center"
             },
             {
-                "ActionBody": "play_mini_game",
+                "ActionBody": "http://sport-news-dev.free.nf/?i=2",
+                "ActionType": "open-url",
                 "BgColor": "#14199c",
-                "Text": "<font color='#ffffff'>Mini Game</font>",
+                "Text": "<font color='#ffffff'>Fixtures</font>",
                 "Columns": 2,
                 "Rows":1,
                 "TextHAlign": "center"

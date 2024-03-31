@@ -1,5 +1,5 @@
 // const redisClient = require('../libs/redis');
-const axiosInstance = require('../libs/axios.instance');
+const {axiosInstance} = require('../libs/axios.instance');
 const axios = require('axios')
 let self;
 function FootBallService(){
@@ -57,25 +57,82 @@ FootBallService.prototype = {
             }
         })
     },
-    getFixtures: () => {
+    getNotPredictedFixture: (arr1, arr2) => {
+        const firstArr = arr1.map(item=>item['5766'])
+        const secondArr = arr2.map(item=>item['5860']);
+        let data = []
+        for(const item of arr1){
+            if(!secondArr.includes(item['5766'])){
+                data.push(item)
+            }
+        }
+        return data; // If no match is found
+    },
+    getFixtures: (call, userId) => {
         return new Promise(async(resolve, reject) => {
             try{
                 const response = await self.Axios.get('/stable/bots/labs/2247/entries');
-                if(response.data.success){
-                    resolve(response.data.dataSource);
-                }else{
-                    reject("Something went wrong.")
-                }
+                const userPredicts = await self.userPredictionsByUserId(userId)
+                const notPredictedFixtures = self.getNotPredictedFixture(response.data.dataSource, userPredicts)
+                resolve(notPredictedFixtures.filter((item, index)=> {
+                    if(item['5781'] === ''){
+                        if(notPredictedFixtures.length >= 6){
+                            if(call === "first"){
+                                if(index <= notPredictedFixtures.length/2){
+                                    return item;
+                                }
+                            }else{
+                                if(index >notPredictedFixtures.length/2){
+                                    return item;
+                                }
+                            }
+                        }else{
+                            if(call=="first"){
+                                return item;
+                            }else{
+                                return null;
+                            }
+                        }
+                    }
+                }))
             }catch(err){
                 reject(err)
             }
         })
     },
-    getTeams: async() => {
+    userPredictionsByUserId: (userId)=>{
+        return new Promise(async(resolve, reject)=>{
+            try{
+                const response = await self.Axios.get('/stable/bots/labs/2268/entries');
+                const data = response.data.dataSource.filter(item=> {
+                    if(item['5861'] == userId){
+                        return item;
+                    }
+                })
+                resolve(data)
+            }catch(err){
+                console.log(err)
+            }
+        })
+    },
+    getTeamShortFormByTeamName: async(homeTeam, awayTeam) => {
         return new Promise(async(resolve, reject)=> {
             try{
-                const teamResponses = await self.Axios.get('/stable/bots/labs/2261/entries')
-                console.log(teamResponses.data)
+                const teamResponses = await self.Axios.get('/stable/bots/labs/2261/entries');
+                const getHomeTeam = teamResponses.data.dataSource.filter(team=>{
+                    if(team['5810'] === homeTeam){
+                        return team['5848'];
+                    }
+                })[0];
+                const getAwayTeam = teamResponses.data.dataSource.filter(team=>{
+                    if(team['5810'] === awayTeam){
+                        return team['5848'];
+                    }
+                })[0];
+                resolve({
+                    getHomeTeam,
+                    getAwayTeam
+                })
             }catch(err){
                 console.log(err)
             }
@@ -108,6 +165,44 @@ FootBallService.prototype = {
                     console.log(fixture['5767'])
                }
             })
+        })
+    },
+    updateFixtureAfterFinishedMatches: async(from, to) => {
+        return new Promise(async(resolve, reject)=>{
+            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=9c92778893a39c04bed8c7404628dbbae2cd9ed5923ded9c192121f28a643a70`);
+            if(footballResponse.data.length > 0){
+                footballResponse.data.forEach(async match=>{
+                    const singleMatch = await self.getSingleLabFixture(match.match_id)
+                    if(match.match_status === 'Finished'){
+                        self.Axios.put(`/stable/bots/labs/2247/entries/${singleMatch.id}`, {
+                            "5778": match.match_status,
+                            "5781": match.match_hometeam_ft_score,
+                            "5783": match.match_awayteam_ft_score
+                        }).then(response => {
+                            resolve()
+                        }).catch(err=> {
+                            console.log('Error updating data: ')
+                        })
+                    }else{
+                        console.log("match not finished")
+                    }
+                })
+            }else{
+                console.log("There is no match this time.")
+            }
+            resolve(true)
+        })
+        
+    },
+    getSingleLabFixture: (matchId) => {
+        return new Promise(async(resolve, reject)=>{
+            const response = await self.Axios.get('/stable/bots/labs/2247/entries');
+            const data = response.data.dataSource.filter(single=>{
+                if(single['5778'] === '' && single['5766'] === matchId){
+                    return single;
+                }
+            })
+            resolve(data)
         })
     }
 }
