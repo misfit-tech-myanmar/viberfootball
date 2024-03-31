@@ -173,9 +173,7 @@ FootBallService.prototype = {
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
                     const singleMatch = await self.getSingleLabFixture(match.match_id)
-                    console.log("url => ", `/stable/bots/labs/2247/entries/${singleMatch[0].id}`)
                     if(match.match_status === 'Finished'){
-                        console.log("Match finisheeeed")
                         self.Axios.put(`/stable/bots/labs/2247/entries/${singleMatch[0].id}`, {
                             "5778": match.match_status,
                             "5781": match.match_hometeam_ft_score,
