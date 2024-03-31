@@ -2,7 +2,7 @@
   "name": "viberfootballbot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "concurrently \"ngrok http 5000\" \"node app.js\"",
     "dev": "nodemon app.js --ignore configs/token.json",
