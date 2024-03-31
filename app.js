@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 require('dotenv').config();
 const { everySecond, everyMonday, everyAugest } = require('./utils/create-cron');
-const bot = require('./libs/viber.bot')
+// const bot = require('./libs/viber.bot')
 const indexRouter = require('./routes/index')
 const {login} = require('./libs/axios.instance');
 
@@ -30,7 +30,7 @@ everySecond();
 everyAugest();
 app.use('/api/v1.0', indexRouter)
 
-app.use("/viber/webhook", bot.middleware());
+// app.use("/viber/webhook", bot.middleware());
 
 app.listen(port, async(err) => {
     await login('kyawhlaingbwar18@gmail.com', 'alice@101')
