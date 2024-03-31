@@ -13,6 +13,7 @@ PredictionService.prototype = {
             const userPredicts = await self.getUserPredictionsByUserId(user.creator_id);
             if(userPredicts.length > 0) {
                 userPredicts.forEach(async userPredict => {
+                    console.log(`${user} - ${userPredict}`)
                     if(userPredict.win_lose === undefined){
                         const fixture = await self.getFixtureByMatchId(userPredict.match_id);
                         if(fixture.match_status === 'Finished'){

@@ -19,7 +19,6 @@ async function login(username, password) {
       accessToken = response.data.access;
       refreshToken = response.data.refresh;
       // Set access token as default header
-      console.log(axiosInstance)
       axiosInstance.defaults.headers.common['Authorization'] = `Token ${accessToken}`;
 
       console.log('Logged in successfully');
@@ -64,6 +63,7 @@ axiosInstance.interceptors.response.use(
       return response;
   },
   async (error) => {
+    console.log("refresh :", error)
       const originalRequest = error.config;
       if (error.response && error.response.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true;
