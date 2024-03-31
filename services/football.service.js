@@ -10,7 +10,7 @@ function FootBallService(){
 
 FootBallService.prototype = {
     getFixtureFromApiAndPostToMyaliceDataLab: async(from, to) => {
-        const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=9c92778893a39c04bed8c7404628dbbae2cd9ed5923ded9c192121f28a643a70`);
+        const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c`);
 
         let fixtures = footballResponse.data.map( fixture => {
             return {
@@ -141,7 +141,7 @@ FootBallService.prototype = {
     addTeamToMyalice: async() => {
         return new Promise(async(resolve, reject)=> {
             try{
-                const teamsResponse = await axios.get('https://apiv3.apifootball.com/?action=get_teams&league_id=152&APIkey=9c92778893a39c04bed8c7404628dbbae2cd9ed5923ded9c192121f28a643a70')
+                const teamsResponse = await axios.get('https://apiv3.apifootball.com/?action=get_teams&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c')
                 if(teamsResponse.data.length > 0){
                     teamsResponse.data.forEach(async team=> {
                         await self.Axios.post('/stable/bots/labs/2261/entries',{
@@ -169,7 +169,7 @@ FootBallService.prototype = {
     },
     updateFixtureAfterFinishedMatches: async(from, to) => {
         return new Promise(async(resolve, reject)=>{
-            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=9c92778893a39c04bed8c7404628dbbae2cd9ed5923ded9c192121f28a643a70`);
+            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c`);
             console.log(footballResponse.data)
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
