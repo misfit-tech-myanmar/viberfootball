@@ -10,7 +10,7 @@ function FootBallService(){
 
 FootBallService.prototype = {
     getFixtureFromApiAndPostToMyaliceDataLab: async(from, to) => {
-        const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c`);
+        const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c&timezone=Asia/Yangon`);
 
         let fixtures = footballResponse.data.map( fixture => {
             return {
@@ -50,7 +50,9 @@ FootBallService.prototype = {
                     "5785": fixture.match_referee, //match_referee
                     "5788":  fixture.league_logo, //league_logo
                     "5786": fixture.team_home_badge, //team_home_badge
-                    "5787": fixture.team_away_badge //team_away_badge,
+                    "5787": fixture.team_away_badge, //team_away_badge,
+                    "5956": fixture.match_hometeam_id,
+                    "5957": fixture.match_awayteam_id
             });
             if(response.data.success){
                 console.log("successful created fixtures.");
@@ -71,19 +73,37 @@ FootBallService.prototype = {
     getFixtures: (call, userId) => {
         return new Promise(async(resolve, reject) => {
             try{
-                const response = await self.Axios.get('/stable/bots/labs/2247/entries');
+                let response = await self.Axios.get('/stable/bots/labs/2247/entries');
+                response.data.dataSource = response.data.dataSource.sort((a,b)=> {
+                    return new Date(`${a['5769']} ${a['5779']}`) - new Date(`${b['5769']} ${b['5779']}`)
+                })
                 const userPredicts = await self.userPredictionsByUserId(userId)
                 const notPredictedFixtures = self.getNotPredictedFixture(response.data.dataSource, userPredicts)
+                console.log("not predicted fixtures", notPredictedFixtures.length)
                 resolve(notPredictedFixtures.filter((item, index)=> {
                     if(item['5781'] === ''){
-                        if(notPredictedFixtures.length >= 6){
+                        if(notPredictedFixtures.length > 5){
                             if(call === "first"){
-                                if(index <= notPredictedFixtures.length/2){
+                                if(index < 5){
                                     return item;
                                 }
-                            }else{
-                                if(index >notPredictedFixtures.length/2){
+                            }else if( call === 'second'){
+                                if(index > 4 && index < 10){
                                     return item;
+                                }else{
+                                    return null;
+                                }
+                            }else if( call === 'third'){
+                                if(index > 9 && index < 15){
+                                    return item;
+                                }else{
+                                    return null;
+                                }
+                            }else if( call === 'fourth'){
+                                if(index > 14 && index < 20){
+                                    return item;
+                                }else{
+                                    return null
                                 }
                             }
                         }else{
@@ -120,12 +140,12 @@ FootBallService.prototype = {
             try{
                 const teamResponses = await self.Axios.get('/stable/bots/labs/2261/entries');
                 const getHomeTeam = teamResponses.data.dataSource.filter(team=>{
-                    if(team['5810'] === homeTeam){
+                    if(team['5811'] === homeTeam){
                         return team['5848'];
                     }
                 })[0];
                 const getAwayTeam = teamResponses.data.dataSource.filter(team=>{
-                    if(team['5810'] === awayTeam){
+                    if(team['5811'] === awayTeam){
                         return team['5848'];
                     }
                 })[0];
@@ -169,6 +189,7 @@ FootBallService.prototype = {
     },
     updateFixtureAfterFinishedMatches: async(from, to) => {
         return new Promise(async(resolve, reject)=>{
+            console.log(from, to)
             const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c`);
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{

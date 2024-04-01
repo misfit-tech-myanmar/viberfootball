@@ -4,14 +4,13 @@ const PredictionService = require('../services/prediction.service');
 
 const footballService = new FootBallService();
 const predictionService = new PredictionService();
-let currentDate = new Date();
-// Extract year, month, and day components
-const startDate = `${currentDate.getFullYear()}-${currentDate.getMonth()+1}-${currentDate.getDate()}`;
-currentDate.setDate(currentDate.getDate() + 7);
-let endDate = currentDate.toISOString().slice(0, 10);
 
 module.exports = {
     everySecond: () => {
+        let currentDate = new Date();
+        // Extract year, month, and day components
+        const startDate = `${currentDate.getFullYear()}-${currentDate.getMonth()+1}-${currentDate.getDate()}`;
+        let endDate=currentDate.toISOString().slice(0, 10);
         cron.schedule('*/30 * * * * *', async() => {
             footballService.updateFixtureAfterFinishedMatches(startDate, startDate);
             predictionService.predict();
@@ -20,6 +19,12 @@ module.exports = {
         });
     },
     everyMonday: () => {
+        let currentDateEveryMonday = new Date();
+        // Extract year, month, and day components
+        const startDate = `${currentDateEveryMonday.getFullYear()}-${currentDateEveryMonday.getMonth()+1}-${currentDateEveryMonday.getDate()}`;
+        currentDateEveryMonday.setDate(currentDateEveryMonday.getDate() + 7);
+        const endDate = currentDateEveryMonday.toISOString().slice(0, 10);
+        console.log(endDate)
         cron.schedule('0 0 * * 1', ()=> {
             footballService.getFixtureFromApiAndPostToMyaliceDataLab(startDate, endDate)
         })

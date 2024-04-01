@@ -15,12 +15,13 @@ const historyService = new HistoryService();
 
 /** Get Home Page */
 router.get('/first-fixtures', async(req, res, next) => {
+    console.log("calling first fixture")
     const fixtures = await footballService.getFixtures("first", req.query.customer_id);
     const proceedData = Promise.all(fixtures.map(async fixture=> {
-        const teams = await footballService.getTeamShortFormByTeamName(fixture['5780'], fixture['5782'])
+        const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-            "subtitle": `${fixture['5769']} | ${fixture['5779']}`,
+            "subtitle": `${fixture['5769']} | ${fixture['5779']} (UTC +6:30)`,
             "image": fixture['5899'],
             "url": '',
             "buttons": [
@@ -60,13 +61,107 @@ router.get('/first-fixtures', async(req, res, next) => {
     })
 })
 router.get('/second-fixtures', async(req, res, next) => {
-    
+    console.log("calling second fixture")
     const fixtures = await footballService.getFixtures("second",req.query.customer_id);
     const proceedData = Promise.all(fixtures.map(async fixture=> {
-        const teams = await footballService.getTeamShortFormByTeamName(fixture['5780'], fixture['5782'])
+        const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-            "subtitle": `${fixture['5769']} | ${fixture['5779']}`,
+            "subtitle": `${fixture['5769']} | ${fixture['5779']} (UTC +6:30)`,
+            "image": fixture['5899'],
+            "url": '',
+            "buttons": [
+                {
+                    "title": teams.getHomeTeam['5848'], 
+                    "type": "sequence", 
+                    "extra": `match_id=${fixture['5766']}&predict=W1&p_team=${fixture['5780']}`,
+                    "value": "136555",
+                },
+                {
+                    "title": "Draw", 
+                    "type": "sequence", 
+                    "extra": `match_id=${fixture['5766']}&predict=Draw`,
+                    "value": "136566",
+                },
+                {
+                    "title": teams.getAwayTeam['5848'], 
+                    "type": "sequence", 
+                    "extra": `match_id=${fixture['5766']}&predict=W2&p_team=${fixture['5782']}`,
+                    "value": "136565",
+                }
+            ]
+
+        }
+        
+    }))
+    proceedData.then(response=>{
+        res.json({
+            "data": response,
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
+               
+            },
+            "status": 200
+        })
+    })
+})
+
+router.get('/third-fixtures', async(req, res, next) => {
+    console.log("calling second fixture")
+    const fixtures = await footballService.getFixtures("third",req.query.customer_id);
+    const proceedData = Promise.all(fixtures.map(async fixture=> {
+        const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
+        return {
+            "title": `${fixture['5780']}  -  ${fixture['5782']}`,
+            "subtitle": `${fixture['5769']} | ${fixture['5779']} (UTC +6:30)`,
+            "image": fixture['5899'],
+            "url": '',
+            "buttons": [
+                {
+                    "title": teams.getHomeTeam['5848'], 
+                    "type": "sequence", 
+                    "extra": `match_id=${fixture['5766']}&predict=W1&p_team=${fixture['5780']}`,
+                    "value": "136555",
+                },
+                {
+                    "title": "Draw", 
+                    "type": "sequence", 
+                    "extra": `match_id=${fixture['5766']}&predict=Draw`,
+                    "value": "136566",
+                },
+                {
+                    "title": teams.getAwayTeam['5848'], 
+                    "type": "sequence", 
+                    "extra": `match_id=${fixture['5766']}&predict=W2&p_team=${fixture['5782']}`,
+                    "value": "136565",
+                }
+            ]
+
+        }
+        
+    }))
+    proceedData.then(response=>{
+        res.json({
+            "data": response,
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
+               
+            },
+            "status": 200
+        })
+    })
+})
+
+router.get('/fourth-fixtures', async(req, res, next) => {
+    console.log("calling second fixture")
+    const fixtures = await footballService.getFixtures("fourth",req.query.customer_id);
+    const proceedData = Promise.all(fixtures.map(async fixture=> {
+        const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
+        return {
+            "title": `${fixture['5780']}  -  ${fixture['5782']}`,
+            "subtitle": `${fixture['5769']} | ${fixture['5779']} (UTC +6:30)`,
             "image": fixture['5899'],
             "url": '',
             "buttons": [
@@ -213,6 +308,7 @@ router.get('/histories', (async(req, res, next)=> {
             "extra": ``,
             "value": 131605,
         })
+        console.log(response)
         res.json({
             "data": response,
             "success": true,

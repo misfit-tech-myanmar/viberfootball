@@ -20,6 +20,7 @@ HistoryService.prototype = {
                         createdAt: self.dateFormat(item.created_at)
                     };
                 }))
+                console.log(userPredictions)
                 const data = [
                     { id: 1, name: 'John', createdAt: '2024-03-25' },
                     { id: 2, name: 'Jane', createdAt: '2024-03-25' },
@@ -27,7 +28,7 @@ HistoryService.prototype = {
                     { id: 4, name: 'Alice', createdAt: '2024-03-26' },
                     { id: 5, name: 'Bob', createdAt: '2024-03-27' }
                   ];
-                resolve(self.groupCreatedAt(data))
+                resolve(self.groupCreatedAt(userPredictions))
             }catch(err){
                 console.log(err)
             }
