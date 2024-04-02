@@ -7,7 +7,7 @@ function HistoryService(){
 }
 
 HistoryService.prototype = {
-    histories: (userId)=>{
+    histories: (userId,active)=>{
         return new Promise(async (resolve, reject) => {
             try{
                 const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries`);
@@ -20,18 +20,22 @@ HistoryService.prototype = {
                         createdAt: self.dateFormat(item.created_at)
                     };
                 }))
-                console.log(userPredictions)
-                const data = [
-                    { id: 1, name: 'John', createdAt: '2024-03-25' },
-                    { id: 2, name: 'Jane', createdAt: '2024-03-25' },
-                    { id: 3, name: 'Doe', createdAt: '2024-03-26' },
-                    { id: 4, name: 'Alice', createdAt: '2024-03-26' },
-                    { id: 5, name: 'Bob', createdAt: '2024-03-27' }
-                  ];
-                resolve(self.groupCreatedAt(userPredictions))
+                const predictions = await self.filterByActive(userPredictions, active);
+                resolve(self.groupCreatedAt(predictions))
             }catch(err){
                 console.log(err)
             }
+        })
+    },
+    filterByActive: (data, active)=> {
+        return new Promise(async(resolve, reject)=> {
+            resolve(data.filter(item=> {
+                if(active){
+                    return item.winLose === undefined;
+                }else{
+                    return item.winLose !== undefined;
+                }
+            }))
         })
     },
     getPredictionByUser: (userId, predictions) => {
@@ -73,6 +77,65 @@ HistoryService.prototype = {
         // Format the date as MM/DD/YY
         const formattedDate = `${year}-${month}-${day}`;
         return formattedDate;
+    },
+    getHistoriesByDate:(date, userId, active) => {
+        return new Promise(async(resolve, reject) => {
+            try{
+                const userPredictions = await self.getUserPredictions(date, userId);
+                const predictions = await self.filterByActive(userPredictions, active)
+                const fixtures = await self.getFixtures();
+                const predictedFixtures = self.getPredictedFixtures(predictions, fixtures, date);
+                resolve(predictedFixtures)
+            }catch(err){
+                console.log(err)
+            }
+        })
+    },
+    getUserPredictions: (date, userId) => {
+        return new Promise(async(resolve, reject)=> {
+            try{
+                const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+                var userPredictions = await self.getPredictionByUser(userId, userHistories.data.dataSource.map(item=> {
+                    return {
+                        matchId: item['5860'],
+                        userId: item['5861'],
+                        predict: item['5862'],
+                        winLose: item['5897'],
+                        createdAt: self.dateFormat(item.created_at)
+                    };
+                }))
+                resolve(userPredictions)
+            }catch(err){
+                console.log(err)
+            }
+        })
+    },
+    getPredictedFixtures: (arr1, arr2, date) => {
+        // var matchingObjects = arr1.filter(obj1 => {
+        //     var matchObject2 =  arr2.find(obj2 => obj2['5766'] === obj1.matchId);
+        //     if(matchObject2){
+        //         return {obj1, matchObject2}
+        //     }
+        // });
+        // return matchingObjects
+        var matchingObjects = arr1.filter(obj1 => {
+            var matchingObj2 = arr2.find(obj2 => obj2['5766'] === obj1.matchId);
+            return matchingObj2;
+        }).map(obj1 => {
+            var matchingObj2 = arr2.find(obj2 =>obj2['5766'] === obj1.matchId);
+            return { ...obj1, ...matchingObj2 };
+        });
+        return matchingObjects.filter(item=> item.createdAt === date)
+    },
+    getFixtures: () => {
+        return new Promise(async(resolve, reject)=> {
+            let response = await self.Axios.get('/stable/bots/labs/2247/entries');
+            if(response.data.dataSource.length > 0){
+                resolve(response.data.dataSource);
+            }else{
+                resolve('There is no fixtures.')
+            }
+        })
     }
 }
 

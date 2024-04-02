@@ -13,12 +13,10 @@ PredictionService.prototype = {
             const userPredicts = await self.getUserPredictionsByUserId(user.creator_id);
             if(userPredicts.length > 0) {
                 userPredicts.forEach(async userPredict => {
-                    console.log(`${user} - ${userPredict}`)
                     if(userPredict.win_lose === undefined){
                         const fixture = await self.getFixtureByMatchId(userPredict.match_id);
                         if(fixture.match_status === 'Finished'){
                             const result = await self.checkW1W2D(fixture, userPredict);
-                            console.log("result", result)
                             if((result==="Draw" || result==="W1" || result==="W2")){
                                 if(result === userPredict.predict){
                                     await self.updateUserPredict('Win', userPredict)
@@ -142,7 +140,6 @@ PredictionService.prototype = {
                 self.Axios.put(`/stable/bots/labs/2241/entries/${userId}`, {
                     "5755": scores
                 }).then(response=> {
-                    console.log(response.data)
                     resolve()
                 })
             }catch(err){

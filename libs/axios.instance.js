@@ -62,10 +62,10 @@ axiosInstance.interceptors.response.use(
   (response) => {
       return response;
   },
-  async (error) => {
-    console.log("refresh :", error)
+  async (error) => { //&& error.response.status === 401 && !originalRequest._retry
+    console.log("refresh :", error.response)
       const originalRequest = error.config;
-      if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      if (error.response ) {
           originalRequest._retry = true;
           try {
               await refreshAccessToken();

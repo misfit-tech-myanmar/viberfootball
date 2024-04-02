@@ -79,7 +79,6 @@ FootBallService.prototype = {
                 })
                 const userPredicts = await self.userPredictionsByUserId(userId)
                 const notPredictedFixtures = self.getNotPredictedFixture(response.data.dataSource, userPredicts)
-                console.log("not predicted fixtures", notPredictedFixtures.length)
                 resolve(notPredictedFixtures.filter((item, index)=> {
                     if(item['5781'] === ''){
                         if(notPredictedFixtures.length > 5){
@@ -189,7 +188,6 @@ FootBallService.prototype = {
     },
     updateFixtureAfterFinishedMatches: async(from, to) => {
         return new Promise(async(resolve, reject)=>{
-            console.log(from, to)
             const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c`);
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
