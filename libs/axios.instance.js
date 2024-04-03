@@ -31,7 +31,7 @@ async function login(username, password) {
 // Function to refresh access token
 async function refreshAccessToken() {
   try {
-      const response = await axios.post('refresh_token_endpoint', {
+      const response = await axios.post('https://api.myalice.ai/stable/accounts/refresh', {
           refresh: refreshToken
       });
       accessToken = response.data.access;

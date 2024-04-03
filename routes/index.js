@@ -15,7 +15,8 @@ const teamService = new TeamService();
 const historyService = new HistoryService();
 const profileService = new ProfileService();
 
-/** Get Home Page */
+
+/**Make Prediction */
 router.get('/first-fixtures', async(req, res, next) => {
     const fixtures = await footballService.getFixtures("first", req.query.customer_id);
     const proceedData = Promise.all(fixtures.map(async fixture=> {
@@ -61,6 +62,7 @@ router.get('/first-fixtures', async(req, res, next) => {
         })
     })
 })
+
 router.get('/second-fixtures', async(req, res, next) => {
     const fixtures = await footballService.getFixtures("second",req.query.customer_id);
     const proceedData = Promise.all(fixtures.map(async fixture=> {
@@ -206,11 +208,29 @@ router.post('/store-user-prediction', async(req, res, next)=> {
     })
 })
 
+router.post('/check-prediction', async(req, res, next)=> {
+    console.log("calling check prediction")
+    console.log(req.body)
+    const isPredict= await predictionService.checkPredict(req.body.uid, req.body.match_id)
+    console.log(isPredict)
+    res.json({
+        "data": " ",
+        "success": true,
+        "message": "Successful", 
+        "attributes": {
+           isPredicted: isPredict?1:2
+        },
+        "status": 200
+    })
+})
+
+/**Quizzes */
 router.get('/quizzes', async(req, res, next)=> {
     const quizzes = await quizService.getQuizzes();
     
 })
 
+/**Favorite Team */
 router.get('/first-fav-teams', async(req, res, next) => {
     const teams = await teamService.getTeams('first');
     const proceedData = Promise.all(teams.map(team=> {
@@ -273,13 +293,15 @@ router.get('/first-fav-teams', async(req, res, next) => {
 //     })
 // })
 
-const theHistory = (histories)=> {
+
+/**History */
+const theActiveHistory = (histories, sequence)=> {
     const data = [];
     for (const key in histories) {
         if (Object.hasOwnProperty.call(histories, key)) {
         const value = histories[key];
             data.push({
-                "title": `${key}  \nYou are prediced ${value.length} matches.`, 
+                "title": `${key}  \nYou are predicted ${value.length} matches.`, 
                 "type": "sequence",
                 "extra": `date_history=${key}`,
                 "value": 138083,
@@ -289,12 +311,28 @@ const theHistory = (histories)=> {
     return data;
 }
 
-router.get('/ongoing-histories', (async(req, res, next)=> {
+const theInActiveHistory = (histories, sequence)=> {
+    const data = [];
+    for (const key in histories) {
+        if (Object.hasOwnProperty.call(histories, key)) {
+        const value = histories[key];
+            data.push({
+                "title": `${key}  \nYou are predicted ${value.length} matches.`, 
+                "type": "sequence",
+                "extra": `date_history=${key}`,
+                "value": 138188,
+            })
+        }
+    }
+    return data;
+}
+
+router.get('/active-histories', (async(req, res, next)=> {
     const active = true;
     const histories = await historyService.histories(req.query.customer_id, active);
     // Loop through the groupedData object by keys
     
-    const proceedData = Promise.all(theHistory(histories))
+    const proceedData = Promise.all(theActiveHistory(histories))
     
     proceedData.then(response=> {
         response.unshift({
@@ -314,12 +352,13 @@ router.get('/ongoing-histories', (async(req, res, next)=> {
         })
     })
 }))
+
 router.get('/inactive-histories', async(req, res, next)=> {
     const active = false;
     const histories = await historyService.histories(req.query.customer_id, active);
     // Loop through the groupedData object by keys
     
-    const proceedData = Promise.all(theHistory(histories))
+    const proceedData = Promise.all(theInActiveHistory(histories))
     
     proceedData.then(response=> {
         response.unshift({
@@ -341,6 +380,7 @@ router.get('/inactive-histories', async(req, res, next)=> {
 })
 
 router.post('/active-histories-by-date', async(req, res,next)=> {
+    console.log("calling active history")
     const active=true;
     const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active);
     const proceedData = Promise.all(histories.map(async fixture=> {
@@ -356,21 +396,21 @@ router.post('/active-histories-by-date', async(req, res,next)=> {
                     "type": "sequence", 
                     "extra": ``,
                     "value": "138113",
-                    "Columns": 2
+                    "Columns": 6
                 },
                 {
                     "title": "Draw", 
                     "type": "sequence", 
                     "extra": ``,
                     "value": "138113",
-                    "Columns": 2
+                    "Columns": 6
                 },
                 {
                     "title": teams.getAwayTeam['5848'], 
                     "type": "sequence", 
                     "extra": ``,
                     "value": "138113",
-                    "Columns": 2
+                    "Columns": 6
                 }
             ]
 
@@ -378,6 +418,7 @@ router.post('/active-histories-by-date', async(req, res,next)=> {
         
     }))
     proceedData.then(response=>{
+        console.log("active response", response)
         res.json({
             "data": response,
             "success": true,
@@ -389,7 +430,9 @@ router.post('/active-histories-by-date', async(req, res,next)=> {
         })
     })
 })
+
 router.post('/inactive-histories-by-date', async(req, res,next)=> {
+    console.log("calling inactive history")
     const active=false;
     const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active);
     const proceedData = Promise.all(histories.map(async fixture=> {
@@ -405,26 +448,29 @@ router.post('/inactive-histories-by-date', async(req, res,next)=> {
                     "type": "sequence", 
                     "extra": ``,
                     "value": "138113",
-                    "Columns": 2
+                    "Columns": 6
                 },
                 {
                     "title": "Draw", 
                     "type": "sequence", 
                     "extra": ``,
                     "value": "138113",
-                    "Columns": 2
+                    "Columns": 6
                 },
                 {
                     "title": teams.getAwayTeam['5848'], 
                     "type": "sequence", 
                     "extra": ``,
                     "value": "138113",
-                    "Columns": 2
+                    "Columns": 6
                 }
             ]
+
         }
+        
     }))
     proceedData.then(response=>{
+        console.log("inactive response", response)
         res.json({
             "data": response,
             "success": true,
@@ -437,29 +483,17 @@ router.post('/inactive-histories-by-date', async(req, res,next)=> {
     })
 })
 
+
+/**Profile */
 router.post('/profile', async(req, res, next)=> {
+    console.log("calling profile")
     const profile = await profileService.profile(req.body);
+    console.log(profile['5755'])
     res.json({
-        "data": [
-            {
-                "title": `Current Balance ${profile['5755']}`,
-                "subtitle": `Make up to 5 predictions every day!`,
-                "image": "https://t4.ftcdn.net/jpg/02/40/63/55/360_F_240635575_EJifwRAbKsVTDnA3QE0bCsWG5TLhUNEZ.jpg",
-                "url": "",
-                "buttons": [
-                    {
-                        "title": "Make Prediction", 
-                        "type": "sequence", 
-                        "extra": ``,
-                        "value": "131663",
-                    },
-                ]
-            }
-        ],
+        "data": `${profile['5755']}`,
         "success": true,
         "message": "Successful", 
         "attributes": {
-           
         },
         "status": 200
     })

@@ -79,7 +79,7 @@ FootBallService.prototype = {
                 })
                 const userPredicts = await self.userPredictionsByUserId(userId)
                 const notPredictedFixtures = self.getNotPredictedFixture(response.data.dataSource, userPredicts)
-                resolve(notPredictedFixtures.filter((item, index)=> {
+                resolve(response.data.dataSource.filter((item, index)=> {
                     if(item['5781'] === ''){
                         if(notPredictedFixtures.length > 5){
                             if(call === "first"){
@@ -160,7 +160,7 @@ FootBallService.prototype = {
     addTeamToMyalice: async() => {
         return new Promise(async(resolve, reject)=> {
             try{
-                const teamsResponse = await axios.get('https://apiv3.apifootball.com/?action=get_teams&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c')
+                const teamsResponse = await axios.get('https://apiv3.apifootball.com/?action=get_teams&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c&timezone=Asia/Yangon')
                 if(teamsResponse.data.length > 0){
                     teamsResponse.data.forEach(async team=> {
                         await self.Axios.post('/stable/bots/labs/2261/entries',{
@@ -188,11 +188,12 @@ FootBallService.prototype = {
     },
     updateFixtureAfterFinishedMatches: async(from, to) => {
         return new Promise(async(resolve, reject)=>{
-            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c`);
+            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c&timezone=Asia/Yangon`);
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
                     const singleMatch = await self.getSingleLabFixture(match.match_id)
-                    if(match.match_status === 'Finished'){
+                    console.log("single match", singleMatch)
+                    if(match.match_status === 'Finished' && singleMatch.length >0){
                         self.Axios.put(`/stable/bots/labs/2247/entries/${singleMatch[0].id}`, {
                             "5778": match.match_status,
                             "5781": match.match_hometeam_ft_score,

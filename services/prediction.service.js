@@ -181,6 +181,26 @@ PredictionService.prototype = {
                 console.log(err)
             }
         })
+    },
+    checkPredict: (userId, matchId) => {
+        return new Promise(async(resolve, reject)=> {
+            try{
+                const response = await self.Axios.get('/stable/bots/labs/2268/entries');
+                const isPredicted = self.checkUserPredictByMatchIdAndUserId(response.data.dataSource, matchId, userId)
+                resolve(isPredicted)
+            }catch(err){
+                console.log(err)
+            }
+        })
+    },
+    checkUserPredictByMatchIdAndUserId: (arr, matchId, userId)=> {
+        console.log(arr)
+        for (let obj of arr) {
+            if (obj['5860'] === matchId && obj['5861'] === userId) {
+                return true;
+            }
+        }
+        return false;
     }
     
 }
