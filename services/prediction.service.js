@@ -1,3 +1,4 @@
+const { response } = require('express');
 const { axiosInstance } = require('../libs/axios.instance');
 
 let self;
@@ -79,7 +80,10 @@ PredictionService.prototype = {
                                 "match_hometeam_name": fixture['5780'],
                                 "match_hometeam_score": fixture['5781'],
                                 "match_awayteam_name": fixture['5782'],
-                                "match_awayteam_score": fixture['5783']
+                                "match_awayteam_score": fixture['5783'],
+                                "match_hometeam_id": fixture['5956'],
+                                "match_awayteam_id": fixture['5957'],
+                                "banner_image": fixture['5899']
                             }
                             resolve(singleFixture)
                         }
@@ -201,7 +205,35 @@ PredictionService.prototype = {
             }
         }
         return false;
-    }
+    },
+    getSinglePrediction: (obj , predictedFixture) => {
+        return new Promise(async(resolve, reject)=> {
+            const predictedFilter = predictedFixture.filter(item=> item.match_id === obj.match_id)
+            resolve({...obj, ...predictedFilter[0]})
+        })
+    },
+    predictedMatch:(matchId, userId) => {
+        return new Promise(async(resolve, reject) => {
+            const fixtureByMatchId = await self.getFixtureByMatchId(matchId);
+            const predictedFixture = await self.getUserPredictionsByUserId(userId);
+            const singlePrediction = await self.getSinglePrediction(fixtureByMatchId, predictedFixture)
+            resolve(singlePrediction)
+        })
+    },
+    updatePredictedMatch: (data) => {
+        return new Promise(async(resolve, reject) => {
+            const singlePrediction = await self.predictedMatch(data.match_id, data.uid);
+            self.Axios.put(`https://api.myalice.ai/stable/bots/labs/2268/entries/${singlePrediction.id}`, {
+                '5862': data.predict
+            }).then(response=> {
+                console.log(response)
+                resolve(true)
+            }).catch(err=> {
+                console.log(err)
+            }) 
+        })
+    },
+    
     
 }
 

@@ -1,6 +1,7 @@
 // const redisClient = require('../libs/redis');
 const {axiosInstance} = require('../libs/axios.instance');
 const axios = require('axios')
+const moment = require('moment-timezone');
 let self;
 function FootBallService(){
     self = this;
@@ -10,6 +11,7 @@ function FootBallService(){
 
 FootBallService.prototype = {
     getFixtureFromApiAndPostToMyaliceDataLab: async(from, to) => {
+        console.log("get fixtures from football api")
         const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c&timezone=Asia/Yangon`);
 
         let fixtures = footballResponse.data.map( fixture => {
@@ -79,9 +81,37 @@ FootBallService.prototype = {
                 })
                 const userPredicts = await self.userPredictionsByUserId(userId)
                 const notPredictedFixtures = self.getNotPredictedFixture(response.data.dataSource, userPredicts)
-                resolve(response.data.dataSource.filter((item, index)=> {
+                const unfinishedFixtures = await self.getUnfinishedFixtures(response.data.dataSource)
+                const getFixtureBeforeOneHours = await self.getFixtureBeforeOneHour(unfinishedFixtures);
+                console.log(getFixtureBeforeOneHours)
+                // if(unfinishedFixtures.length > 15 && call === 'third' ){
+                //     result = {
+                //         result: data,
+                //         more: true
+                //     }
+                // }else{
+                //     if(unfinishedFixtures.length > 10 && call === 'second'){
+                //         result = {
+                //             result: data,
+                //             more: true
+                //         }
+                //     }else{
+                //         if(unfinishedFixtures.length > 5 && call === 'first'){
+                //             result = {
+                //                 result: data,
+                //                 more: true
+                //             }
+                //         }else{
+                //             result = {
+                //                 result: data,
+                //                 more: false
+                //             }
+                //         }
+                //     }
+                // }
+                resolve(getFixtureBeforeOneHours.filter((item, index)=> {
                     if(item['5781'] === ''){
-                        if(notPredictedFixtures.length > 5){
+                        if(response.data.dataSource.length > 5){
                             if(call === "first"){
                                 if(index < 5){
                                     return item;
@@ -106,17 +136,34 @@ FootBallService.prototype = {
                                 }
                             }
                         }else{
-                            if(call=="first"){
-                                return item;
-                            }else{
-                                return null;
-                            }
+                            return item
                         }
                     }
                 }))
             }catch(err){
                 reject(err)
             }
+        })
+    },
+    getFixtureBeforeOneHour: (data) => {
+        return new Promise(async(resolve, reject)=> {
+            // Set the timezone to Myanmar
+            const myanmarTime = moment().tz('Asia/Yangon');
+            // Add one hour
+            const myanmarTimePlusOneHour = myanmarTime.clone().add(1, 'hour');
+            resolve(data.filter(item=>{
+                const matchDateTime = moment(`${item['5769']} ${item['5779']}`, "YYYY-MM-DD HH:mm");
+                console.log(matchDateTime)
+                console.log(myanmarTimePlusOneHour)
+                return matchDateTime.isSameOrAfter(myanmarTimePlusOneHour);
+            }))
+            resolve()
+        })
+    },
+    getUnfinishedFixtures: (data)=> {
+        return new Promise(async(resolve, reject)=> {
+            const unfinishedFixture = data.filter(item=> item['5781'] === '')
+            resolve(unfinishedFixture)
         })
     },
     userPredictionsByUserId: (userId)=>{
@@ -188,11 +235,11 @@ FootBallService.prototype = {
     },
     updateFixtureAfterFinishedMatches: async(from, to) => {
         return new Promise(async(resolve, reject)=>{
+            console.log("update fixture comming")
             const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c&timezone=Asia/Yangon`);
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
                     const singleMatch = await self.getSingleLabFixture(match.match_id)
-                    console.log("single match", singleMatch)
                     if(match.match_status === 'Finished' && singleMatch.length >0){
                         self.Axios.put(`/stable/bots/labs/2247/entries/${singleMatch[0].id}`, {
                             "5778": match.match_status,
@@ -224,6 +271,21 @@ FootBallService.prototype = {
                 }
             })
             resolve(data)
+        })
+    },
+    getPredictedTeamName: (match, predict)=> {
+        return new Promise(async(resolve, reject)=> {
+            console.log(match,predict)
+            let guest;
+            if(predict === 'W1'){
+                guest = match.getHomeTeam['5810']
+            }else if(predict === 'W2'){
+                guest = match.getAwayTeam['5810']
+            }else{
+                guest='Draw'
+            }
+            console.log(guest)
+            resolve(guest)
         })
     }
 }

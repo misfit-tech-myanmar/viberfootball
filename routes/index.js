@@ -19,6 +19,7 @@ const profileService = new ProfileService();
 /**Make Prediction */
 router.get('/first-fixtures', async(req, res, next) => {
     const fixtures = await footballService.getFixtures("first", req.query.customer_id);
+    // console.log("fixture::::", fixtures.more)
     const proceedData = Promise.all(fixtures.map(async fixture=> {
         const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
         return {
@@ -36,7 +37,7 @@ router.get('/first-fixtures', async(req, res, next) => {
                 {
                     "title": "Draw", 
                     "type": "sequence", 
-                    "extra": `match_id=${fixture['5766']}&predict=Draw`,
+                    "extra": `match_id=${fixture['5766']}&predict=Draw&p_team=Draw`,
                     "value": "136566",
                 },
                 {
@@ -51,6 +52,23 @@ router.get('/first-fixtures', async(req, res, next) => {
         
     }))
     proceedData.then(response=>{
+        // if(fixtures.more){
+        //     response.push({
+        //         "title": `‎`,
+        //         "subtitle": `‎ `,
+        //         "image": '',
+        //         "url": '',
+        //         "buttons": [
+        //             {
+        //                 "title": `More`, 
+        //                 "type": "sequence", 
+        //                 "extra": ``,
+        //                 "value": "138227",
+        //             }
+        //         ]
+    
+        //     })
+        // }
         res.json({
             "data": response,
             "success": true,
@@ -65,6 +83,7 @@ router.get('/first-fixtures', async(req, res, next) => {
 
 router.get('/second-fixtures', async(req, res, next) => {
     const fixtures = await footballService.getFixtures("second",req.query.customer_id);
+
     const proceedData = Promise.all(fixtures.map(async fixture=> {
         const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
         return {
@@ -82,7 +101,7 @@ router.get('/second-fixtures', async(req, res, next) => {
                 {
                     "title": "Draw", 
                     "type": "sequence", 
-                    "extra": `match_id=${fixture['5766']}&predict=Draw`,
+                    "extra": `match_id=${fixture['5766']}&predict=Draw&p_team=Draw`,
                     "value": "136566",
                 },
                 {
@@ -97,6 +116,24 @@ router.get('/second-fixtures', async(req, res, next) => {
         
     }))
     proceedData.then(response=>{
+        // if(fixtures.more){
+        //     response.push({
+        //         "title": `‎`,
+        //         "subtitle": `‎ `,
+        //         "image": '',
+        //         "url": '',
+        //         "buttons": [
+        //             {
+        //                 "title": `More`, 
+        //                 "type": "sequence", 
+        //                 "extra": ``,
+        //                 "value": "138228",
+        //             }
+        //         ]
+    
+        //     })
+        // }
+
         res.json({
             "data": response,
             "success": true,
@@ -111,6 +148,7 @@ router.get('/second-fixtures', async(req, res, next) => {
 
 router.get('/third-fixtures', async(req, res, next) => {
     const fixtures = await footballService.getFixtures("third",req.query.customer_id);
+
     const proceedData = Promise.all(fixtures.map(async fixture=> {
         const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
         return {
@@ -128,7 +166,7 @@ router.get('/third-fixtures', async(req, res, next) => {
                 {
                     "title": "Draw", 
                     "type": "sequence", 
-                    "extra": `match_id=${fixture['5766']}&predict=Draw`,
+                    "extra": `match_id=${fixture['5766']}&predict=Draw&p_team=Draw`,
                     "value": "136566",
                 },
                 {
@@ -143,6 +181,23 @@ router.get('/third-fixtures', async(req, res, next) => {
         
     }))
     proceedData.then(response=>{
+        // if(fixtures.more){
+        //     response.push({
+        //         "title": `‎`,
+        //         "subtitle": `‎ `,
+        //         "image": '',
+        //         "url": '',
+        //         "buttons": [
+        //             {
+        //                 "title": `More`, 
+        //                 "type": "sequence", 
+        //                 "extra": ``,
+        //                 "value": "138229",
+        //             }
+        //         ]
+    
+        //     })
+        // }
         res.json({
             "data": response,
             "success": true,
@@ -157,6 +212,7 @@ router.get('/third-fixtures', async(req, res, next) => {
 
 router.get('/fourth-fixtures', async(req, res, next) => {
     const fixtures = await footballService.getFixtures("fourth",req.query.customer_id);
+
     const proceedData = Promise.all(fixtures.map(async fixture=> {
         const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
         return {
@@ -174,7 +230,7 @@ router.get('/fourth-fixtures', async(req, res, next) => {
                 {
                     "title": "Draw", 
                     "type": "sequence", 
-                    "extra": `match_id=${fixture['5766']}&predict=Draw`,
+                    "extra": `match_id=${fixture['5766']}&predict=Draw&p_team=Draw`,
                     "value": "136566",
                 },
                 {
@@ -189,6 +245,8 @@ router.get('/fourth-fixtures', async(req, res, next) => {
         
     }))
     proceedData.then(response=>{
+        console.log("fourth",response)
+
         res.json({
             "data": response,
             "success": true,
@@ -304,7 +362,7 @@ const theActiveHistory = (histories, sequence)=> {
                 "title": `${key}  \nYou are predicted ${value.length} matches.`, 
                 "type": "sequence",
                 "extra": `date_history=${key}`,
-                "value": 138083,
+                "value": 138247,
             })
         }
     }
@@ -357,7 +415,7 @@ router.get('/inactive-histories', async(req, res, next)=> {
     const active = false;
     const histories = await historyService.histories(req.query.customer_id, active);
     // Loop through the groupedData object by keys
-    
+    console.log("calling inactive histories")
     const proceedData = Promise.all(theInActiveHistory(histories))
     
     proceedData.then(response=> {
@@ -383,33 +441,22 @@ router.post('/active-histories-by-date', async(req, res,next)=> {
     console.log("calling active history")
     const active=true;
     const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active);
+    // console.log("histories", histories)
     const proceedData = Promise.all(histories.map(async fixture=> {
         const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
+        const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
+        console.log("predicteeeeed : ", fixture.predict)
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-            "subtitle": `${fixture['5769']} - You are predicted ${teams.getHomeTeam['5848']}`,
+            "subtitle": `${fixture['5769']} - You are predicted ${guest}`,
             "image": fixture['5899'],
             "url": '',
             "buttons": [
                 {
-                    "title": teams.getHomeTeam['5848'], 
+                    "title": 'Edit Prediction', 
                     "type": "sequence", 
-                    "extra": ``,
-                    "value": "138113",
-                    "Columns": 6
-                },
-                {
-                    "title": "Draw", 
-                    "type": "sequence", 
-                    "extra": ``,
-                    "value": "138113",
-                    "Columns": 6
-                },
-                {
-                    "title": teams.getAwayTeam['5848'], 
-                    "type": "sequence", 
-                    "extra": ``,
-                    "value": "138113",
+                    "extra": `predicted_match_id=${fixture['5766']}`,
+                    "value": 138083,
                     "Columns": 6
                 }
             ]
@@ -418,7 +465,6 @@ router.post('/active-histories-by-date', async(req, res,next)=> {
         
     }))
     proceedData.then(response=>{
-        console.log("active response", response)
         res.json({
             "data": response,
             "success": true,
@@ -482,6 +528,53 @@ router.post('/inactive-histories-by-date', async(req, res,next)=> {
         })
     })
 })
+router.post('/edit-prediction', async(req, res, next)=> {
+    const fixture = await predictionService.predictedMatch(req.body.predicted_match_id, req.body.uid);
+    console.log(fixture)
+    const teams = await footballService.getTeamShortFormByTeamName(fixture.match_hometeam_id, fixture.match_awayteam_id)
+    console.log(teams)
+    res.json({
+        "data": [
+            {
+                "title": `${fixture.match_hometeam_name}  -  ${fixture.match_awayteam_name}`,
+                "subtitle": `${fixture.match_date} - You are predicted ${teams.getHomeTeam['5848']}`,
+                "image": fixture.banner_image,
+                "url": '',
+                "buttons": [
+                    {
+                        "title": teams.getHomeTeam['5848'], 
+                        "type": "sequence", 
+                        "extra": `match_id=${fixture.match_id}&predict=W1&p_team=${fixture.match_hometeam_name}`,
+                        "value": "138246",
+                    },
+                    {
+                        "title": "Draw", 
+                        "type": "sequence", 
+                        "extra": `match_id=${fixture.match_id}&predict=Draw&p_team=Draw`,
+                        "value": "138246",
+                    },
+                    {
+                        "title": teams.getAwayTeam['5848'], 
+                        "type": "sequence", 
+                        "extra": `match_id=${fixture.match_id}&predict=W2&p_team=${fixture.match_awayteam_name}`,
+                        "value": "138246",
+                    }
+                ]
+            }
+        ],
+        "success": true,
+        "message": "Successful", 
+        "attributes": {
+        },
+        "status": 200
+    })
+})
+router.post('/update-prediction', async(req, res, next) => {
+    await predictionService.updatePredictedMatch(req.body)
+    res.json({
+        success: true
+    })
+})
 
 
 /**Profile */
@@ -498,5 +591,6 @@ router.post('/profile', async(req, res, next)=> {
         "status": 200
     })
 })
+
 
 module.exports = router;

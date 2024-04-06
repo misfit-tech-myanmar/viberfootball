@@ -11,11 +11,14 @@ module.exports = {
         // Extract year, month, and day components
         const startDate = `${currentDate.getFullYear()}-${currentDate.getMonth()+1}-${currentDate.getDate()}`;
         let endDate=currentDate.toISOString().slice(0, 10);
-        cron.schedule('* * * * *', async() => {
+        cron.schedule('*/30 * * * * *', async() => {
+            console.log("now : ", new Date())
+            // footballService.getFixtureFromApiAndPostToMyaliceDataLab('2024-04-05', '2024-04-08')
             footballService.updateFixtureAfterFinishedMatches(startDate, startDate);
             predictionService.predict();
             footballService.getTeams();
-            // footballService.getFixtureFromApiAndPostToMyaliceDataLab("2024-03-26", "2024-04-1")
+            // footballService.getFixtureFromApiAndPostToMyaliceDataLab("2024-04-05", "2024-04-08")
+
         });
     },
     everyMonday: () => {

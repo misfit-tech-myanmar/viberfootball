@@ -7,6 +7,7 @@ const { everySecond, everyMonday, everyAugest } = require('./utils/create-cron')
 // const bot = require('./libs/viber.bot')
 const indexRouter = require('./routes/index')
 const {login} = require('./libs/axios.instance');
+const moment = require('moment-timezone');
 
 
 const app = express();
@@ -29,6 +30,30 @@ everyMonday();
 everySecond();
 everyAugest();
 app.use('/api/v1.0', indexRouter)
+// Sample fixtures data
+const fixtures = [
+    { match_date: "2024-04-05", match_time: "14:18", teams: ["Team A", "Team B"] },
+    { match_date: "2024-04-05", match_time: "15:30", teams: ["Team C", "Team D"] },
+    { match_date: "2024-04-05", match_time: "16:45", teams: ["Team E", "Team F"] }
+];
+
+// Get the current time in Myanmar time zone
+const myanmarTime = moment().tz('Asia/Yangon');
+
+// Add one hour to the current time
+const myanmarTimePlusOneHour = myanmarTime.clone().add(1, 'hour');
+
+// Filter fixtures based on start time
+const filteredFixtures = fixtures.filter(fixture => {
+    const matchDateTime = moment(`${fixture.match_date} ${fixture.match_time}`, "YYYY-MM-DD HH:mm");
+    return matchDateTime.isSameOrAfter(myanmarTimePlusOneHour);
+});
+
+// Display filtered fixtures
+console.log("Fixtures scheduled to start at least one hour from now:");
+filteredFixtures.forEach(fixture => {
+    console.log(`Match Date: ${fixture.match_date}, Match Time: ${fixture.match_time}, Teams: ${fixture.teams.join(" vs ")}`);
+});
 
 // app.use("/viber/webhook", bot.middleware());
 
