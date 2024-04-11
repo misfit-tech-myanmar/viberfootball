@@ -7,18 +7,12 @@ function QuizService(){
 }
 
 QuizService.prototype = {
-    getQuizzes: () => {
+    getQuizzes: (totalAnswer) => {
         return new Promise(async(resolve, reject)=> {
             try{
-                const response = await self.Axios.get('/stable/bots/labs/2245/entries');
-                response.data.dataSource.forEach(async question=> {
-                    const options = await self.getOptions(question.id)
-                    resolve({
-                        questionId: question.id,
-                        questionText: question['5762'],
-                        options: options
-                    })
-                })
+                console.log("total anaserrrr")
+                const response = await self.Axios.get('/stable/bots/labs/2295/entries');
+                resolve(response.data.dataSource[totalAnswer])
             }catch(err){
                 reject(err)
             }

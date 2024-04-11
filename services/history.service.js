@@ -1,4 +1,5 @@
 const {axiosInstance} = require('../libs/axios.instance');
+const moment = require('moment-timezone');
 
 let self;
 function HistoryService(){
@@ -78,6 +79,21 @@ HistoryService.prototype = {
         const formattedDate = `${year}-${month}-${day}`;
         return formattedDate;
     },
+    getFixtureBeforeOneHour: (data) => {
+        return new Promise(async(resolve, reject)=> {
+            // Set the timezone to Myanmar
+            const myanmarTime = moment().tz('Asia/Yangon');
+            // Add one hour
+            const myanmarTimePlusOneHour = myanmarTime.clone().add(1, 'hour');
+            resolve(data.filter(item=>{
+                const matchDateTime = moment(`${item['5769']} ${item['5779']}`, "YYYY-MM-DD HH:mm");
+                console.log(matchDateTime)
+                console.log(myanmarTimePlusOneHour)
+                return matchDateTime.isSameOrAfter(myanmarTimePlusOneHour);
+            }))
+            resolve()
+        })
+    },
     getHistoriesByDate:(date, userId, active) => {
         return new Promise(async(resolve, reject) => {
             try{
@@ -85,7 +101,12 @@ HistoryService.prototype = {
                 const predictions = await self.filterByActive(userPredictions, active)
                 const fixtures = await self.getFixtures();
                 const predictedFixtures = self.getPredictedFixtures(predictions, fixtures, date);
-                resolve(predictedFixtures)
+                if(active){
+                    const getFixtureBeforeOneHour = await self.getFixtureBeforeOneHour(predictedFixtures);
+                    resolve(getFixtureBeforeOneHour)
+                }else{
+                    resolve(predictedFixtures)
+                }
             }catch(err){
                 console.log(err)
             }

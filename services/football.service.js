@@ -12,7 +12,8 @@ function FootBallService(){
 FootBallService.prototype = {
     getFixtureFromApiAndPostToMyaliceDataLab: async(from, to) => {
         console.log("get fixtures from football api")
-        const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c&timezone=Asia/Yangon`);
+        const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=f6a3a43b61352931f6078b9ba49ddb09ca91441557f6a3ba9f506805cb02b4f5&timezone=Asia/Yangon`);
+
 
         let fixtures = footballResponse.data.map( fixture => {
             return {
@@ -82,8 +83,9 @@ FootBallService.prototype = {
                 const userPredicts = await self.userPredictionsByUserId(userId)
                 const notPredictedFixtures = self.getNotPredictedFixture(response.data.dataSource, userPredicts)
                 const unfinishedFixtures = await self.getUnfinishedFixtures(response.data.dataSource)
+                console.log("unfinished fixtures count", unfinishedFixtures.length)
                 const getFixtureBeforeOneHours = await self.getFixtureBeforeOneHour(unfinishedFixtures);
-                console.log(getFixtureBeforeOneHours)
+                console.log("fixtures 1 hours before match start",getFixtureBeforeOneHours.length)
                 // if(unfinishedFixtures.length > 15 && call === 'third' ){
                 //     result = {
                 //         result: data,
@@ -109,37 +111,40 @@ FootBallService.prototype = {
                 //         }
                 //     }
                 // }
-                resolve(getFixtureBeforeOneHours.filter((item, index)=> {
-                    if(item['5781'] === ''){
-                        if(response.data.dataSource.length > 5){
-                            if(call === "first"){
-                                if(index < 5){
-                                    return item;
+                resolve({
+                    result: getFixtureBeforeOneHours.filter((item, index)=> {
+                        if(item['5781'] === ''){
+                            if(response.data.dataSource.length > 5){
+                                if(call === "first"){
+                                    if(index < 5){
+                                        return item;
+                                    }
+                                }else if( call === 'second'){
+                                    if(index > 4 && index < 10){
+                                        return item;
+                                    }else{
+                                        return null;
+                                    }
+                                }else if( call === 'third'){
+                                    if(index > 9 && index < 15){
+                                        return item;
+                                    }else{
+                                        return null;
+                                    }
+                                }else if( call === 'fourth'){
+                                    if(index > 14 && index < 20){
+                                        return item;
+                                    }else{
+                                        return null
+                                    }
                                 }
-                            }else if( call === 'second'){
-                                if(index > 4 && index < 10){
-                                    return item;
-                                }else{
-                                    return null;
-                                }
-                            }else if( call === 'third'){
-                                if(index > 9 && index < 15){
-                                    return item;
-                                }else{
-                                    return null;
-                                }
-                            }else if( call === 'fourth'){
-                                if(index > 14 && index < 20){
-                                    return item;
-                                }else{
-                                    return null
-                                }
+                            }else{
+                                return item
                             }
-                        }else{
-                            return item
                         }
-                    }
-                }))
+                    }),
+                    total: getFixtureBeforeOneHours.length
+                })
             }catch(err){
                 reject(err)
             }
@@ -207,7 +212,7 @@ FootBallService.prototype = {
     addTeamToMyalice: async() => {
         return new Promise(async(resolve, reject)=> {
             try{
-                const teamsResponse = await axios.get('https://apiv3.apifootball.com/?action=get_teams&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c&timezone=Asia/Yangon')
+                const teamsResponse = await axios.get('https://apiv3.apifootball.com/?action=get_teams&league_id=152&APIkey=f6a3a43b61352931f6078b9ba49ddb09ca91441557f6a3ba9f506805cb02b4f5&timezone=Asia/Yangon')
                 if(teamsResponse.data.length > 0){
                     teamsResponse.data.forEach(async team=> {
                         await self.Axios.post('/stable/bots/labs/2261/entries',{
@@ -236,10 +241,12 @@ FootBallService.prototype = {
     updateFixtureAfterFinishedMatches: async(from, to) => {
         return new Promise(async(resolve, reject)=>{
             console.log("update fixture comming")
-            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=a0653eb09309447395a20432f0e99380da1fc84673efe92119bc121f1c82a07c&timezone=Asia/Yangon`);
+            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=f6a3a43b61352931f6078b9ba49ddb09ca91441557f6a3ba9f506805cb02b4f5&timezone=Asia/Yangon`);
+            console.log("data", footballResponse.data)
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
                     const singleMatch = await self.getSingleLabFixture(match.match_id)
+                    console.log("single match",singleMatch)
                     if(match.match_status === 'Finished' && singleMatch.length >0){
                         self.Axios.put(`/stable/bots/labs/2247/entries/${singleMatch[0].id}`, {
                             "5778": match.match_status,

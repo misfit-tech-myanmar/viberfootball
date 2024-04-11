@@ -1,5 +1,6 @@
 const { response } = require('express');
 const { axiosInstance } = require('../libs/axios.instance');
+const axios = require('axios')
 
 let self;
 function PredictionService(){
@@ -14,8 +15,11 @@ PredictionService.prototype = {
             const userPredicts = await self.getUserPredictionsByUserId(user.creator_id);
             if(userPredicts.length > 0) {
                 userPredicts.forEach(async userPredict => {
+                    console.log("user predict", userPredict)
                     if(userPredict.win_lose === undefined){
+                        console.log("predict", userPredict)
                         const fixture = await self.getFixtureByMatchId(userPredict.match_id);
+                        console.log(fixture)
                         if(fixture.match_status === 'Finished'){
                             const result = await self.checkW1W2D(fixture, userPredict);
                             if((result==="Draw" || result==="W1" || result==="W2")){
@@ -28,6 +32,14 @@ PredictionService.prototype = {
                             }else{
                                 console.log(result)
                             }
+                            await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                                "sequence_id":"138700",
+                                "customer_id": `${userPredict.user_id}`
+                            }, {
+                                headers: {
+                                    'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                                }
+                            })
                         }else{
                             console.log("Fixture finished not yet!")
                         }
@@ -179,7 +191,8 @@ PredictionService.prototype = {
                 await self.Axios.post('/stable/bots/labs/2268/entries', {
                     "5861": data.uid,
                     "5860": data.match_id,
-                    "5862": data.predict
+                    "5862": data.predict,
+                    "6002": "No"
                 });
             }catch(err){
                 console.log(err)
