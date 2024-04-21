@@ -8,9 +8,11 @@ const { everySecond, everyMonday, everyAugest, everyMorningSixthAm } = require('
 const indexRouter = require('./routes/index')
 const {login} = require('./libs/axios.instance');
 const moment = require('moment-timezone');
+var cors = require('cors')
 
 
 const app = express();
+app.use(cors())
 
 const port = process.env.PORT || 5000;
 

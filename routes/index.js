@@ -624,8 +624,7 @@ router.get('/noti-message', async(req, res, next)=> {
 
 /**Leaderboard */
 router.get('/top-five-player', async(req, res, next)=>{
-    console.log("calling leader board")
-    const leaderboard = await leaderboardService.getTopFivePlayerScore();
+    const leaderboard = await leaderboardService.getTopPredictionUserScore();
     console.log(leaderboard)
     res.json({
         "data": `${leaderboard[0]['5751']} -  ${leaderboard[0]['5755']} \n${leaderboard[1]['5751']} -  ${leaderboard[1]['5755']} \n${leaderboard[2]['5751']} -  ${leaderboard[2]['5755']} \n${leaderboard[3]['5751']} -  ${leaderboard[3]['5755']} \n${leaderboard[4]['5751']} -  ${leaderboard[4]['5755']}`,
@@ -635,6 +634,17 @@ router.get('/top-five-player', async(req, res, next)=>{
         },
         "status": 200
     })
+})
+
+router.get('/leaderboard', async(req, res)=> {
+    const leaderboard = await leaderboardService.getTopPredictionUserScore();
+    res.json(leaderboard.map((item, index)=> {
+        return {
+            "id": index+1,
+            "name": item['5751'],
+            "score": item['5755']
+        }
+    }))
 })
 
 /**Quizzes */
@@ -714,6 +724,23 @@ router.get('/send-noti-favteam', async(req, res) => {
         "attributes": {
         },
         "status": 200
+    })
+})
+
+router.get('/fixtures-results', async(req, res, next)=> {
+    const fixtures = await footballService.getFixtureAndResult();
+    res.json({
+        "success": true,
+        "statusCode": 200,
+        "data": fixtures.sort((a, b)=> {
+            if (a['5778'] === "Finished" && b['5778'] !== "Finished") {
+                return -1; // a is Finished, b is not, move a to end
+            } else if (a['5778'] !== "Finished" && b['5778'] === "Finished") {
+                return 1; // a is not finished, b is finished, move b to end
+            } else {
+                return 0; // Both have same match_status or both are not finished
+            }
+        })
     })
 })
 

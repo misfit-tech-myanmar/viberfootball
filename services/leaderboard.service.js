@@ -7,7 +7,7 @@ function LeaderBoardService() {
 }
 
 LeaderBoardService.prototype = {
-    getTopFivePlayerScore : () => {
+    getTopPredictionUserScore : () => {
         return new Promise(async(resolve, reject)=> {
             try{
                 const userResponse = await self.Axios.get(`/stable/bots/labs/2241/entries`);
