@@ -280,7 +280,7 @@ router.post('/check-prediction', async(req, res, next)=> {
     const isPredict= await predictionService.checkPredict(req.body.uid, req.body.match_id)
     console.log(isPredict)
     res.json({
-        "data": " ",
+        "data": "",
         "success": true,
         "message": "Successful", 
         "attributes": {
