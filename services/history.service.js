@@ -94,7 +94,7 @@ HistoryService.prototype = {
             resolve()
         })
     },
-    getHistoriesByDate:(date, userId, active) => {
+    getHistoriesByDate:(date, userId, active, call) => {
         return new Promise(async(resolve, reject) => {
             try{
                 const userPredictions = await self.getUserPredictions(date, userId);
@@ -103,9 +103,74 @@ HistoryService.prototype = {
                 const predictedFixtures = self.getPredictedFixtures(predictions, fixtures, date);
                 if(active){
                     const getFixtureBeforeOneHour = await self.getFixtureBeforeOneHour(predictedFixtures);
-                    resolve(getFixtureBeforeOneHour)
+                    console.log("active prediction", getFixtureBeforeOneHour.length)
+                    resolve({
+                        result: getFixtureBeforeOneHour.filter( (item, index)=> {
+                            if(item['5781'] === ''){
+                                if(getFixtureBeforeOneHour.length > 5){
+                                    if(call === "first"){
+                                        if(index < 5){
+                                            return item;
+                                        }
+                                    }else if( call === 'second'){
+                                        if(index > 4 && index < 10){
+                                            return item;
+                                        }else{
+                                            return null;
+                                        }
+                                    }else if( call === 'third'){
+                                        if(index > 9 && index < 15){
+                                            return item;
+                                        }else{
+                                            return null;
+                                        }
+                                    }else if( call === 'fourth'){
+                                        if(index > 14 && index < 20){
+                                            return item;
+                                        }else{
+                                            return null
+                                        }
+                                    }
+                                }else{
+                                    return item
+                                }
+                            }
+                        }),
+                        total: getFixtureBeforeOneHour.length
+                    })
                 }else{
-                    resolve(predictedFixtures)
+                    resolve({
+                        result: predictedFixtures.filter( (item, index)=> {
+                            if(predictedFixtures.length > 5){
+                                if(call === "first"){
+                                    if(index < 5){
+                                        return item;
+                                    }
+                                }else if( call === 'second'){
+                                    if(index > 4 && index < 10){
+                                        return item;
+                                    }else{
+                                        return null;
+                                    }
+                                }else if( call === 'third'){
+                                    if(index > 9 && index < 15){
+                                        return item;
+                                    }else{
+                                        return null;
+                                    }
+                                }else if( call === 'fourth'){
+                                    if(index > 14 && index < 20){
+                                        return item;
+                                    }else{
+                                        return null
+                                    }
+                                }
+                            }else{
+                                return item
+                            }
+                        }),
+                        total: predictedFixtures.length
+                    })
                 }
             }catch(err){
                 console.log(err)

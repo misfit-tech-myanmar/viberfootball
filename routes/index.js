@@ -24,12 +24,12 @@ const leaderboardService = new LeaderBoardService();
 router.get('/first-fixtures', async(req, res, next) => {
     const fixtures = await footballService.getFixtures("first", req.query.customer_id);
     // console.log("fixture::::", fixtures.more)
-    const proceedData = Promise.all(fixtures.result.map(async fixture=> {
+    const proceedData = Promise.all(fixtures.result.map(async (fixture,index)=> {
         const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
             "subtitle": `${fixture['5769']} | ${fixture['5779']} (UTC +6:30)`,
-            "image": fixture['5899'],
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
             "url": '',
             "buttons": [
                 {
@@ -89,12 +89,12 @@ router.get('/first-fixtures', async(req, res, next) => {
 router.get('/second-fixtures', async(req, res, next) => {
     const fixtures = await footballService.getFixtures("second",req.query.customer_id);
 
-    const proceedData = Promise.all(fixtures.result.map(async fixture=> {
+    const proceedData = Promise.all(fixtures.result.map(async (fixture,index)=> {
         const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
             "subtitle": `${fixture['5769']} | ${fixture['5779']} (UTC +6:30)`,
-            "image": fixture['5899'],
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
             "url": '',
             "buttons": [
                 {
@@ -155,12 +155,12 @@ router.get('/second-fixtures', async(req, res, next) => {
 router.get('/third-fixtures', async(req, res, next) => {
     const fixtures = await footballService.getFixtures("third",req.query.customer_id);
 
-    const proceedData = Promise.all(fixtures.result.map(async fixture=> {
+    const proceedData = Promise.all(fixtures.result.map(async (fixture, index)=> {
         const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
             "subtitle": `${fixture['5769']} | ${fixture['5779']} (UTC +6:30)`,
-            "image": fixture['5899'],
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
             "url": '',
             "buttons": [
                 {
@@ -220,12 +220,12 @@ router.get('/third-fixtures', async(req, res, next) => {
 router.get('/fourth-fixtures', async(req, res, next) => {
     const fixtures = await footballService.getFixtures("fourth",req.query.customer_id);
 
-    const proceedData = Promise.all(fixtures.result.map(async fixture=> {
+    const proceedData = Promise.all(fixtures.result.map(async (fixture, index)=> {
         const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
             "subtitle": `${fixture['5769']} | ${fixture['5779']} (UTC +6:30)`,
-            "image": fixture['5899'],
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
             "url": '',
             "buttons": [
                 {
@@ -392,26 +392,38 @@ router.get('/active-histories', (async(req, res, next)=> {
     const active = true;
     const histories = await historyService.histories(req.query.customer_id, active);
     // Loop through the groupedData object by keys
-    
+    console.log("Active Histories =>>>", histories)
     const proceedData = Promise.all(theActiveHistory(histories))
     
-    proceedData.then(response=> {
-        response.unshift({
-            "title": `Main Menu`, 
-            "type": "sequence",
-            "extra": ``,
-            "value": 131605,
+    if(Object.keys(histories).length > 0){
+        proceedData.then(response=> {
+            response.unshift({
+                "title": `Main Menu`, 
+                "type": "sequence",
+                "extra": ``,
+                "value": 131605,
+            })
+            res.json({
+                "data": response,
+                "success": true,
+                "message": "Successful", 
+                "attributes": {
+                   activeHistory: "1"
+                },
+                "status": 200
+            })
         })
+    }else{
         res.json({
-            "data": response,
+            "data": [],
             "success": true,
             "message": "Successful", 
             "attributes": {
-               
+                activeHistory: "2"
             },
             "status": 200
         })
-    })
+    }
 }))
 
 router.get('/inactive-histories', async(req, res, next)=> {
@@ -420,41 +432,53 @@ router.get('/inactive-histories', async(req, res, next)=> {
     // Loop through the groupedData object by keys
     console.log("calling inactive histories")
     const proceedData = Promise.all(theInActiveHistory(histories))
-    
-    proceedData.then(response=> {
-        response.unshift({
-            "title": `Main Menu`, 
-            "type": "sequence",
-            "extra": ``,
-            "value": 131605,
+    if(Object.keys(histories).length > 0){
+        proceedData.then(response=> {
+            response.unshift({
+                "title": `Main Menu`, 
+                "type": "sequence",
+                "extra": ``,
+                "value": 131605,
+            })
+            res.json({
+                "data": response,
+                "success": true,
+                "message": "Successful", 
+                "attributes": {
+                    inactiveHistory: "1"
+                },
+                "status": 200
+            })
         })
+    }else{
         res.json({
-            "data": response,
+            "data": [],
             "success": true,
             "message": "Successful", 
             "attributes": {
-               
+                inactiveHistory: "2"
             },
             "status": 200
         })
-    })
+    }
+   
 })
 
-router.post('/active-histories-by-date', async(req, res,next)=> {
-    console.log("calling active history")
+router.post('/active-histories-by-date-first', async(req, res,next)=> {
     const active=true;
-    const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active);
+    const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active, "first");
+    console.log("history length",histories.result.length, histories.total)
     // console.log("histories", histories)
     let proceedData=[];
-    if(histories.length>0){
-         proceedData = Promise.all(histories.map(async fixture=> {
+    if(histories.result.length>0){
+         proceedData = Promise.all(histories.result.map(async (fixture, index)=> {
             const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
             const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
             console.log("predicteeeeed : ", fixture.predict)
             return {
                 "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-                "subtitle": `${fixture['5769']} - You are predicted ${guest}`,
-                "image": fixture['5899'],
+                "subtitle": `${fixture['5769']} - You are predicted <font color="blue">${guest}</font>`,
+                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
                 "url": '',
                 "buttons": [
                     {
@@ -469,12 +493,14 @@ router.post('/active-histories-by-date', async(req, res,next)=> {
             }
         }))
         proceedData.then(response=>{
+            console.log("active prediction response", response)
             res.json({
                 "data": response,
                 "success": true,
                 "message": "Successful", 
                 "attributes": {
-                   
+                    previousFixturesActive: "2",
+                    nextFixturesActive: histories.total > 5?"1":"2"
                 },
                 "status": 200
             })
@@ -491,40 +517,193 @@ router.post('/active-histories-by-date', async(req, res,next)=> {
         })
     }
 })
-
-router.post('/inactive-histories-by-date', async(req, res,next)=> {
+router.post('/active-histories-by-date-second', async(req, res,next)=> {
+    const active=true;
+    const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active, "second");
+    console.log("history length",histories.result.length, histories.total)
+    // console.log("histories", histories)
+    let proceedData=[];
+    if(histories.result.length>0){
+         proceedData = Promise.all(histories.result.map(async (fixture, index)=> {
+            const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
+            const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
+            console.log("predicteeeeed : ", fixture.predict)
+            return {
+                "title": `${fixture['5780']}  -  ${fixture['5782']}`,
+                "subtitle": `${fixture['5769']} - You are predicted <font color="blue">${guest}</font>`,
+                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
+                "url": '',
+                "buttons": [
+                    {
+                        "title": 'Edit Prediction', 
+                        "type": "sequence", 
+                        "extra": `predicted_match_id=${fixture['5766']}`,
+                        "value": 138083,
+                        "Columns": 6
+                    }
+                ]
+    
+            }
+        }))
+        proceedData.then(response=>{
+            console.log("active prediction response", response)
+            res.json({
+                "data": response,
+                "success": true,
+                "message": "Successful", 
+                "attributes": {
+                    previousFixturesActive: "2",
+                    nextFixturesActive: histories.total > 10?"1":"2"
+                },
+                "status": 200
+            })
+        })
+    }else{
+        res.json({
+            "data": [],
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
+                
+            },
+            "status": 200
+        })
+    }
+})
+router.post('/active-histories-by-date-third', async(req, res,next)=> {
+    const active=true;
+    const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active, "third");
+    console.log("history length",histories.result.length, histories.total)
+    // console.log("histories", histories)
+    let proceedData=[];
+    if(histories.result.length>0){
+         proceedData = Promise.all(histories.result.map(async (fixture, index)=> {
+            const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
+            const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
+            console.log("predicteeeeed : ", fixture.predict)
+            return {
+                "title": `${fixture['5780']}  -  ${fixture['5782']}`,
+                "subtitle": `${fixture['5769']} - You are predicted <font color="blue">${guest}</font>`,
+                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
+                "url": '',
+                "buttons": [
+                    {
+                        "title": 'Edit Prediction', 
+                        "type": "sequence", 
+                        "extra": `predicted_match_id=${fixture['5766']}`,
+                        "value": 138083,
+                        "Columns": 6
+                    }
+                ]
+    
+            }
+        }))
+        proceedData.then(response=>{
+            console.log("active prediction response", response)
+            res.json({
+                "data": response,
+                "success": true,
+                "message": "Successful", 
+                "attributes": {
+                    previousFixturesActive: "1",
+                    nextFixturesActive: histories.total > 15?"1":"2"
+                },
+                "status": 200
+            })
+        })
+    }else{
+        res.json({
+            "data": [],
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
+                
+            },
+            "status": 200
+        })
+    }
+})
+router.post('/active-histories-by-date-fourth', async(req, res,next)=> {
+    const active=true;
+    const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active, "fourth");
+    console.log("history length",histories.result.length, histories.total)
+    // console.log("histories", histories)
+    let proceedData=[];
+    if(histories.result.length>0){
+         proceedData = Promise.all(histories.result.map(async (fixture, index)=> {
+            const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
+            const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
+            console.log("predicteeeeed : ", fixture.predict)
+            return {
+                "title": `${fixture['5780']}  -  ${fixture['5782']}`,
+                "subtitle": `${fixture['5769']} - You are predicted <font color="blue">${guest}</font>`,
+                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
+                "url": '',
+                "buttons": [
+                    {
+                        "title": 'Edit Prediction', 
+                        "type": "sequence", 
+                        "extra": `predicted_match_id=${fixture['5766']}`,
+                        "value": 138083,
+                        "Columns": 6
+                    }
+                ]
+    
+            }
+        }))
+        proceedData.then(response=>{
+            console.log("active prediction response", response)
+            res.json({
+                "data": response,
+                "success": true,
+                "message": "Successful", 
+                "attributes": {
+                    previousFixturesActive: "1",
+                    nextFixturesActive: "2"
+                },
+                "status": 200
+            })
+        })
+    }else{
+        res.json({
+            "data": [],
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
+                
+            },
+            "status": 200
+        })
+    }
+})
+router.post('/inactive-histories-by-date-first', async(req, res,next)=> {
     console.log("calling inactive history")
     const active=false;
-    const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active);
-    const proceedData = Promise.all(histories.map(async fixture=> {
+    const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active, "first");
+    console.log("inactive histories =>>>", histories.result, histories.total)
+    const proceedData = Promise.all(histories.result.map(async (fixture, index)=> {
         const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
+        const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-            "subtitle": `${fixture['5769']} - You are predicted ${teams.getHomeTeam['5848']}`,
-            "image": fixture['5899'],
+            "subtitle": `${fixture['5769']} \n <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
             "url": '',
             "buttons": [
                 {
-                    "title": teams.getHomeTeam['5848'], 
+                    "title": `You predicted <font color="blue">${guest}</font>`, 
                     "type": "sequence", 
                     "extra": ``,
                     "value": "138113",
-                    "Columns": 6
+                    "columns": 6
                 },
                 {
-                    "title": "Draw", 
+                    "title": fixture.winLose==='Win'?"✅":"❌", 
                     "type": "sequence", 
                     "extra": ``,
                     "value": "138113",
-                    "Columns": 6
+                    "columns": 6
                 },
-                {
-                    "title": teams.getAwayTeam['5848'], 
-                    "type": "sequence", 
-                    "extra": ``,
-                    "value": "138113",
-                    "Columns": 6
-                }
             ]
 
         }
@@ -537,7 +716,149 @@ router.post('/inactive-histories-by-date', async(req, res,next)=> {
             "success": true,
             "message": "Successful", 
             "attributes": {
-               
+                previousFixturesInActive: "2",
+                nextFixturesInActive: histories.total > 5?"1":"2"
+            },
+            "status": 200
+        })
+    })
+})
+router.post('/inactive-histories-by-date-second', async(req, res,next)=> {
+    console.log("calling inactive history")
+    const active=false;
+    const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active, "second");
+    console.log("history length", histories.result.length, histories.total)
+    const proceedData = Promise.all(histories.result.map(async (fixture, index)=> {
+        const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
+        const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
+        return {
+            "title": `${fixture['5780']}  -  ${fixture['5782']}`,
+            "subtitle": `${fixture['5769']}  \n <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
+            "url": '',
+            "buttons": [
+                {
+                    "title": `You predicted <font color="blue">${guest}</font>`, 
+                    "type": "sequence", 
+                    "extra": ``,
+                    "value": "138113",
+                    "Columns": 6
+                },
+                {
+                    "title": fixture.winLose==='Win'?"✅":"❌", 
+                    "type": "sequence", 
+                    "extra": ``,
+                    "value": "138113",
+                    "Columns": 6
+                },
+            ]
+
+        }
+        
+    }))
+    proceedData.then(response=>{
+        console.log("inactive response", response)
+        res.json({
+            "data": response,
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
+                previousFixturesInActive: "1",
+                nextFixturesInActive: histories.total > 10?"1":"2"
+            },
+            "status": 200
+        })
+    })
+})
+router.post('/inactive-histories-by-date-third', async(req, res,next)=> {
+    console.log("calling inactive history")
+    const active=false;
+    const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active, "third");
+    console.log("history length", histories.result.length, histories.total)
+    const proceedData = Promise.all(histories.result.map(async (fixture, index)=> {
+        const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
+        const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
+        return {
+            "title": `${fixture['5780']}  -  ${fixture['5782']}`,
+            "subtitle": `${fixture['5769']} \n <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
+            "url": '',
+            "buttons": [
+                {
+                    "title": `You predicted <font color="blue">${guest}</font>`, 
+                    "type": "sequence", 
+                    "extra": ``,
+                    "value": "138113",
+                    "Columns": 6
+                },
+                {
+                    "title": fixture.winLose==='Win'?"✅":"❌", 
+                    "type": "sequence", 
+                    "extra": ``,
+                    "value": "138113",
+                    "Columns": 6
+                },
+            ]
+
+        }
+        
+    }))
+    proceedData.then(response=>{
+        console.log("inactive response", response)
+        res.json({
+            "data": response,
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
+                previousFixturesInActive: "1",
+                nextFixturesInActive: histories.total > 15?"1":"2"
+            },
+            "status": 200
+        })
+    })
+})
+router.post('/inactive-histories-by-date-fourth', async(req, res,next)=> {
+    console.log("calling inactive history")
+    const active=false;
+    const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active, "fourth");
+    console.log("history length", histories.result.length, histories.total)
+    const proceedData = Promise.all(histories.result.map(async (fixture, index)=> {
+        const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
+        const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
+        return {
+            "title": `${fixture['5780']}  -  ${fixture['5782']}`,
+            "subtitle": `${fixture['5769']} \n <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
+            "url": '',
+            "buttons": [
+                {
+                    "title": `You predicted <font color="blue">${guest}</font>`, 
+                    "type": "sequence", 
+                    "extra": ``,
+                    "value": "138113",
+                    "Columns": 6
+                },
+                {
+                    "title": fixture.winLose==='Win'?"✅":"❌", 
+                    "type": "sequence", 
+                    "extra": ``,
+                    "value": "138113",
+                    "Columns": 6
+                },
+            ]
+
+        }
+        
+    }))
+    proceedData.then(response=>{
+        console.log("inactive response", response)
+        res.json({
+            "data": response,
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
+                previousFixturesInActive: "1",
+                nextFixturesInActive: "2"
             },
             "status": 200
         })
