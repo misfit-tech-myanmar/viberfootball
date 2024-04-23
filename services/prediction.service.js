@@ -15,11 +15,8 @@ PredictionService.prototype = {
             const userPredicts = await self.getUserPredictionsByUserId(user.creator_id);
             if(userPredicts.length > 0) {
                 userPredicts.forEach(async userPredict => {
-                    console.log("user predict", userPredict)
                     if(userPredict.win_lose === undefined){
-                        console.log("predict", userPredict)
                         const fixture = await self.getFixtureByMatchId(userPredict.match_id);
-                        console.log(fixture)
                         if(fixture.match_status === 'Finished'){
                             const result = await self.checkW1W2D(fixture, userPredict);
                             if((result==="Draw" || result==="W1" || result==="W2")){
@@ -211,7 +208,6 @@ PredictionService.prototype = {
         })
     },
     checkUserPredictByMatchIdAndUserId: (arr, matchId, userId)=> {
-        console.log(arr)
         for (let obj of arr) {
             if (obj['5860'] === matchId && obj['5861'] === userId) {
                 return true;
@@ -239,7 +235,6 @@ PredictionService.prototype = {
             self.Axios.put(`https://api.myalice.ai/stable/bots/labs/2268/entries/${singlePrediction.id}`, {
                 '5862': data.predict
             }).then(response=> {
-                console.log(response)
                 resolve(true)
             }).catch(err=> {
                 console.log(err)

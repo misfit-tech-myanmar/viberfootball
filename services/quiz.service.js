@@ -10,7 +10,6 @@ QuizService.prototype = {
     getQuizzes: (totalAnswer) => {
         return new Promise(async(resolve, reject)=> {
             try{
-                console.log("total anaserrrr")
                 const response = await self.Axios.get('/stable/bots/labs/2295/entries');
                 resolve(response.data.dataSource[totalAnswer])
             }catch(err){

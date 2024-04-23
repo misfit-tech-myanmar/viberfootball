@@ -11,7 +11,6 @@ function FootBallService(){
 
 FootBallService.prototype = {
     getFixtureFromApiAndPostToMyaliceDataLab: async(from, to) => {
-        console.log("get fixtures from football api")
         const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=f6a3a43b61352931f6078b9ba49ddb09ca91441557f6a3ba9f506805cb02b4f5&timezone=Asia/Yangon`);
 
 
@@ -83,9 +82,7 @@ FootBallService.prototype = {
                 const userPredicts = await self.userPredictionsByUserId(userId)
                 const notPredictedFixtures = self.getNotPredictedFixture(response.data.dataSource, userPredicts)
                 const unfinishedFixtures = await self.getUnfinishedFixtures(response.data.dataSource)
-                console.log("unfinished fixtures count", unfinishedFixtures.length)
                 const getFixtureBeforeOneHours = await self.getFixtureBeforeOneHour(unfinishedFixtures);
-                console.log("fixtures 1 hours before match start",getFixtureBeforeOneHours.length)
                 // if(unfinishedFixtures.length > 15 && call === 'third' ){
                 //     result = {
                 //         result: data,
@@ -158,8 +155,6 @@ FootBallService.prototype = {
             const myanmarTimePlusOneHour = myanmarTime.clone().add(1, 'hour');
             resolve(data.filter(item=>{
                 const matchDateTime = moment(`${item['5769']} ${item['5779']}`, "YYYY-MM-DD HH:mm");
-                console.log(matchDateTime)
-                console.log(myanmarTimePlusOneHour)
                 return matchDateTime.isSameOrAfter(myanmarTimePlusOneHour);
             }))
             resolve()
@@ -220,7 +215,6 @@ FootBallService.prototype = {
                             "5811": team.team_key,
                             "5812": team.team_badge
                         })
-                        console.log("completed")
                     })
                 }
             }catch(err){
@@ -240,13 +234,10 @@ FootBallService.prototype = {
     },
     updateFixtureAfterFinishedMatches: async(from, to) => {
         return new Promise(async(resolve, reject)=>{
-            console.log("update fixture comming")
             const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=f6a3a43b61352931f6078b9ba49ddb09ca91441557f6a3ba9f506805cb02b4f5&timezone=Asia/Yangon`);
-            console.log("data", footballResponse.data)
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
                     const singleMatch = await self.getSingleLabFixture(match.match_id)
-                    console.log("single match",singleMatch)
                     if(match.match_status === 'Finished' && singleMatch.length >0){
                         self.Axios.put(`/stable/bots/labs/2247/entries/${singleMatch[0].id}`, {
                             "5778": match.match_status,
@@ -282,7 +273,6 @@ FootBallService.prototype = {
     },
     getPredictedTeamName: (match, predict)=> {
         return new Promise(async(resolve, reject)=> {
-            console.log(match,predict)
             let guest;
             if(predict === 'W1'){
                 guest = match.getHomeTeam['5810']
@@ -291,7 +281,6 @@ FootBallService.prototype = {
             }else{
                 guest='Draw'
             }
-            console.log(guest)
             resolve(guest)
         })
     },

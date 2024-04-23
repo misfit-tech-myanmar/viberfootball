@@ -87,8 +87,6 @@ HistoryService.prototype = {
             const myanmarTimePlusOneHour = myanmarTime.clone().add(1, 'hour');
             resolve(data.filter(item=>{
                 const matchDateTime = moment(`${item['5769']} ${item['5779']}`, "YYYY-MM-DD HH:mm");
-                console.log(matchDateTime)
-                console.log(myanmarTimePlusOneHour)
                 return matchDateTime.isSameOrAfter(myanmarTimePlusOneHour);
             }))
             resolve()
@@ -103,7 +101,6 @@ HistoryService.prototype = {
                 const predictedFixtures = self.getPredictedFixtures(predictions, fixtures, date);
                 if(active){
                     const getFixtureBeforeOneHour = await self.getFixtureBeforeOneHour(predictedFixtures);
-                    console.log("active prediction", getFixtureBeforeOneHour.length)
                     resolve({
                         result: getFixtureBeforeOneHour.filter( (item, index)=> {
                             if(item['5781'] === ''){
