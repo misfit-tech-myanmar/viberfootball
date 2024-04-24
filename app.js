@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 require('dotenv').config();
-const { everySecond, everyMonday, everyAugest, everyMorningSixthAm } = require('./utils/create-cron');
+const { everySecond, everyMonday, everyAugest, everyMorningSixthAm, everyMonday7AM } = require('./utils/create-cron');
 // const bot = require('./libs/viber.bot')
 const indexRouter = require('./routes/index')
 const {login} = require('./libs/axios.instance');
@@ -31,6 +31,7 @@ app.get('/', (req, res, next)=>{
 everyMonday();
 everySecond();
 everyAugest();
+everyMonday7AM();
 // everyMorningSixthAm();
 app.use('/api/v1.0', indexRouter)
 

@@ -44,5 +44,10 @@ module.exports = {
         cron.schedule('*/30 * * * * *', async()=> {
             await notificationService.sendNotiToPredictUsers();
         })
+    },
+    everyMonday7AM: () => {
+        cron.schedule('0 7 * * 1', async()=> {
+            await notificationService.sentNotiUserFavouriteTeam();
+        })
     }
 }

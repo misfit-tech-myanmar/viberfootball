@@ -179,9 +179,20 @@ NotificationService.prototype = {
     },
     checkFavTeamMatchForUser: (user, fixtures) => {
         return new Promise(async(resolve, reject) => {
-            resolve(fixtures.filter( fixture=> fixture['5956'] === user['6012'] || fixture['5957'] === user['6012']))
+            resolve(fixtures.filter(fixture=> (fixture['5956'] === user['6012'] || fixture['5957'] === user['6012'])))
         })
-    }
+    },
+    // checkFixtureDate: (fixture) => {
+    //     let today = new Date();
+    //     // Extracting the day, month, and year
+    //     const day = today.getDate() + 1;
+    //     const month = today.getMonth() + 1; // January is 0, so we add 1
+    //     const year = today.getFullYear();
+
+    //     // Formatting the date as YYYY-MM-DD
+    //     const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
+    //     console.log(formattedDate)
+    // }
 }
 
 module.exports = NotificationService;
