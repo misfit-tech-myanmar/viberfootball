@@ -1,4 +1,5 @@
 var cron = require('node-cron');
+const logger = require('../libs/logger');
 const FootBallService = require('../services/football.service');
 const PredictionService = require('../services/prediction.service');
 const NotificationService = require('../services/notification.service')
@@ -14,7 +15,6 @@ module.exports = {
         const startDate = `${currentDate.getFullYear()}-${currentDate.getMonth()+1}-${currentDate.getDate()}`;
         let endDate=currentDate.toISOString().slice(0, 10);
         cron.schedule('*/30 * * * * *', async() => {
-            console.log("now : ", new Date())
             // footballService.getFixtureFromApiAndPostToMyaliceDataLab('2024-04-16', '2024-04-22')
             footballService.updateFixtureAfterFinishedMatches(startDate, startDate);
             predictionService.predict();
@@ -29,7 +29,6 @@ module.exports = {
         const startDate = `${currentDateEveryMonday.getFullYear()}-${currentDateEveryMonday.getMonth()+1}-${currentDateEveryMonday.getDate()}`;
         currentDateEveryMonday.setDate(currentDateEveryMonday.getDate() + 7);
         const endDate = currentDateEveryMonday.toISOString().slice(0, 10);
-        console.log(endDate)
         cron.schedule('0 0 * * 1', ()=> {
             footballService.getFixtureFromApiAndPostToMyaliceDataLab(startDate, endDate)
         })

@@ -9,7 +9,7 @@ const indexRouter = require('./routes/index')
 const {login} = require('./libs/axios.instance');
 const moment = require('moment-timezone');
 var cors = require('cors')
-
+var logger = require('./libs/logger');
 
 const app = express();
 app.use(cors())
@@ -38,7 +38,7 @@ app.use('/api/v1.0', indexRouter)
 
 app.listen(port, async(err) => {
     await login('kyawhlaingbwar18@gmail.com', 'alice@101')
-    if(!err) console.log(`Server is running on ${port}`);
+    if(!err) logger.info(`Server is running on ${port}`);
     // bot.setWebhook(`${process.env.EXPOSE_URL}/viber/webhook`).catch(error => {
     //     console.log('Can not set webhook on following server. Is it running?');
     //     console.error(error);

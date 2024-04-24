@@ -26,7 +26,8 @@
     "node-gyp": "^10.0.1",
     "pug": "^3.0.2",
     "redis": "^4.6.13",
-    "viber-bot": "^1.0.18"
+    "viber-bot": "^1.0.18",
+    "winston": "^3.13.0"
   },
   "devDependencies": {
     "json-server": "^1.0.0-alpha.23"

@@ -656,9 +656,10 @@ router.post('/inactive-histories-by-date-first', async(req, res,next)=> {
     const proceedData = Promise.all(histories.result.map(async (fixture, index)=> {
         const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
         const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
+        console.log(req.query.customer_id, " - ", fixture)
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-            "subtitle": `${fixture['5769']} \n <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
+            "subtitle": `${fixture['5769']} <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
             "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
             "url": '',
             "buttons": [
@@ -702,7 +703,7 @@ router.post('/inactive-histories-by-date-second', async(req, res,next)=> {
         const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-            "subtitle": `${fixture['5769']}  \n <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
+            "subtitle": `${fixture['5769']}  <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
             "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
             "url": '',
             "buttons": [
@@ -746,7 +747,7 @@ router.post('/inactive-histories-by-date-third', async(req, res,next)=> {
         const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-            "subtitle": `${fixture['5769']} \n <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
+            "subtitle": `${fixture['5769']} <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
             "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
             "url": '',
             "buttons": [
@@ -790,7 +791,7 @@ router.post('/inactive-histories-by-date-fourth', async(req, res,next)=> {
         const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-            "subtitle": `${fixture['5769']} \n <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
+            "subtitle": `${fixture['5769']}  <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
             "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
             "url": '',
             "buttons": [
@@ -874,6 +875,7 @@ router.post('/update-prediction', async(req, res, next) => {
 
 /**Profile */
 router.post('/profile', async(req, res, next)=> {
+    console.log("Calling profile")
     const profile = await profileService.profile(req.body);
     res.json({
         "data": `${profile['5755']}`,
@@ -888,9 +890,20 @@ router.post('/profile', async(req, res, next)=> {
 //get update fixtures
 router.get('/noti-message', async(req, res, next)=> {
     const fixture = await notiService.getPredictedAndFinishedMatchByUserId(req.query.customer_id)
+    console.log("noti => ",fixture)
+    var predict;
+    if(fixture !== null){
+        if(fixture['5862']==='W1'){
+            predict=fixture['5780']
+        }else if(fixture['5862']==='W2'){
+            predict=fixture['5783']
+        }else{
+            predict=fixture['5862']
+        }
+    }
    if(fixture!==null){
         res.json({
-            "data": `Match Finished \n${fixture['5780']} - ${fixture['5782']} \nMatch Score: ${fixture['5781']}:${fixture['5783']} \nYou made the following prediction ${fixture['5862']} \n${fixture['5897']==="Win"?"Congratulations!":"Try Again!"} Your prediction was ${fixture['5897']==="Win"?"correct":"incorrect"}! ${fixture['5897']==="Win"?"\nPoints added to your balance 1":""}`,
+            "data": `Match Finished \n${fixture['5780']} - ${fixture['5782']} \nMatch Score: ${fixture['5781']}:${fixture['5783']} \nYou made the following prediction ${predict} \n${fixture['5897']==="Win"?"Congratulations!":"Try Again!"} Your prediction was ${fixture['5897']==="Win"?"correct":"incorrect"}! ${fixture['5897']==="Win"?"\nPoints added to your balance 1":""}`,
             "success": true,
             "message": "Successful", 
             "attributes": {
@@ -901,15 +914,269 @@ router.get('/noti-message', async(req, res, next)=> {
 })
 
 /**Leaderboard */
+
 router.get('/top-five-player', async(req, res, next)=>{
     const leaderboard = await leaderboardService.getTopPredictionUserScore();
+    // const proceedData = Promise.all()
     res.json({
-        "data": `${leaderboard[0]['5751']} -  ${leaderboard[0]['5755']} \n${leaderboard[1]['5751']} -  ${leaderboard[1]['5755']} \n${leaderboard[2]['5751']} -  ${leaderboard[2]['5755']} \n${leaderboard[3]['5751']} -  ${leaderboard[3]['5755']} \n${leaderboard[4]['5751']} -  ${leaderboard[4]['5755']}`,
+        "data": [
+            {
+                "title": "International",
+                "subtitle": "dede",
+                "image": null,
+                "url": null,
+                "buttons": [
+                    //1
+                    {
+                        "title": "1",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[0]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[0]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    //2
+                    {
+                        "title": "2",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[1]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[1]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    }, 
+                    //3
+                    {
+                        "title": "3",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[2]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[2]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    // //4
+                    {
+                        "title": "4",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[3]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[3]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    //5
+                    {
+                        "title": "5",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[4]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[4]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": "see more",
+                        "type": "url",
+                        "extra": "",
+                        "value": "http://sport-news-dev.free.nf/leaderboard/",
+                        "messenger_extensions": false
+                    }
+    
+                ]
+            },
+            {
+                "title": "Myanmar",
+                "subtitle": "dede",
+                "image": null,
+                "url": null,
+                "buttons": [
+                    //1
+                    {
+                        "title": "1",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[0]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[0]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    //2
+                    {
+                        "title": "2",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[1]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[1]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    }, 
+                    //3
+                    {
+                        "title": "3",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[2]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[2]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    // //4
+                    {
+                        "title": "4",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[3]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[3]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    //5
+                    {
+                        "title": "5",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[4]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[4]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": "see more",
+                        "type": "url",
+                        "extra": "",
+                        "value": "http://sport-news-dev.free.nf/leaderboard/",
+                        "messenger_extensions": false
+                    }
+    
+                ]
+            }
+        ],
         "success": true,
-        "message": "Successful", 
-        "attributes": {
-        },
-        "status": 200
+        "message": "",
+        "status": 200,
+        "attributes": {}
     })
 })
 
