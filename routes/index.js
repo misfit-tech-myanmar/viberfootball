@@ -354,7 +354,7 @@ const theActiveHistory = (histories, sequence)=> {
         if (Object.hasOwnProperty.call(histories, key)) {
         const value = histories[key];
             data.push({
-                "title": `${key}  \nPredicted:${value.length} matches.`, 
+                "title": `${key}  \nPredicted:${value.length} \nmatches.`, 
                 "type": "sequence",
                 "extra": `date_history=${key}`,
                 "value": 138247,
@@ -370,7 +370,7 @@ const theInActiveHistory = (histories, sequence)=> {
         if (Object.hasOwnProperty.call(histories, key)) {
         const value = histories[key];
             data.push({
-                "title": `${key}  \nPredicted:${value.length} matches.`, 
+                "title": `${key}  \nPredicted:${value.length} \nmatches.`, 
                 "type": "sequence",
                 "extra": `date_history=${key}`,
                 "value": 138188,
