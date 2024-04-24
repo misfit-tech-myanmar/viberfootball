@@ -454,14 +454,24 @@ router.get('/inactive-histories', async(req, res, next)=> {
    
 })
 
+function beforeOneHour(time){
+    const [hours, minutes] = time.split(':').map(Number);
+    const newHours  = (hours - 1 + 24) % 24;
+    // Format the new time
+    const newTimeString = `${newHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    return newTimeString;
+}
+
 router.post('/active-histories-by-date-first', async(req, res,next)=> {
     const active=true;
     const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active, "first");
     let proceedData=[];
+    console.log("active histories => ", histories)
     if(histories.result.length>0){
          proceedData = Promise.all(histories.result.map(async (fixture, index)=> {
             const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
             const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
+            
             return {
                 "title": `${fixture['5780']}  -  ${fixture['5782']}`,
                 "subtitle": `${fixture['5769']} - You are predicted <font color="blue">${guest}</font>`,
@@ -469,11 +479,16 @@ router.post('/active-histories-by-date-first', async(req, res,next)=> {
                 "url": '',
                 "buttons": [
                     {
+                        "title": `Editable until ${beforeOneHour(fixture['5779'])}`, 
+                        "type": "basic", 
+                        "extra": ``,
+                        "value": '',
+                    },
+                    {
                         "title": 'Edit Prediction', 
                         "type": "sequence", 
                         "extra": `predicted_match_id=${fixture['5766']}`,
                         "value": 138083,
-                        "Columns": 6
                     }
                 ]
     
@@ -517,6 +532,12 @@ router.post('/active-histories-by-date-second', async(req, res,next)=> {
                 "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
                 "url": '',
                 "buttons": [
+                    {
+                        "title": `Editable until ${beforeOneHour(fixture['5779'])}`, 
+                        "type": "basic", 
+                        "extra": ``,
+                        "value": '',
+                    },
                     {
                         "title": 'Edit Prediction', 
                         "type": "sequence", 
@@ -567,6 +588,12 @@ router.post('/active-histories-by-date-third', async(req, res,next)=> {
                 "url": '',
                 "buttons": [
                     {
+                        "title": `Editable until ${beforeOneHour(fixture['5779'])}`, 
+                        "type": "basic", 
+                        "extra": ``,
+                        "value": '',
+                    },
+                    {
                         "title": 'Edit Prediction', 
                         "type": "sequence", 
                         "extra": `predicted_match_id=${fixture['5766']}`,
@@ -615,6 +642,12 @@ router.post('/active-histories-by-date-fourth', async(req, res,next)=> {
                 "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
                 "url": '',
                 "buttons": [
+                    {
+                        "title": `Editable until ${beforeOneHour(fixture['5779'])}`, 
+                        "type": "basic", 
+                        "extra": ``,
+                        "value": '',
+                    },
                     {
                         "title": 'Edit Prediction', 
                         "type": "sequence", 
@@ -830,12 +863,13 @@ router.post('/inactive-histories-by-date-fourth', async(req, res,next)=> {
 router.post('/edit-prediction', async(req, res, next)=> {
     const fixture = await predictionService.predictedMatch(req.body.predicted_match_id, req.body.uid);
     const teams = await footballService.getTeamShortFormByTeamName(fixture.match_hometeam_id, fixture.match_awayteam_id)
+    const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
     res.json({
         "data": [
             {
                 "title": `${fixture.match_hometeam_name}  -  ${fixture.match_awayteam_name}`,
-                "subtitle": `${fixture.match_date} - You are predicted ${teams.getHomeTeam['5848']}`,
-                "image": fixture.banner_image,
+                "subtitle": `${fixture.match_date} - You are predicted <font color="blue">${guest}</font>`,
+                "image": "https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg",
                 "url": '',
                 "buttons": [
                     {
@@ -903,7 +937,7 @@ router.get('/noti-message', async(req, res, next)=> {
     }
    if(fixture!==null){
         res.json({
-            "data": `Match Finished \n${fixture['5780']} - ${fixture['5782']} \nMatch Score: ${fixture['5781']}:${fixture['5783']} \nYou made the following prediction ${predict} \n${fixture['5897']==="Win"?"Congratulations!":"Try Again!"} Your prediction was ${fixture['5897']==="Win"?"correct":"incorrect"}! ${fixture['5897']==="Win"?"\nPoints added to your balance 1":""}`,
+            "data": `Match Finished \n${fixture['5780']} - ${fixture['5782']} \nMatch Score: ${fixture['5781']}:${fixture['5783']} \nYou made the following prediction ${predict} \n${fixture['5897']==="Win"?"Congratulations!":"Try Again!"} Your prediction was ${fixture['5897']==="Win"?"correct":"incorrect"}! ${fixture['5897']==="Win"?"\n1 point added to your balance":""}`,
             "success": true,
             "message": "Successful", 
             "attributes": {
