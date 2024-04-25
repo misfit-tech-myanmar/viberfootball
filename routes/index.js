@@ -380,6 +380,20 @@ const theInActiveHistory = (histories, sequence)=> {
     return data;
 }
 
+router.get('/active-history-check', (async(req, res, next)=> {
+    const active = true;
+    const histories = await historyService.histories(req.query.customer_id, active);
+    res.json({
+        "data": "",
+        "success": true,
+        "message": "Successful", 
+        "attributes": {
+           activeHistory: Object.keys(histories).length > 0?"1":"2"
+        },
+        "status": 200
+    })
+}))
+
 router.get('/active-histories', (async(req, res, next)=> {
     const active = true;
     const histories = await historyService.histories(req.query.customer_id, active);
@@ -405,6 +419,19 @@ router.get('/active-histories', (async(req, res, next)=> {
     })
 }))
 
+router.get('/inactive-histories-check', async(req, res, next)=> {
+    const active = false;
+    const histories = await historyService.histories(req.query.customer_id, active);
+    res.json({
+        "data": response,
+        "success": true,
+        "message": "Successful", 
+        "attributes": {
+            inactiveHistory: Object.keys(histories).length > 0?"1":"2"
+        },
+        "status": 200
+    })
+})
 router.get('/inactive-histories', async(req, res, next)=> {
     const active = false;
     const histories = await historyService.histories(req.query.customer_id, active);
