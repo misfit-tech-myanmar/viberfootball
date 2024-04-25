@@ -386,35 +386,23 @@ router.get('/active-histories', (async(req, res, next)=> {
     // Loop through the groupedData object by keys
     const proceedData = Promise.all(theActiveHistory(histories))
     
-    if(Object.keys(histories).length > 0){
-        proceedData.then(response=> {
-            response.unshift({
-                "title": `Main Menu`, 
-                "type": "sequence",
-                "extra": ``,
-                "value": 131605,
-            })
-            res.json({
-                "data": response,
-                "success": true,
-                "message": "Successful", 
-                "attributes": {
-                   activeHistory: "1"
-                },
-                "status": 200
-            })
+    proceedData.then(response=> {
+        response.unshift({
+            "title": `Main Menu`, 
+            "type": "sequence",
+            "extra": ``,
+            "value": 131605,
         })
-    }else{
         res.json({
-            "data": [],
+            "data": response,
             "success": true,
             "message": "Successful", 
             "attributes": {
-                activeHistory: "2"
+               activeHistory: "1"
             },
             "status": 200
         })
-    }
+    })
 }))
 
 router.get('/inactive-histories', async(req, res, next)=> {
@@ -422,35 +410,23 @@ router.get('/inactive-histories', async(req, res, next)=> {
     const histories = await historyService.histories(req.query.customer_id, active);
     // Loop through the groupedData object by keys
     const proceedData = Promise.all(theInActiveHistory(histories))
-    if(Object.keys(histories).length > 0){
-        proceedData.then(response=> {
-            response.unshift({
-                "title": `Main Menu`, 
-                "type": "sequence",
-                "extra": ``,
-                "value": 131605,
-            })
-            res.json({
-                "data": response,
-                "success": true,
-                "message": "Successful", 
-                "attributes": {
-                    inactiveHistory: "1"
-                },
-                "status": 200
-            })
+    proceedData.then(response=> {
+        response.unshift({
+            "title": `Main Menu`, 
+            "type": "sequence",
+            "extra": ``,
+            "value": 131605,
         })
-    }else{
         res.json({
-            "data": [],
+            "data": response,
             "success": true,
             "message": "Successful", 
             "attributes": {
-                inactiveHistory: "2"
+                inactiveHistory: "1"
             },
             "status": 200
         })
-    }
+    })
    
 })
 
