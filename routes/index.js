@@ -419,7 +419,7 @@ router.get('/active-histories', (async(req, res, next)=> {
     })
 }))
 
-router.get('/inactive-histories-check', async(req, res, next)=> {
+router.get('/inactive-history-check', async(req, res, next)=> {
     const active = false;
     const histories = await historyService.histories(req.query.customer_id, active);
     res.json({
