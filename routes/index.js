@@ -388,7 +388,7 @@ router.get('/active-history-check', (async(req, res, next)=> {
         "success": true,
         "message": "Successful", 
         "attributes": {
-           historyActive: Object.keys(histories).length > 0?"1":"2"
+           activehistory: Object.keys(histories).length > 0?"1":"2"
         },
         "status": 200
     })
@@ -427,7 +427,7 @@ router.get('/inactive-history-check', async(req, res, next)=> {
         "success": true,
         "message": "Successful", 
         "attributes": {
-            historyInactive: Object.keys(histories).length > 0?"1":"2"
+            inactivehistory: Object.keys(histories).length > 0?"1":"2"
         },
         "status": 200
     })
