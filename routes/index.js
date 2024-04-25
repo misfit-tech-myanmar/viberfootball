@@ -423,7 +423,7 @@ router.get('/inactive-history-check', async(req, res, next)=> {
     const active = false;
     const histories = await historyService.histories(req.query.customer_id, active);
     res.json({
-        "data": response,
+        "data": "",
         "success": true,
         "message": "Successful", 
         "attributes": {
