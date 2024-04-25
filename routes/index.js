@@ -958,6 +958,132 @@ router.get('/top-five-player', async(req, res, next)=>{
     res.json({
         "data": [
             {
+                "title": "Myanmar",
+                "subtitle": "dede",
+                "image": null,
+                "url": null,
+                "buttons": [
+                    //1
+                    {
+                        "title": "1",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[0]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[0]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    //2
+                    {
+                        "title": "2",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[1]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[1]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    }, 
+                    //3
+                    {
+                        "title": "3",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[2]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[2]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    // //4
+                    {
+                        "title": "4",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[3]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[3]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    //5
+                    {
+                        "title": "5",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[4]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[4]['5755'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": "see more",
+                        "type": "url",
+                        "extra": "",
+                        "value": "http://sport-news-dev.free.nf/leaderboard/",
+                        "messenger_extensions": false
+                    }
+    
+                ]
+            },
+            {
                 "title": "International",
                 "subtitle": "dede",
                 "image": null,
@@ -1083,132 +1209,7 @@ router.get('/top-five-player', async(req, res, next)=>{
     
                 ]
             },
-            {
-                "title": "Myanmar",
-                "subtitle": "dede",
-                "image": null,
-                "url": null,
-                "buttons": [
-                    //1
-                    {
-                        "title": "1",
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    },
-                    {
-                        "title": leaderboard.myanmar[0]['5751'],
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    },
-                    {
-                        "title": leaderboard.myanmar[0]['5755'],
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    },
-                    //2
-                    {
-                        "title": "2",
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    },
-                    {
-                        "title": leaderboard.myanmar[1]['5751'],
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    },
-                    {
-                        "title": leaderboard.myanmar[1]['5755'],
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    }, 
-                    //3
-                    {
-                        "title": "3",
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    },
-                    {
-                        "title": leaderboard.myanmar[2]['5751'],
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    },
-                    {
-                        "title": leaderboard.myanmar[2]['5755'],
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    },
-                    // //4
-                    {
-                        "title": "4",
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    },
-                    {
-                        "title": leaderboard.myanmar[3]['5751'],
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    },
-                    {
-                        "title": leaderboard.myanmar[3]['5755'],
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    },
-                    //5
-                    {
-                        "title": "5",
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    },
-                    {
-                        "title": leaderboard.myanmar[4]['5751'],
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    },
-                    {
-                        "title": leaderboard.myanmar[4]['5755'],
-                        "type": "basic",
-                        "extra": "",
-                        "value": "",
-                        "messenger_extensions": false
-                    },
-                    {
-                        "title": "see more",
-                        "type": "url",
-                        "extra": "",
-                        "value": "http://sport-news-dev.free.nf/leaderboard/",
-                        "messenger_extensions": false
-                    }
-    
-                ]
-            }
+           
         ],
         "success": true,
         "message": "",
@@ -1217,9 +1218,29 @@ router.get('/top-five-player', async(req, res, next)=>{
     })
 })
 
-router.get('/leaderboard', async(req, res)=> {
+router.get('/myanmar-leaderboard', async(req, res)=> {
     const leaderboard = await leaderboardService.getTopPredictionUserScore();
-    res.json(leaderboard.map((item, index)=> {
+    res.json(leaderboard.myanmar.map((item, index)=> {
+        return {
+            "id": index+1,
+            "name": item['5751'],
+            "score": item['5755']
+        }
+    }))
+})
+router.get('/myanmar-leaderboard', async(req, res)=> {
+    const leaderboard = await leaderboardService.getTopPredictionUserScore();
+    res.json(leaderboard.myanmar.map((item, index)=> {
+        return {
+            "id": index+1,
+            "name": item['5751'],
+            "score": item['5755']
+        }
+    }))
+})
+router.get('/international-leaderboard', async(req, res)=> {
+    const leaderboard = await leaderboardService.getTopPredictionUserScore();
+    res.json(leaderboard.inter.map((item, index)=> {
         return {
             "id": index+1,
             "name": item['5751'],
