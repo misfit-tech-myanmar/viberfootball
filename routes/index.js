@@ -1330,9 +1330,9 @@ router.get('/fixtures-results', async(req, res, next)=> {
     console.log("calling fixture and result")
     const fixtures = await footballService.getFixtureAndResult();
     res.json(fixtures.sort((a, b)=> {
-        if (a['5778'] === "Finished" && b['5778'] !== "Finished") {
+        if (a.status === "Finished" && b.status !== "Finished") {
             return -1; // a is Finished, b is not, move a to end
-        } else if (a['5778'] !== "Finished" && b['5778'] === "Finished") {
+        } else if (a.status !== "Finished" && b.status === "Finished") {
             return 1; // a is not finished, b is finished, move b to end
         } else {
             return 0; // Both have same match_status or both are not finished

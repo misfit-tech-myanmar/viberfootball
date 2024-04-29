@@ -287,7 +287,7 @@ FootBallService.prototype = {
             resolve(guest)
         })
     },
-    getFixtureAndResult: () => {
+    fixtureResultSort: () => {
         return new Promise(async(resolve, reject)=> {
             let response = await self.Axios.get('/stable/bots/labs/2247/entries');
             if(response.data.dataSource.length > 0){
@@ -297,6 +297,23 @@ FootBallService.prototype = {
             }else{
                 resolve('There is no fixtures and result.')
             }
+        })
+    }, 
+    getFixtureAndResult: () => {
+        return new Promise(async(resolve, reject)=> {
+            const fixtureResultSorted = await self.fixtureResultSort();
+            resolve(fixtureResultSorted.map(fixture=> {
+                return {
+                    leagueName: fixture['5768'],
+                    status: fixture['5778'],
+                    home: fixture['5780'],
+                    away: fixture['5782'],
+                    homeScore: fixture['5781'],
+                    awayScore: fixture['5783'],
+                    matchDate: fixture['5769'],
+                    matchTime: fixture['5779']
+                }
+            }))
         })
     }
 }
