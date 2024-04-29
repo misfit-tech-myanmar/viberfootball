@@ -1328,19 +1328,15 @@ router.get('/send-noti-favteam', async(req, res) => {
 
 router.get('/fixtures-results', async(req, res, next)=> {
     const fixtures = await footballService.getFixtureAndResult();
-    res.json({
-        "success": true,
-        "statusCode": 200,
-        "data": fixtures.sort((a, b)=> {
-            if (a['5778'] === "Finished" && b['5778'] !== "Finished") {
-                return -1; // a is Finished, b is not, move a to end
-            } else if (a['5778'] !== "Finished" && b['5778'] === "Finished") {
-                return 1; // a is not finished, b is finished, move b to end
-            } else {
-                return 0; // Both have same match_status or both are not finished
-            }
-        })
-    })
+    res.json(fixtures.sort((a, b)=> {
+        if (a['5778'] === "Finished" && b['5778'] !== "Finished") {
+            return -1; // a is Finished, b is not, move a to end
+        } else if (a['5778'] !== "Finished" && b['5778'] === "Finished") {
+            return 1; // a is not finished, b is finished, move b to end
+        } else {
+            return 0; // Both have same match_status or both are not finished
+        }
+    }))
 })
 
 
