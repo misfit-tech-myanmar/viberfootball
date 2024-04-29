@@ -1327,6 +1327,7 @@ router.get('/send-noti-favteam', async(req, res) => {
 })
 
 router.get('/fixtures-results', async(req, res, next)=> {
+    console.log("calling fixture and result")
     const fixtures = await footballService.getFixtureAndResult();
     res.json(fixtures.sort((a, b)=> {
         if (a['5778'] === "Finished" && b['5778'] !== "Finished") {
