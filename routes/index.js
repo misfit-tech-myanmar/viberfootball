@@ -1252,7 +1252,7 @@ router.get('/international-leaderboard', async(req, res)=> {
 /**Quizzes */
 router.post('/quizzes', async(req, res)=> {
     console.log("calling quizzes api")
-    const totalAnswer = req.body.totalAnswer===undefined?0:req.body.totalAnswer;
+    const totalAnswer = req.body.totalAnswer===''?0:req.body.totalAnswer;
     const quizz = await quizService.getQuizzes(totalAnswer);
     console.log("quizzz", quizz)
     if(quizz !== undefined ){
@@ -1310,8 +1310,8 @@ router.post('/quizzes', async(req, res)=> {
     
 })
 router.post('/question', (async(req, res) => {
-    console.log(req.body.totalAnswer)
-    const totalAnswer = req.body.totalAnswer ===undefined?0:req.body.totalAnswer;
+    console.log("total answer => ", req.body.totalAnswer)
+    const totalAnswer = req.body.totalAnswer ===''?0:req.body.totalAnswer;
     const quizz = await quizService.getQuizzes(totalAnswer);
     console.log("quizzz", quizz)
 
