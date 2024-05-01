@@ -17,7 +17,7 @@ QuizService.prototype = {
             }
         })
     },
-    getOptions: (questionId) => {
+    getOptions: (totalAnswer) => {
         return new Promise(async(resolve, reject)=> {
             try{
                 const response = await self.Axios.get('/stable/bots/labs/2246/entries')

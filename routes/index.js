@@ -1251,67 +1251,89 @@ router.get('/international-leaderboard', async(req, res)=> {
 
 /**Quizzes */
 router.post('/quizzes', async(req, res)=> {
-    
-    const totalAnswer = req.body.totalAnswer?0:req.body.totalAnswer;
+    console.log("calling quizzes api")
+    const totalAnswer = req.body.totalAnswer===undefined?0:req.body.totalAnswer;
     const quizz = await quizService.getQuizzes(totalAnswer);
-    res.json({
-        "data": [
-            {
-                "title": `Profile`, 
-                "type": "sequence",
-                "extra": ``,
-                "value": 138687,
+    console.log("quizzz", quizz)
+    if(quizz !== undefined ){
+        res.json({
+            "data": [
+                {
+                    "title": `Profile`, 
+                    "type": "sequence",
+                    "extra": ``,
+                    "value": 138687,
+                },
+                {
+                    "title": `${quizz['6007']}`, 
+                    "type": "sequence",
+                    "extra": `answer=Option 1&answerValue=${quizz['6011']}&totalAnswer=${parseInt(totalAnswer)+1}`,
+                    "value": "141009",
+                },
+                {
+                    "title": `${quizz['6008']}`, 
+                    "type": "sequence",
+                    "extra": `answer=Option 2&answerValue=${quizz['6011']}&totalAnswer=${parseInt(totalAnswer)+1}`,
+                    "value": "141009",
+                },
+                {
+                    "title": `${quizz['6009']}`, 
+                    "type": "sequence",
+                    "extra": `answer=Option 3&answerValue=${quizz['6011']}&totalAnswer=${parseInt(totalAnswer)+1}`,
+                    "value": "141009",
+                },
+                {
+                    "title": `${quizz['6010']}`, 
+                    "type": "sequence",
+                    "extra": `answer=Option 4&answerValue=${quizz['6011']}&totalAnswer=${parseInt(totalAnswer)+1}`,
+                    "value": "141009",
+                },
+            ],
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
             },
-            {
-                "title": `Next`, 
-                "type": "sequence",
-                "extra": `totalAnswer: ${totalAnswer+1}`,
-                "value": 138872,
+            "status": 200
+        })
+    }else{
+        res.json({
+            "data": [
+                
+            ],
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
             },
-            {
-                "title": `${quizz['6007']}`, 
-                "type": "sequence",
-                "extra": `answer=Option 1&answerValue=${quizz['6007']}&totalAnswer: ${totalAnswer}`,
-                "value": 138873,
-            },
-            {
-                "title": `${quizz['6008']}`, 
-                "type": "sequence",
-                "extra": `answer=Option 2&answerValue=${quizz['6008']}&totalAnswer: ${totalAnswer}`,
-                "value": 138873,
-            },
-            {
-                "title": `${quizz['6009']}`, 
-                "type": "sequence",
-                "extra": `answer=Option 3&answerValue=${quizz['6009']}&totalAnswer: ${totalAnswer}`,
-                "value": 138873,
-            },
-            {
-                "title": `${quizz['6010']}`, 
-                "type": "sequence",
-                "extra": `answer=Option 4&answerValue=${quizz['6010']}&totalAnswer: ${totalAnswer}`,
-                "value": 138873,
-            },
-        ],
-        "success": true,
-        "message": "Successful", 
-        "attributes": {
-        },
-        "status": 200
-    })
+            "status": 200
+        })
+    }
+    
 })
 router.post('/question', (async(req, res) => {
-    const totalAnswer = req.body.totalAnswer?0:req.body.totalAnswer;
-
+    console.log(req.body.totalAnswer)
+    const totalAnswer = req.body.totalAnswer ===undefined?0:req.body.totalAnswer;
     const quizz = await quizService.getQuizzes(totalAnswer);
-    res.json({
-        "data": `${req.body.language==='English'?quizz['6005']:quizz['6006']}`,
-        "success": true,
-        "message": "Successful", 
-        "attributes": {
-        },
-        "status": 200
-    })
+    console.log("quizzz", quizz)
+
+    if(quizz !== undefined){
+        res.json({
+            "data": `${req.body.language==='English'?quizz['6005']:quizz['6006']}`,
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
+            },
+            "status": 200
+        })
+    }else{
+        res.json({
+            "data": `There is no quiz left for this week.`,
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
+            },
+            "status": 200
+        })
+    }
 }))
 
 router.get('/send-noti-favteam', async(req, res) => {
