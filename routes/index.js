@@ -1249,44 +1249,55 @@ router.get('/international-leaderboard', async(req, res)=> {
     }))
 })
 
+function checkAnswer(userAnwer, correctAnswer){
+    if(userAnwer === correctAnswer) return true;
+    return false;
+}
+
 /**Quizzes */
 router.post('/quizzes', async(req, res)=> {
     console.log("calling quizzes api")
     const totalAnswer = req.body.totalAnswer===''?0:req.body.totalAnswer;
-    const quizz = await quizService.getQuizzes(totalAnswer);
+    const quizz = await quizService.getQuizzes(req.body.QuizDone);
     console.log("quizzz", quizz)
     if(quizz !== undefined ){
         res.json({
             "data": [
                 {
-                    "title": `Profile`, 
+                    "title": `Main Menu`, 
                     "type": "sequence",
                     "extra": ``,
-                    "value": 138687,
+                    "value": 136297,
+                },
+                {
+                    "title": `‎`, 
+                    "type": "basic",
+                    "extra": ``,
+                    "value": ''
                 },
                 {
                     "title": `${quizz['6007']}`, 
                     "type": "sequence",
-                    "extra": `answer=Option 1&answerValue=${quizz['6011']}&totalAnswer=${parseInt(totalAnswer)+1}`,
-                    "value": "141009",
+                    "extra": ``,
+                    "value": checkAnswer('Option 1', quizz['6011'])?137762:137763,
                 },
                 {
                     "title": `${quizz['6008']}`, 
                     "type": "sequence",
-                    "extra": `answer=Option 2&answerValue=${quizz['6011']}&totalAnswer=${parseInt(totalAnswer)+1}`,
-                    "value": "141009",
+                    "extra": ``,
+                    "value": checkAnswer('Option ', quizz['6011'])?137762:137763,
                 },
                 {
                     "title": `${quizz['6009']}`, 
                     "type": "sequence",
-                    "extra": `answer=Option 3&answerValue=${quizz['6011']}&totalAnswer=${parseInt(totalAnswer)+1}`,
-                    "value": "141009",
+                    "extra": ``,
+                    "value": checkAnswer('Option 3', quizz['6011'])?137762:137763,
                 },
                 {
                     "title": `${quizz['6010']}`, 
                     "type": "sequence",
-                    "extra": `answer=Option 4&answerValue=${quizz['6011']}&totalAnswer=${parseInt(totalAnswer)+1}`,
-                    "value": "141009",
+                    "extra": ``,
+                    "value": checkAnswer('Option 4', quizz['6011'])?137762:137763,
                 },
             ],
             "success": true,
@@ -1310,9 +1321,9 @@ router.post('/quizzes', async(req, res)=> {
     
 })
 router.post('/question', (async(req, res) => {
-    console.log("total answer => ", req.body.totalAnswer)
+    console.log("total answer => ", req.body)
     const totalAnswer = req.body.totalAnswer ===''?0:req.body.totalAnswer;
-    const quizz = await quizService.getQuizzes(totalAnswer);
+    const quizz = await quizService.getQuizzes(req.body.QuizDone);
     console.log("quizzz", quizz)
 
     if(quizz !== undefined){
@@ -1360,6 +1371,14 @@ router.get('/fixtures-results', async(req, res, next)=> {
             return 0; // Both have same match_status or both are not finished
         }
     }))
+})
+
+const LoginService = require('../services/login.service');
+const loginService = new LoginService();
+
+router.get('/test-login', async(req, res) => {
+    const data = await loginService.loginAndStoreToken();
+    res.json({});
 })
 
 
