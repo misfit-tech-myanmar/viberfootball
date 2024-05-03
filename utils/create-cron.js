@@ -42,7 +42,7 @@ module.exports = {
         });
     },
     everyMorningSixthAm: () => {
-        cron.schedule('*/30 * * * * *', async()=> {
+        cron.schedule(' * * * * *', async()=> {
             await notificationService.sendNotiToPredictUsers();
         })
     },
