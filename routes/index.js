@@ -1373,13 +1373,5 @@ router.get('/fixtures-results', async(req, res, next)=> {
     }))
 })
 
-const LoginService = require('../services/login.service');
-const loginService = new LoginService();
-
-router.get('/test-login', async(req, res) => {
-    const data = await loginService.loginAndStoreToken();
-    res.json({});
-})
-
 
 module.exports = router;

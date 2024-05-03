@@ -307,11 +307,15 @@ FootBallService.prototype = {
                     leagueName: fixture['5768'],
                     status: fixture['5778'],
                     home: fixture['5780'],
+                    homeLogo: fixture['5786'],
                     away: fixture['5782'],
+                    awayLogo: fixture['5787'],
                     homeScore: fixture['5781'],
                     awayScore: fixture['5783'],
                     matchDate: fixture['5769'],
-                    matchTime: fixture['5779']
+                    matchTime: fixture['5779'],
+                    leagueLogo: fixture['5788'],
+                    statium: fixture['5784']
                 }
             }))
         })

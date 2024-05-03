@@ -1,84 +1,50 @@
 const axios = require('axios');
-// Axios instance with default headers
+const redisClient = require('./redis');
+
+
+// Function to get access token from Redis
+function getAccessToken(callback) {
+  redisClient.get('accessToken', function(err, accessToken) {
+      if (err) {
+          callback(err, null);
+      } else {
+          callback(null, accessToken);
+      }
+  });
+}
+
+// Create an Axios instance with custom configurations
 const axiosInstance = axios.create({
-  baseURL: 'https://api.myalice.ai',
+  baseURL: 'https://api.myalice.ai', // Base URL for all requests
+  timeout: 5000, // Request timeout in milliseconds
+  headers: {
+      'Content-Type': 'application/json', // Example headers
+  },
 });
 
-let accessToken;
-let refreshToken;
-
-// Function to call login API and retrieve access token and refresh token
-async function login(username, password) {
-  try {
-      const response = await axios.post('https://api.myalice.ai/stable/accounts/login', {
-          username: username,
-          password: password
-      });
-      
-      // Assuming the response contains access token and refresh token
-      accessToken = response.data.access;
-      refreshToken = response.data.refresh;
-      // Set access token as default header
-      axiosInstance.defaults.headers.common['Authorization'] = `Token ${accessToken}`;
-
-      console.log('Logged in successfully');
-  } catch (error) {
-      console.error('Error logging in:', error.message);
-      throw new Error('Failed to log in');
-  }
-}
-
-// Function to refresh access token
-async function refreshAccessToken() {
-  try {
-      const response = await axios.post('https://api.myalice.ai/stable/accounts/refresh', {
-          refresh: refreshToken
-      });
-      accessToken = response.data.access;
-      axiosInstance.defaults.headers.common['Authorization'] = `Token ${accessToken}`;
-      console.log('Access token refreshed');
-  } catch (error) {
-      console.error('Error refreshing access token:', error.message);
-      throw new Error('Failed to refresh access token');
-  }
-}
-
-// Intercept request and add Authorization header
+// Request interceptor to add access token to requests
 axiosInstance.interceptors.request.use(
-  (config) => {
-      // Check if access token exists and is not expired
-      if (accessToken) {
-          config.headers.Authorization = `Token ${accessToken}`;
-      }
-      return config;
+  config => {
+    // Get access token from Redis
+    return new Promise((resolve, reject) => {
+      getAccessToken((err, accessToken) => {
+        if (err) {
+          console.error('Error getting access token from Redis:', err);
+          reject(err);
+        } else {
+          // Make sure config object is defined
+          config = config || {};
+          // Make sure config.headers object is defined
+          config.headers = config.headers || {};
+          config.headers['Authorization'] = `Token ${accessToken}`;
+          resolve(config);
+        }
+      });
+    });
   },
-  (error) => {
-      return Promise.reject(error);
+  error => {
+    return Promise.reject(error);
   }
 );
 
-// Intercept response and handle token expiration
-axiosInstance.interceptors.response.use(
-  (response) => {
-      return response;
-  },
-  async (error) => { //&& error.response.status === 401 && !originalRequest._retry
-    console.log("refresh :", error)
-      const originalRequest = error.config;
-      if (error.response ) {
-          originalRequest._retry = true;
-          try {
-              await refreshAccessToken();
-              return axiosInstance(originalRequest);
-          } catch (refreshError) {
-              return Promise.reject(refreshError);
-          }
-      }
-      return Promise.reject(error);
-  }
-);
-
-module.exports = {
-  axiosInstance,
-  login
-}
+module.exports = {axiosInstance}

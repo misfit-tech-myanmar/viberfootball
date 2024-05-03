@@ -3,6 +3,7 @@ const logger = require('../libs/logger');
 const FootBallService = require('../services/football.service');
 const PredictionService = require('../services/prediction.service');
 const NotificationService = require('../services/notification.service')
+const {login} = require('../services/login.service')
 
 const footballService = new FootBallService();
 const predictionService = new PredictionService();
@@ -48,6 +49,11 @@ module.exports = {
     everyMonday7AM: () => {
         cron.schedule('0 7 * * 1', async()=> {
             await notificationService.sentNotiUserFavouriteTeam();
+        })
+    },
+    everyFiveHour30Minutes: () => {
+        cron.schedule('*/30 */5 * * *', async()=> {
+            await login();
         })
     }
 }

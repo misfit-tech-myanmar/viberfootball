@@ -3,10 +3,10 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 require('dotenv').config();
-const { everySecond, everyMonday, everyAugest, everyMorningSixthAm, everyMonday7AM } = require('./utils/create-cron');
+const { everySecond, everyMonday, everyAugest, everyMorningSixthAm, everyMonday7AM, everyFiveHour30Minutes } = require('./utils/create-cron');
 // const bot = require('./libs/viber.bot')
 const indexRouter = require('./routes/index')
-const {login} = require('./libs/axios.instance');
+const {login} = require('./services/login.service');
 const moment = require('moment-timezone');
 var cors = require('cors')
 var logger = require('./libs/logger');
@@ -32,13 +32,14 @@ everyMonday();
 everySecond();
 everyAugest();
 everyMonday7AM();
+everyFiveHour30Minutes();
 // everyMorningSixthAm();
 app.use('/api/v1.0', indexRouter)
 
 // app.use("/viber/webhook", bot.middleware());
 
 app.listen(port, async(err) => {
-    await login('kyawhlaingbwar18@gmail.com', 'alice@101')
+    await login()
     if(!err) logger.info(`Server is running on ${port}`);
     // bot.setWebhook(`${process.env.EXPOSE_URL}/viber/webhook`).catch(error => {
     //     console.log('Can not set webhook on following server. Is it running?');
