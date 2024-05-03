@@ -15,7 +15,7 @@ module.exports = {
         // Extract year, month, and day components
         const startDate = `${currentDate.getFullYear()}-${currentDate.getMonth()+1}-${currentDate.getDate()}`;
         let endDate=currentDate.toISOString().slice(0, 10);
-        cron.schedule('*/30 * * * * *', async() => {
+        cron.schedule('* * * * *', async() => {
             // footballService.getFixtureFromApiAndPostToMyaliceDataLab('2024-04-25', '2024-04-28')
             footballService.updateFixtureAfterFinishedMatches(startDate, startDate);
             predictionService.predict();
