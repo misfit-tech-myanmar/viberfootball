@@ -1364,9 +1364,9 @@ router.get('/fixtures-results', async(req, res, next)=> {
     const fixtures = await footballService.getFixtureAndResult();
     res.json(fixtures.sort((a, b)=> {
         if (a.status === "Finished" && b.status !== "Finished") {
-            return -1; // a is Finished, b is not, move a to end
+            return 1; // a is Finished, b is not, move a to end
         } else if (a.status !== "Finished" && b.status === "Finished") {
-            return 1; // a is not finished, b is finished, move b to end
+            return -1; // a is not finished, b is finished, move b to end
         } else {
             return 0; // Both have same match_status or both are not finished
         }

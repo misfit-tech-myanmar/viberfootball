@@ -32,6 +32,7 @@ axiosInstance.interceptors.request.use(
           console.error('Error getting access token from Redis:', err);
           reject(err);
         } else {
+          console.log("getting access token => ", accessToken)
           // Make sure config object is defined
           config = config || {};
           // Make sure config.headers object is defined
