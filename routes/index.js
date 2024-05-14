@@ -78,7 +78,8 @@ router.get('/first-fixtures', async(req, res, next) => {
             "message": "Successful", 
             "attributes": {
                 previousFixtures: "2",
-                nextFixtures: fixtures.total > 5?"1":"2"
+                nextFixtures: fixtures.total > 5?"1":"2",
+                predictFixture: fixtures.length > 0?"1":"2"
             },
             "status": 200
         })
@@ -144,7 +145,8 @@ router.get('/second-fixtures', async(req, res, next) => {
             "message": "Successful", 
             "attributes": {
                 previousFixtures: "1",
-                nextFixtures: fixtures.total > 10?"1":"2"
+                nextFixtures: fixtures.total > 10?"1":"2",
+                predictFixture: fixtures.length > 0?"1":"2"
             },
             "status": 200
         })
@@ -209,7 +211,8 @@ router.get('/third-fixtures', async(req, res, next) => {
             "message": "Successful", 
             "attributes": {
                 previousFixtures: "1",
-                nextFixtures: fixtures.total > 15?"1":"2"
+                nextFixtures: fixtures.total > 15?"1":"2",
+                predictFixture: fixtures.length > 0?"1":"2"
             },
             "status": 200
         })
@@ -258,7 +261,8 @@ router.get('/fourth-fixtures', async(req, res, next) => {
             "message": "Successful", 
             "attributes": {
                 previousFixtures: "1",
-                nextFixtures: "2"
+                nextFixtures: "2",
+                predictFixture: fixtures.length > 0?"1":"2"
             },
             "status": 200
         })
@@ -402,7 +406,7 @@ router.get('/active-histories', (async(req, res, next)=> {
     
     proceedData.then(response=> {
         response.unshift({
-            "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
+            "title": `${req.body.language === 'English'?'Main Menu':'ပင်မ /nစာမျက်နှာ'}`, 
             "type": "sequence",
             "extra": ``,
             "value": 136297,
@@ -439,7 +443,7 @@ router.get('/inactive-histories', async(req, res, next)=> {
     const proceedData = Promise.all(theInActiveHistory(histories))
     proceedData.then(response=> {
         response.unshift({
-            "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
+            "title": `${req.body.language === 'English'?'Main Menu':'ပင်မ /nစာမျက်နှာ'}`, 
             "type": "sequence",
             "extra": ``,
             "value": 136297,
