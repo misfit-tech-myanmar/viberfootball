@@ -79,7 +79,7 @@ router.get('/first-fixtures', async(req, res, next) => {
             "attributes": {
                 previousFixtures: "2",
                 nextFixtures: fixtures.total > 5?"1":"2",
-                predictFixture: fixtures.length > 0 && fixtures.total > 5?"1":"2"
+                predictFixture: fixtures.result.length > 0 && fixtures.total > 5?"1":"2"
             },
             "status": 200
         })
@@ -146,7 +146,7 @@ router.get('/second-fixtures', async(req, res, next) => {
             "attributes": {
                 previousFixtures: "1",
                 nextFixtures: fixtures.total > 10?"1":"2",
-                predictFixture: fixtures.length > 0 && fixtures.total > 10 ?"1":"2"
+                predictFixture: fixtures.result.length > 0 && fixtures.total > 10 ?"1":"2"
             },
             "status": 200
         })
@@ -212,7 +212,7 @@ router.get('/third-fixtures', async(req, res, next) => {
             "attributes": {
                 previousFixtures: "1",
                 nextFixtures: fixtures.total > 15?"1":"2",
-                predictFixture: fixtures.length > 0 && fixtures.total > 15?"1":"2"
+                predictFixture: fixtures.result.length > 0 && fixtures.total > 15?"1":"2"
             },
             "status": 200
         })
