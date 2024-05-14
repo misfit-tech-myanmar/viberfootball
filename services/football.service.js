@@ -75,6 +75,17 @@ FootBallService.prototype = {
         }
         return data; // If no match is found
     },
+    checkPredictFixtures: () => {
+        return new Promise(async(resolve, reject) => {
+            let response = await self.Axios.get('/stable/bots/labs/2247/entries');
+            response.data.dataSource = response.data.dataSource.sort((a,b)=> {
+                return new Date(`${a['5769']} ${a['5779']}`) - new Date(`${b['5769']} ${b['5779']}`)
+            })
+            const unfinishedFixtures = await self.getUnfinishedFixtures(response.data.dataSource)
+            const getFixtureBeforeOneHours = await self.getFixtureBeforeOneHour(unfinishedFixtures);
+            resolve(getFixtureBeforeOneHours)
+        })
+    },
     getFixtures: (call, userId) => {
         return new Promise(async(resolve, reject) => {
             try{
