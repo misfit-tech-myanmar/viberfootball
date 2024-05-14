@@ -406,7 +406,7 @@ router.get('/active-histories', (async(req, res, next)=> {
     
     proceedData.then(response=> {
         response.unshift({
-            "title": `${req.body.language === 'English'?'Main Menu':'ပင်မ /nစာမျက်နှာ'}`, 
+            "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
             "type": "sequence",
             "extra": ``,
             "value": 136297,
@@ -443,7 +443,7 @@ router.get('/inactive-histories', async(req, res, next)=> {
     const proceedData = Promise.all(theInActiveHistory(histories))
     proceedData.then(response=> {
         response.unshift({
-            "title": `${req.body.language === 'English'?'Main Menu':'ပင်မ /nစာမျက်နှာ'}`, 
+            "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
             "type": "sequence",
             "extra": ``,
             "value": 136297,
@@ -1534,7 +1534,7 @@ router.post('/quizzes', async(req, res)=> {
         res.json({
             "data": [
                 {
-                    "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
+                    "title": `${req.body.language === 'English'?'Main Menu':'ပင်မ \nစာမျက်နှာ'}`, 
                     "type": "sequence",
                     "extra": ``,
                     "value": 136297,
