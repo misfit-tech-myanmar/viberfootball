@@ -405,7 +405,7 @@ router.get('/active-histories', (async(req, res, next)=> {
             "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
             "type": "sequence",
             "extra": ``,
-            "value": 131605,
+            "value": 136297,
         })
         res.json({
             "data": response,
@@ -442,7 +442,7 @@ router.get('/inactive-histories', async(req, res, next)=> {
             "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
             "type": "sequence",
             "extra": ``,
-            "value": 131605,
+            "value": 136297,
         })
         res.json({
             "data": response,
