@@ -4,10 +4,12 @@ const FootBallService = require('../services/football.service');
 const PredictionService = require('../services/prediction.service');
 const NotificationService = require('../services/notification.service')
 const {login} = require('../services/login.service')
+const QuizService = require('../services/quiz.service');
 
 const footballService = new FootBallService();
 const predictionService = new PredictionService();
 const notificationService = new NotificationService(); 
+const quizService = new QuizService()
 
 module.exports = {
     everySecond: () => {
@@ -49,6 +51,7 @@ module.exports = {
     everyMonday7AM: () => {
         cron.schedule('0 7 * * 1', async()=> {
             await notificationService.sentNotiUserFavouriteTeam();
+            await quizService.updateQuizEntryStatus();
         })
     },
     everyFiveHour30Minutes: () => {

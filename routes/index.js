@@ -402,7 +402,7 @@ router.get('/active-histories', (async(req, res, next)=> {
     
     proceedData.then(response=> {
         response.unshift({
-            "title": `Main Menu`, 
+            "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
             "type": "sequence",
             "extra": ``,
             "value": 131605,
@@ -439,7 +439,7 @@ router.get('/inactive-histories', async(req, res, next)=> {
     const proceedData = Promise.all(theInActiveHistory(histories))
     proceedData.then(response=> {
         response.unshift({
-            "title": `Main Menu`, 
+            "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
             "type": "sequence",
             "extra": ``,
             "value": 131605,
@@ -1249,6 +1249,272 @@ router.get('/international-leaderboard', async(req, res)=> {
     }))
 })
 
+router.get('/quiz-top-five-player', async(req, res) => {
+    const leaderboard = await leaderboardService.getQuizScores();
+    // const proceedData = Promise.all()
+    res.json({
+        "data": [
+            {
+                "title": "Myanmar",
+                "subtitle": "dede",
+                "image": null,
+                "url": null,
+                "buttons": [
+                    //1
+                    {
+                        "title": "1",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[0]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[0]['6137'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    //2
+                    {
+                        "title": "2",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[1]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[1]['6137'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    }, 
+                    //3
+                    {
+                        "title": "3",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[2]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[2]['6137'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    // //4
+                    {
+                        "title": "4",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[3]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[3]['6137'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    //5
+                    {
+                        "title": "5",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[4]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.myanmar[4]['6137'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": "see more",
+                        "type": "url",
+                        "extra": "",
+                        "value": "http://sport-news-dev.free.nf/leaderboard/",
+                        "messenger_extensions": false
+                    }
+    
+                ]
+            },
+            {
+                "title": "International",
+                "subtitle": "dede",
+                "image": null,
+                "url": null,
+                "buttons": [
+                    //1
+                    {
+                        "title": "1",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[0]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[0]['6137'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    //2
+                    {
+                        "title": "2",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[1]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[1]['6137'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    }, 
+                    //3
+                    {
+                        "title": "3",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[2]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[2]['6137'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    // //4
+                    {
+                        "title": "4",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[3]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[3]['6137'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    //5
+                    {
+                        "title": "5",
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[4]['5751'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": leaderboard.inter[4]['6137'],
+                        "type": "basic",
+                        "extra": "",
+                        "value": "",
+                        "messenger_extensions": false
+                    },
+                    {
+                        "title": "see more",
+                        "type": "url",
+                        "extra": "",
+                        "value": "http://sport-news-dev.free.nf/leaderboard/",
+                        "messenger_extensions": false
+                    }
+    
+                ]
+            },
+           
+        ],
+        "success": true,
+        "message": "",
+        "status": 200,
+        "attributes": {}
+    })
+})
+
 function checkAnswer(userAnwer, correctAnswer){
     if(userAnwer === correctAnswer) return true;
     return false;
@@ -1258,13 +1524,13 @@ function checkAnswer(userAnwer, correctAnswer){
 router.post('/quizzes', async(req, res)=> {
     console.log("calling quizzes api")
     const totalAnswer = req.body.totalAnswer===''?0:req.body.totalAnswer;
-    const quizz = await quizService.getQuizzes(req.body.QuizDone);
+    const quizz = await quizService.getQuizzes(req.body.QuizDone===''?0:req.body.QuizDone);
     console.log("quizzz", quizz)
     if(quizz !== undefined ){
         res.json({
             "data": [
                 {
-                    "title": `Main Menu`, 
+                    "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
                     "type": "sequence",
                     "extra": ``,
                     "value": 136297,
@@ -1278,26 +1544,26 @@ router.post('/quizzes', async(req, res)=> {
                 {
                     "title": `${quizz['6007']}`, 
                     "type": "sequence",
-                    "extra": ``,
-                    "value": checkAnswer('Option 1', quizz['6011'])?137762:137763,
+                    "extra": `QuizDone=${parseInt(req.body.QuizDone) + 1}&QuizAnswer=Option 1&QuizId=${quizz.id}`,
+                    "value": "142673",
                 },
                 {
                     "title": `${quizz['6008']}`, 
                     "type": "sequence",
-                    "extra": ``,
-                    "value": checkAnswer('Option ', quizz['6011'])?137762:137763,
+                    "extra": `QuizDone=${parseInt(req.body.QuizDone) + 1}&QuizAnswer=Option 2&QuizId=${quizz.id}`,
+                    "value": "142673",
                 },
                 {
                     "title": `${quizz['6009']}`, 
                     "type": "sequence",
-                    "extra": ``,
-                    "value": checkAnswer('Option 3', quizz['6011'])?137762:137763,
+                    "extra": `QuizDone=${parseInt(req.body.QuizDone) + 1}&QuizAnswer=Option 3&QuizId=${quizz.id}`,
+                    "value": "142673",
                 },
                 {
                     "title": `${quizz['6010']}`, 
                     "type": "sequence",
-                    "extra": ``,
-                    "value": checkAnswer('Option 4', quizz['6011'])?137762:137763,
+                    "extra": `QuizDone=${parseInt(req.body.QuizDone) + 1}&QuizAnswer=Option 4&QuizId=${quizz.id}`,
+                    "value": "142673",
                 },
             ],
             "success": true,
@@ -1323,7 +1589,7 @@ router.post('/quizzes', async(req, res)=> {
 router.post('/question', (async(req, res) => {
     console.log("total answer => ", req.body)
     const totalAnswer = req.body.totalAnswer ===''?0:req.body.totalAnswer;
-    const quizz = await quizService.getQuizzes(req.body.QuizDone);
+    const quizz = await quizService.getQuizzes(req.body.QuizDone===''?0:req.body.QuizDone);
     console.log("quizzz", quizz)
 
     if(quizz !== undefined){
@@ -1341,11 +1607,50 @@ router.post('/question', (async(req, res) => {
             "success": true,
             "message": "Successful", 
             "attributes": {
+                NoQuizLeft: 1
             },
             "status": 200
         })
     }
 }))
+
+router.post('/check-quiz-answer', (async(req, res)=> {
+    console.log("calling check quiz answer", req.body)
+    const quiz = await quizService.checkQuizAnswer(req.body.QuizId)
+    if(quiz['6011'] === req.body.QuizAnswer){
+        await quizService.updateQuizScoreUser(req.body.uid);
+        res.json({
+            "data": `${req.body.language==='English'?'Your answer is correct':'သင့်ရဲ့အဖြေမှန်ပါသည်'}`,
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
+                QuizScore: parseInt(req.body.QuizScore) + 1,
+                TotalQuizScore: parseInt(req.body.TotalQuizScore) + 1,
+                QuizTotalAnswer: parseInt(req.body.QuizTotalAnswer) + 1
+            },
+            "status": 200
+        })
+    }else{
+        res.json({
+            "data": `${req.body.language==='English'?'Your answer is Wrong':'သင့်ရဲ့အဖြေမှားပါသည်'}`,
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
+                QuizTotalAnswer: parseInt(req.body.QuizTotalAnswer) + 1
+            },
+            "status": 200
+        })
+    }
+}))
+
+router.get('/test-update-status', async(req, res) => {
+    const sortedQuiz = await quizService.updateQuizEntryStatus();
+
+    res.json({
+        "data": sortedQuiz ,
+        "message": "fuck you quizzzz"
+    })
+})
 
 router.get('/send-noti-favteam', async(req, res) => {
     const users = await notiService.sentNotiUserFavouriteTeam();

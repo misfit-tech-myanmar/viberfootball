@@ -11,7 +11,7 @@ QuizService.prototype = {
         return new Promise(async(resolve, reject)=> {
             try{
                 const response = await self.Axios.get('/stable/bots/labs/2295/entries');
-                resolve(response.data.dataSource[totalAnswer])
+                resolve(response.data.dataSource.filter(item=> item['6136'] !== "Finished").sort((a, b) => a['6004'] - b['6004'])[totalAnswer])
             }catch(err){
                 reject(err)
             }
@@ -34,6 +34,69 @@ QuizService.prototype = {
             }catch(err){
                 reject(err)
             }
+        })
+    },
+    checkQuizAnswer: (quizId) => {
+        return new Promise(async(resolve, reject)=> {
+            const quiz = await self.Axios.get(`/stable/bots/labs/2295/entries/${quizId}`);
+            resolve(quiz.data.dataSource)
+        })
+    },
+    updateQuizScoreUser: (creatorId) => {
+        return new Promise(async(resolve, reject) => {
+            const user = await self.getUserByUid(creatorId)
+            console.log("update user", user)
+            var scores = user['6137']===undefined? 1 : (parseInt(user['6137'])+1)
+            await self.updateUserQuizScore(scores, user.id)
+            resolve()
+        })
+    },
+    getUserByUid: (creatorId) => {
+        return new Promise(async(resolve, reject)=> {
+            const userResponse = await self.Axios.get('/stable/bots/labs/2241/entries');
+            console.log(userResponse.data.dataSource)
+            resolve(userResponse.data.dataSource.filter(user=> user.creator_id === creatorId)[0])
+        })
+    }, 
+    updateUserQuizScore: (scores, userId) => {
+        return new Promise(async(resolve, reject) => {
+            self.Axios.put(`/stable/bots/labs/2241/entries/${userId}`, {
+                "6137": scores
+            }).then(response=> {
+                console.log("updated quiz score")
+                resolve()
+            })
+        })
+    },
+    updateQuizEntryStatus: () => {
+        return new Promise(async(resolve, reject) => {
+            const sortedQuiz = await self.getAllQuizEntries();
+            const latestBatchQuizzes = await self.findLatestBatchQuizzes(sortedQuiz[0]['6004'], sortedQuiz)
+            latestBatchQuizzes.filter(async item=> {
+                await self.updateLatestBatchStatus(item.id)
+            })
+            resolve(latestBatchQuizzes)
+        })
+    },
+    findLatestBatchQuizzes: (latestBatch, sortedQuiz) => {
+        return new Promise(async(resolve, reject) => {
+            resolve(sortedQuiz.filter(item=> item['6004'] === latestBatch))
+        })
+    },
+    updateLatestBatchStatus: (quizId) => {
+        return new Promise(async(resolve, reject) => {
+            self.Axios.put(`/stable/bots/labs/2295/entries/${quizId}`, {
+                "6136": 'Finished'
+            }).then(response=> {
+                console.log("updated quiz status")
+                resolve()
+            })
+        })
+    },
+    getAllQuizEntries: () => {
+        return new Promise(async(resolve, reject)=> {
+            const quizResponse = await self.Axios.get('/stable/bots/labs/2295/entries');
+            resolve(quizResponse.data.dataSource.filter(item=> item['6136'] !== 'Finished').sort((a,b) => a['6004']- b['6004']))
         })
     }
 }
