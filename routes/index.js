@@ -398,7 +398,7 @@ router.get('/active-history-check', (async(req, res, next)=> {
     })
 }))
 
-router.get('/active-histories', (async(req, res, next)=> {
+router.post('/active-histories', (async(req, res, next)=> {
     const active = true;
     const histories = await historyService.histories(req.query.customer_id, active);
     // Loop through the groupedData object by keys
@@ -409,7 +409,7 @@ router.get('/active-histories', (async(req, res, next)=> {
             "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
             "type": "sequence",
             "extra": ``,
-            "value": 136297,
+            "value": `${req.body.language === 'English'?'131605':'136298'}`,
         })
         res.json({
             "data": response,
@@ -436,7 +436,8 @@ router.get('/inactive-history-check', async(req, res, next)=> {
         "status": 200
     })
 })
-router.get('/inactive-histories', async(req, res, next)=> {
+router.post('/inactive-histories', async(req, res, next)=> {
+    console.log("calling inactive histories")
     const active = false;
     const histories = await historyService.histories(req.query.customer_id, active);
     // Loop through the groupedData object by keys
@@ -446,7 +447,7 @@ router.get('/inactive-histories', async(req, res, next)=> {
             "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
             "type": "sequence",
             "extra": ``,
-            "value": 136297,
+            "value": `${req.body.language === 'English'?'131605':'136298'}`,
         })
         res.json({
             "data": response,
@@ -1602,16 +1603,17 @@ router.post('/question', (async(req, res) => {
             "success": true,
             "message": "Successful", 
             "attributes": {
+                NoQuizLeft: "2"
             },
             "status": 200
         })
     }else{
         res.json({
-            "data": `There is no quiz left for this week.`,
+            "data": ``,
             "success": true,
             "message": "Successful", 
             "attributes": {
-                NoQuizLeft: 1
+                NoQuizLeft: "1"
             },
             "status": 200
         })
@@ -1680,6 +1682,19 @@ router.get('/fixtures-results', async(req, res, next)=> {
             return 0; // Both have same match_status or both are not finished
         }
     }))
+})
+
+router.get('/check-quiz-batch', async(req, res) => {
+    const batchMessage = await quizService.batchMessage();
+    res.json({
+        "data": `Batch ${batchMessage.currentBatch} is currently running. \nBatch ${batchMessage.nextBatch} will be running next week Monday at 7am. \nYou have entered up to Batch ${batchMessage.maxBatch}.`,
+        "success": true,
+        "message": "Successful", 
+        "attributes": {
+           
+        },
+        "status": 200
+    })
 })
 
 

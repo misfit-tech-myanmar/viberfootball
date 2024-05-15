@@ -98,6 +98,16 @@ QuizService.prototype = {
             const quizResponse = await self.Axios.get('/stable/bots/labs/2295/entries');
             resolve(quizResponse.data.dataSource.filter(item=> item['6136'] !== 'Finished').sort((a,b) => a['6004']- b['6004']))
         })
+    },
+    batchMessage: () => {
+        return new Promise(async(resolve, reject) => {
+            const sortedQuiz = await self.getAllQuizEntries();
+            resolve({
+                currentBatch: parseInt(sortedQuiz[0]['6004']),
+                nextBatch: parseInt(sortedQuiz[0]['6004']) + 1,
+                maxBatch: parseInt(sortedQuiz[sortedQuiz.length -1]['6004'])
+            })
+        })
     }
 }
 
