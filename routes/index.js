@@ -957,7 +957,7 @@ router.get('/noti-message', async(req, res, next)=> {
 
 /**Leaderboard */
 
-router.get('/top-five-player', async(req, res, next)=>{
+router.post('/top-five-player', async(req, res, next)=>{
     const leaderboard = await leaderboardService.getTopPredictionUserScore();
     // const proceedData = Promise.all()
     res.json({
@@ -1079,7 +1079,7 @@ router.get('/top-five-player', async(req, res, next)=>{
                         "messenger_extensions": false
                     },
                     {
-                        "title": "see more",
+                        "title": `${req.body.language === 'English'?'See more':'ဆက်ကြည့်မည်'}`,
                         "type": "url",
                         "extra": "",
                         "value": "http://sport-news-dev.free.nf/leaderboard/",
@@ -1205,7 +1205,7 @@ router.get('/top-five-player', async(req, res, next)=>{
                         "messenger_extensions": false
                     },
                     {
-                        "title": "see more",
+                        "title": `${req.body.language === 'English'?'See more':'ဆက်ကြည့်မည်'}`,
                         "type": "url",
                         "extra": "",
                         "value": "http://sport-news-dev.free.nf/leaderboard/",
@@ -1254,7 +1254,7 @@ router.get('/international-leaderboard', async(req, res)=> {
     }))
 })
 
-router.get('/quiz-top-five-player', async(req, res) => {
+router.post('/quiz-top-five-player', async(req, res) => {
     const leaderboard = await leaderboardService.getQuizScores();
     // const proceedData = Promise.all()
     res.json({
@@ -1376,7 +1376,7 @@ router.get('/quiz-top-five-player', async(req, res) => {
                         "messenger_extensions": false
                     },
                     {
-                        "title": "see more",
+                        "title": `${req.body.language === 'English'?'see more':'ဆက်ကြည့်မည်'}`,
                         "type": "url",
                         "extra": "",
                         "value": "http://sport-news-dev.free.nf/leaderboard/",
@@ -1502,7 +1502,7 @@ router.get('/quiz-top-five-player', async(req, res) => {
                         "messenger_extensions": false
                     },
                     {
-                        "title": "see more",
+                        "title": `${req.body.language === 'English'?'see more':'ဆက်ကြည့်မည်'}`,
                         "type": "url",
                         "extra": "",
                         "value": "http://sport-news-dev.free.nf/leaderboard/",
