@@ -1379,7 +1379,7 @@ router.post('/quiz-top-five-player', async(req, res) => {
                         "title": `${req.body.language === 'English'?'see more':'ဆက်ကြည့်မည်'}`,
                         "type": "url",
                         "extra": "",
-                        "value": "http://sport-news-dev.free.nf/leaderboard/",
+                        "value": "http://tdn.vsb.mybluehost.me/?page_id=113",
                         "messenger_extensions": false
                     }
     
@@ -1505,7 +1505,7 @@ router.post('/quiz-top-five-player', async(req, res) => {
                         "title": `${req.body.language === 'English'?'see more':'ဆက်ကြည့်မည်'}`,
                         "type": "url",
                         "extra": "",
-                        "value": "http://sport-news-dev.free.nf/leaderboard/",
+                        "value": "http://tdn.vsb.mybluehost.me/?page_id=113",
                         "messenger_extensions": false
                     }
     
