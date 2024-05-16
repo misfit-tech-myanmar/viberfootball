@@ -1082,7 +1082,7 @@ router.post('/top-five-player', async(req, res, next)=>{
                         "title": `${req.body.language === 'English'?'See more':'ဆက်ကြည့်မည်'}`,
                         "type": "url",
                         "extra": "",
-                        "value": "http://tdn.vsb.mybluehost.me/?page_id=113",
+                        "value": "https://football360.myalice.ai/?page_id=113",
                         "messenger_extensions": false
                     }
     
@@ -1208,7 +1208,7 @@ router.post('/top-five-player', async(req, res, next)=>{
                         "title": `${req.body.language === 'English'?'See more':'ဆက်ကြည့်မည်'}`,
                         "type": "url",
                         "extra": "",
-                        "value": "http://tdn.vsb.mybluehost.me/?page_id=113",
+                        "value": "https://football360.myalice.ai/?page_id=113",
                         "messenger_extensions": false
                     }
     
