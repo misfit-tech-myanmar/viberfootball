@@ -38,10 +38,17 @@ QuizService.prototype = {
     },
     checkQuizAnswer: (quizId) => {
         return new Promise(async(resolve, reject)=> {
-            const quiz = await self.Axios.get(`/stable/bots/labs/2295/entries/${quizId}`);
-            resolve(quiz.data.dataSource)
+            console.log("Hello Quizzz")
+            const quiz = await self.getQuizById(quizId);
+            resolve(quiz)
         })
     },
+    getQuizById: (quizId) => {
+        return new Promise(async(resolve, reject) => {
+            const quizzes = await self.Axios.get('/stable/bots/labs/2295/entries');
+            resolve(quizzes.data.dataSource.filter(item=> item.id === quizId)[0])
+        })
+    }, 
     updateQuizScoreUser: (creatorId) => {
         return new Promise(async(resolve, reject) => {
             const user = await self.getUserByUid(creatorId)
