@@ -11,7 +11,7 @@ function FootBallService(){
 
 FootBallService.prototype = {
     getFixtureFromApiAndPostToMyaliceDataLab: async(from, to) => {
-        const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=6278b33ab6ca68ffbca66f0d5b8e0a60f9c2f47f6439110ed2634479e47d01c6&timezone=Asia/Yangon`);
+        const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=1&APIkey=6278b33ab6ca68ffbca66f0d5b8e0a60f9c2f47f6439110ed2634479e47d01c6&timezone=Asia/Yangon`);
 
         if(footballResponse.data.length > 0){
             let fixtures = footballResponse.data.map( fixture => {
@@ -221,7 +221,7 @@ FootBallService.prototype = {
     addTeamToMyalice: async() => {
         return new Promise(async(resolve, reject)=> {
             try{
-                const teamsResponse = await axios.get('https://apiv3.apifootball.com/?action=get_teams&league_id=152&APIkey=6278b33ab6ca68ffbca66f0d5b8e0a60f9c2f47f6439110ed2634479e47d01c6&timezone=Asia/Yangon')
+                const teamsResponse = await axios.get('https://apiv3.apifootball.com/?action=get_teams&league_id=1&APIkey=6278b33ab6ca68ffbca66f0d5b8e0a60f9c2f47f6439110ed2634479e47d01c6&timezone=Asia/Yangon')
                 if(teamsResponse.data.length > 0){
                     teamsResponse.data.forEach(async team=> {
                         await self.Axios.post('/stable/bots/labs/2261/entries',{
@@ -248,7 +248,7 @@ FootBallService.prototype = {
     },
     updateFixtureAfterFinishedMatches: async(from, to) => {
         return new Promise(async(resolve, reject)=>{
-            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=6278b33ab6ca68ffbca66f0d5b8e0a60f9c2f47f6439110ed2634479e47d01c6&timezone=Asia/Yangon`);
+            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=1&APIkey=6278b33ab6ca68ffbca66f0d5b8e0a60f9c2f47f6439110ed2634479e47d01c6&timezone=Asia/Yangon`);
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
                     const singleMatch = await self.getSingleLabFixture(match.match_id)
