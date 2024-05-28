@@ -219,6 +219,7 @@ FootBallService.prototype = {
         })
     },
     addTeamToMyalice: async() => {
+        console.log("calling add team")
         return new Promise(async(resolve, reject)=> {
             try{
                 const teamsResponse = await axios.get('https://apiv3.apifootball.com/?action=get_teams&league_id=1&APIkey=6278b33ab6ca68ffbca66f0d5b8e0a60f9c2f47f6439110ed2634479e47d01c6&timezone=Asia/Yangon')
@@ -229,6 +230,7 @@ FootBallService.prototype = {
                             "5811": team.team_key,
                             "5812": team.team_badge
                         })
+                        console.log("team created successful")
                     })
                 }
             }catch(err){

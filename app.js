@@ -10,6 +10,10 @@ const {login} = require('./services/login.service');
 const moment = require('moment-timezone');
 var cors = require('cors')
 var logger = require('./libs/logger');
+const FootBallService = require('./services/football.service')
+const footballService = new FootBallService();
+
+// footballService.addTeamToMyalice();
 
 const app = express();
 app.use(cors())
