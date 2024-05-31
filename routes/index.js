@@ -406,10 +406,10 @@ router.post('/active-histories', (async(req, res, next)=> {
     
     proceedData.then(response=> {
         response.unshift({
-            "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
+            "title": `${req.body.language === 'English'?'Back':'နောက်သို့'}`, 
             "type": "sequence",
             "extra": ``,
-            "value": `${req.body.language === 'English'?'131605':'136298'}`,
+            "value": `138709`,
         })
         res.json({
             "data": response,
@@ -444,10 +444,10 @@ router.post('/inactive-histories', async(req, res, next)=> {
     const proceedData = Promise.all(theInActiveHistory(histories, req))
     proceedData.then(response=> {
         response.unshift({
-            "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
+            "title": `${req.body.language === 'English'?'Back':'နောက်သို့'}`, 
             "type": "sequence",
             "extra": ``,
-            "value": `${req.body.language === 'English'?'131605':'136298'}`,
+            "value": `138709`,
         })
         res.json({
             "data": response,
@@ -482,8 +482,8 @@ router.post('/active-histories-by-date-first', async(req, res,next)=> {
             
             return {
                 "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-                "subtitle": `${fixture['5769']} - ${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
-                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
+                "subtitle": `${fixture['5769']}\n${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
+                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
                 "url": '',
                 "buttons": [
                     {
@@ -536,8 +536,8 @@ router.post('/active-histories-by-date-second', async(req, res,next)=> {
             const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
             return {
                 "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-                "subtitle": `${fixture['5769']} - ${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
-                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
+                "subtitle": `${fixture['5769']}\n${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
+                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
                 "url": '',
                 "buttons": [
                     {
@@ -591,8 +591,8 @@ router.post('/active-histories-by-date-third', async(req, res,next)=> {
             const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
             return {
                 "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-                "subtitle": `${fixture['5769']} - ${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
-                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
+                "subtitle": `${fixture['5769']} \n${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
+                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
                 "url": '',
                 "buttons": [
                     {
@@ -646,8 +646,8 @@ router.post('/active-histories-by-date-fourth', async(req, res,next)=> {
             const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
             return {
                 "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-                "subtitle": `${fixture['5769']} - ${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင် ${guest}  ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
-                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
+                "subtitle": `${fixture['5769']} \n${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင် ${guest}  ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
+                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
                 "url": '',
                 "buttons": [
                     {
@@ -700,15 +700,15 @@ router.post('/inactive-histories-by-date-first', async(req, res,next)=> {
         console.log(req.query.customer_id, " - ", fixture)
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-            "subtitle": `${fixture['5769']} <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
-            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
+            "subtitle": `${fixture['5769']} <font color="black">${req.body.language==="English"?'Result':'ရလဒ်'}: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
             "url": '',
             "buttons": [
                 {
                     "title": `${req.body.language==="English"?`You predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းထားခဲ့သည်`}`, 
-                    "type": "sequence", 
+                    "type": "basic", 
                     "extra": ``,
-                    "value": "138113",
+                    "value": "",
                     "columns": 6
                 },
                 {
@@ -744,15 +744,15 @@ router.post('/inactive-histories-by-date-second', async(req, res,next)=> {
         const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-            "subtitle": `${fixture['5769']}  <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
-            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
+            "subtitle": `${fixture['5769']}  <font color="black">${req.body.language==="English"?'Result':'ရလဒ်'}: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
             "url": '',
             "buttons": [
                 {
                     "title": `${req.body.language==="English"?`You predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းထားခဲ့သည်`}`, 
-                    "type": "sequence", 
+                    "type": "basic", 
                     "extra": ``,
-                    "value": "138113",
+                    "value": "",
                     "Columns": 6
                 },
                 {
@@ -788,15 +788,15 @@ router.post('/inactive-histories-by-date-third', async(req, res,next)=> {
         const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-            "subtitle": `${fixture['5769']} <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
-            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
+            "subtitle": `${fixture['5769']} <font color="black">${req.body.language==="English"?'Result':'ရလဒ်'}: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
             "url": '',
             "buttons": [
                 {
                     "title": `${req.body.language==="English"?`You predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းထားခဲ့သည်`}`,  
-                    "type": "sequence", 
+                    "type": "basic", 
                     "extra": ``,
-                    "value": "138113",
+                    "value": "",
                     "Columns": 6
                 },
                 {
@@ -832,15 +832,15 @@ router.post('/inactive-histories-by-date-fourth', async(req, res,next)=> {
         const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-            "subtitle": `${fixture['5769']}  <font color="black">Result: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
-            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
+            "subtitle": `${fixture['5769']}  <font color="black">${req.body.language==="English"?'Result':'ရလဒ်'}: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
             "url": '',
             "buttons": [
                 {
                     "title": `${req.body.language==="English"?`You predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းထားခဲ့သည်`}`, 
-                    "type": "sequence", 
+                    "type": "basic", 
                     "extra": ``,
-                    "value": "138113",
+                    "value": "",
                     "Columns": 6
                 },
                 {
@@ -876,8 +876,8 @@ router.post('/edit-prediction', async(req, res, next)=> {
         "data": [
             {
                 "title": `${fixture.match_hometeam_name}  -  ${fixture.match_awayteam_name}`,
-                "subtitle": `${fixture.match_date} - You are predicted <font color="blue">${guest}</font>`,
-                "image": "https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg",
+                "subtitle": `${fixture.match_date} \n${req.body.language==="English"?`You predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းထားခဲ့သည်`}`,
+                "image": "https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg",
                 "url": '',
                 "buttons": [
                     {
@@ -1377,9 +1377,9 @@ router.post('/quiz-top-five-player', async(req, res) => {
                     },
                     {
                         "title": `${req.body.language === 'English'?'see more':'ဆက်ကြည့်မည်'}`,
-                        "type": "url",
+                        "type": "basic",
                         "extra": "",
-                        "value": "http://tdn.vsb.mybluehost.me/?page_id=113",
+                        "value": "",
                         "messenger_extensions": false
                     }
     
@@ -1503,9 +1503,9 @@ router.post('/quiz-top-five-player', async(req, res) => {
                     },
                     {
                         "title": `${req.body.language === 'English'?'see more':'ဆက်ကြည့်မည်'}`,
-                        "type": "url",
+                        "type": "basic",
                         "extra": "",
-                        "value": "http://tdn.vsb.mybluehost.me/?page_id=113",
+                        "value": "",
                         "messenger_extensions": false
                     }
     
