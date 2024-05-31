@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 require('dotenv').config();
-const { everySecond, everyMonday, everyAugest, everyMorningSixthAm, everyMonday7AM, everyFiveHour30Minutes } = require('./utils/create-cron');
+const { everySecond, everyStartOfDay, everyAugest, everyMorningSixthAm, everyMonday7AM, everyFiveHour30Minutes } = require('./utils/create-cron');
 // const bot = require('./libs/viber.bot')
 const indexRouter = require('./routes/index')
 const {login} = require('./services/login.service');
@@ -32,7 +32,7 @@ app.get('/', (req, res, next)=>{
     res.send("Welcome using WSL ON Window!!!")
 })
 
-everyMonday();
+everyStartOfDay();
 everySecond();
 everyAugest();
 everyMonday7AM();

@@ -10,6 +10,12 @@ const footballService = new FootBallService();
 const predictionService = new PredictionService();
 const notificationService = new NotificationService(); 
 const quizService = new QuizService()
+function getFormattedDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
 module.exports = {
     everySecond: () => {
@@ -22,18 +28,17 @@ module.exports = {
             footballService.updateFixtureAfterFinishedMatches(startDate, startDate);
             predictionService.predict();
             footballService.getTeams();
-            // footballService.getFixtureFromApiAndPostToMyaliceDataLab("2024-04-05", "2024-04-08")
-
         });
     },
-    everyMonday: () => {
-        let currentDateEveryMonday = new Date();
-        // Extract year, month, and day components
-        const startDate = `${currentDateEveryMonday.getFullYear()}-${currentDateEveryMonday.getMonth()+1}-${currentDateEveryMonday.getDate()}`;
-        currentDateEveryMonday.setDate(currentDateEveryMonday.getDate() + 7);
-        const endDate = currentDateEveryMonday.toISOString().slice(0, 10);
-        cron.schedule('0 0 * * 1', ()=> {
-            footballService.getFixtureFromApiAndPostToMyaliceDataLab(startDate, endDate)
+    everyStartOfDay: () => {
+        const today = new Date();
+        const dayAfterNext = new Date();
+        dayAfterNext.setDate(today.getDate() + 2);
+        cron.schedule('0 0 * * *', ()=> {
+            console.error("running every start of day")
+            console.log('today', today)
+            console.log('next 2 day', dayAfterNext)
+            footballService.getFixtureFromApiAndPostToMyaliceDataLab(today, dayAfterNext)
         })
     },
     everyAugest: () => {

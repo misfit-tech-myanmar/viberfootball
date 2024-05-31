@@ -352,13 +352,13 @@ router.get('/first-fav-teams', async(req, res, next) => {
 
 
 /**History */
-const theActiveHistory = (histories, sequence)=> {
+const theActiveHistory = (histories, req)=> {
     const data = [];
     for (const key in histories) {
         if (Object.hasOwnProperty.call(histories, key)) {
         const value = histories[key];
             data.push({
-                "title": `${key}  \nPredicted:${value.length} \nmatches.`, 
+                "title": `${key}  \n${req.body.language==="English"?`Predicted:${value.length} \nmatches.`:`ခန့်မှန်းခဲ့သောပွဲ:${value.length}`}`, 
                 "type": "sequence",
                 "extra": `date_history=${key}`,
                 "value": 138247,
@@ -368,13 +368,13 @@ const theActiveHistory = (histories, sequence)=> {
     return data;
 }
 
-const theInActiveHistory = (histories, sequence)=> {
+const theInActiveHistory = (histories, req)=> {
     const data = [];
     for (const key in histories) {
         if (Object.hasOwnProperty.call(histories, key)) {
         const value = histories[key];
             data.push({
-                "title": `${key}  \nPredicted:${value.length} \nmatches.`, 
+                "title": `${key}  \n${req.body.language==="English"?`Predicted:${value.length} \nmatches.`:`ခန့်မှန်းခဲ့သောပွဲ:${value.length}`}`,
                 "type": "sequence",
                 "extra": `date_history=${key}`,
                 "value": 138188,
@@ -402,7 +402,7 @@ router.post('/active-histories', (async(req, res, next)=> {
     const active = true;
     const histories = await historyService.histories(req.query.customer_id, active);
     // Loop through the groupedData object by keys
-    const proceedData = Promise.all(theActiveHistory(histories))
+    const proceedData = Promise.all(theActiveHistory(histories, req))
     
     proceedData.then(response=> {
         response.unshift({
@@ -441,7 +441,7 @@ router.post('/inactive-histories', async(req, res, next)=> {
     const active = false;
     const histories = await historyService.histories(req.query.customer_id, active);
     // Loop through the groupedData object by keys
-    const proceedData = Promise.all(theInActiveHistory(histories))
+    const proceedData = Promise.all(theInActiveHistory(histories, req))
     proceedData.then(response=> {
         response.unshift({
             "title": `${req.body.language === 'English'?'Main Menu':'ပင်မစာမျက်နှာ'}`, 
@@ -482,18 +482,18 @@ router.post('/active-histories-by-date-first', async(req, res,next)=> {
             
             return {
                 "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-                "subtitle": `${fixture['5769']} - You are predicted <font color="blue">${guest}</font>`,
+                "subtitle": `${fixture['5769']} - ${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
                 "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
                 "url": '',
                 "buttons": [
                     {
-                        "title": `<font color="red">Editable until ${beforeOneHour(fixture['5779'])}</font>`, 
+                        "title": `${req.body.language==="English"?`<font color="red">Editable until ${beforeOneHour(fixture['5779'])}</font>`:`<font color="red">${beforeOneHour(fixture['5779'])}</font>မတိုင်ခင်ပြင်ဆင်နိုင်သေးသည်`}`, 
                         "type": "basic", 
                         "extra": ``,
                         "value": '',
                     },
                     {
-                        "title": 'Edit Prediction', 
+                        "title": `${req.body.language==="English"?'Edit Prediction':'ခန့်မှန်းမှုကိုပြင်ဆင်မည်'}`, 
                         "type": "sequence", 
                         "extra": `predicted_match_id=${fixture['5766']}`,
                         "value": 138083,
@@ -536,18 +536,18 @@ router.post('/active-histories-by-date-second', async(req, res,next)=> {
             const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
             return {
                 "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-                "subtitle": `${fixture['5769']} - You are predicted <font color="blue">${guest}</font>`,
+                "subtitle": `${fixture['5769']} - ${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
                 "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
                 "url": '',
                 "buttons": [
                     {
-                        "title": `<font color="red">Editable until ${beforeOneHour(fixture['5779'])}</font>`, 
+                        "title": `${req.body.language==="English"?`<font color="red">Editable until ${beforeOneHour(fixture['5779'])}</font>`:`<font color="red">${beforeOneHour(fixture['5779'])}</font>မတိုင်ခင်ပြင်ဆင်နိုင်သေးသည်`}`,
                         "type": "basic", 
                         "extra": ``,
                         "value": '',
                     },
                     {
-                        "title": 'Edit Prediction', 
+                        "title": `${req.body.language==="English"?'Edit Prediction':'ခန့်မှန်းမှုကိုပြင်ဆင်မည်'}`,  
                         "type": "sequence", 
                         "extra": `predicted_match_id=${fixture['5766']}`,
                         "value": 138083,
@@ -591,18 +591,18 @@ router.post('/active-histories-by-date-third', async(req, res,next)=> {
             const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
             return {
                 "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-                "subtitle": `${fixture['5769']} - You are predicted <font color="blue">${guest}</font>`,
+                "subtitle": `${fixture['5769']} - ${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
                 "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
                 "url": '',
                 "buttons": [
                     {
-                        "title": `<font color="red">Editable until ${beforeOneHour(fixture['5779'])}</font>`, 
+                        "title": `${req.body.language==="English"?`<font color="red">Editable until ${beforeOneHour(fixture['5779'])}</font>`:`<font color="red">${beforeOneHour(fixture['5779'])}</font>မတိုင်ခင်ပြင်ဆင်နိုင်သေးသည်`}`, 
                         "type": "basic", 
                         "extra": ``,
                         "value": '',
                     },
                     {
-                        "title": 'Edit Prediction', 
+                        "title": `${req.body.language==="English"?'Edit Prediction':'ခန့်မှန်းမှုကိုပြင်ဆင်မည်'}`, 
                         "type": "sequence", 
                         "extra": `predicted_match_id=${fixture['5766']}`,
                         "value": 138083,
@@ -646,18 +646,18 @@ router.post('/active-histories-by-date-fourth', async(req, res,next)=> {
             const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
             return {
                 "title": `${fixture['5780']}  -  ${fixture['5782']}`,
-                "subtitle": `${fixture['5769']} - You are predicted <font color="blue">${guest}</font>`,
+                "subtitle": `${fixture['5769']} - ${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင် ${guest}  ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
                 "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7ae87132008a11ef8d0722b151a25f3a.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/7fa81100008a11ef84942e018f279e4f.jpeg",
                 "url": '',
                 "buttons": [
                     {
-                        "title": `<font color="red">Editable until ${beforeOneHour(fixture['5779'])}</font>`, 
+                        "title": `${req.body.language==="English"?`<font color="red">Editable until ${beforeOneHour(fixture['5779'])}</font>`:`<font color="red">${beforeOneHour(fixture['5779'])}</font>မတိုင်ခင်ပြင်ဆင်နိုင်သေးသည်`}`, 
                         "type": "basic", 
                         "extra": ``,
                         "value": '',
                     },
                     {
-                        "title": 'Edit Prediction', 
+                        "title": `${req.body.language==="English"?'Edit Prediction':'ခန့်မှန်းမှုကိုပြင်ဆင်မည်'}`, 
                         "type": "sequence", 
                         "extra": `predicted_match_id=${fixture['5766']}`,
                         "value": 138083,
@@ -705,7 +705,7 @@ router.post('/inactive-histories-by-date-first', async(req, res,next)=> {
             "url": '',
             "buttons": [
                 {
-                    "title": `You predicted <font color="blue">${guest}</font>`, 
+                    "title": `${req.body.language==="English"?`You predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းထားခဲ့သည်`}`, 
                     "type": "sequence", 
                     "extra": ``,
                     "value": "138113",
@@ -713,9 +713,9 @@ router.post('/inactive-histories-by-date-first', async(req, res,next)=> {
                 },
                 {
                     "title": fixture.winLose==='Win'?"✅":"❌", 
-                    "type": "sequence", 
+                    "type": "basic", 
                     "extra": ``,
-                    "value": "138113",
+                    "value": "",
                     "columns": 6
                 },
             ]
@@ -749,7 +749,7 @@ router.post('/inactive-histories-by-date-second', async(req, res,next)=> {
             "url": '',
             "buttons": [
                 {
-                    "title": `You predicted <font color="blue">${guest}</font>`, 
+                    "title": `${req.body.language==="English"?`You predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းထားခဲ့သည်`}`, 
                     "type": "sequence", 
                     "extra": ``,
                     "value": "138113",
@@ -757,9 +757,9 @@ router.post('/inactive-histories-by-date-second', async(req, res,next)=> {
                 },
                 {
                     "title": fixture.winLose==='Win'?"✅":"❌", 
-                    "type": "sequence", 
+                    "type": "basic", 
                     "extra": ``,
-                    "value": "138113",
+                    "value": "",
                     "Columns": 6
                 },
             ]
@@ -793,7 +793,7 @@ router.post('/inactive-histories-by-date-third', async(req, res,next)=> {
             "url": '',
             "buttons": [
                 {
-                    "title": `You predicted <font color="blue">${guest}</font>`, 
+                    "title": `${req.body.language==="English"?`You predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းထားခဲ့သည်`}`,  
                     "type": "sequence", 
                     "extra": ``,
                     "value": "138113",
@@ -801,9 +801,9 @@ router.post('/inactive-histories-by-date-third', async(req, res,next)=> {
                 },
                 {
                     "title": fixture.winLose==='Win'?"✅":"❌", 
-                    "type": "sequence", 
+                    "type": "basic", 
                     "extra": ``,
-                    "value": "138113",
+                    "value": "",
                     "Columns": 6
                 },
             ]
@@ -837,7 +837,7 @@ router.post('/inactive-histories-by-date-fourth', async(req, res,next)=> {
             "url": '',
             "buttons": [
                 {
-                    "title": `You predicted <font color="blue">${guest}</font>`, 
+                    "title": `${req.body.language==="English"?`You predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းထားခဲ့သည်`}`, 
                     "type": "sequence", 
                     "extra": ``,
                     "value": "138113",
@@ -845,9 +845,9 @@ router.post('/inactive-histories-by-date-fourth', async(req, res,next)=> {
                 },
                 {
                     "title": fixture.winLose==='Win'?"✅":"❌", 
-                    "type": "sequence", 
+                    "type": "basic", 
                     "extra": ``,
-                    "value": "138113",
+                    "value": "",
                     "Columns": 6
                 },
             ]
@@ -1620,9 +1620,25 @@ router.post('/question', (async(req, res) => {
     }
 }))
 
+const checkCorrectAnswer = (answer)=> {
+    var correctAnswer;
+    if(answer === 'Option 1'){
+        correctAnswer='6007'
+    }else if(answer === 'Option 2'){
+        correctAnswer='6008'
+    }else if(answer === 'Option 3'){
+        correctAnswer='6009'
+    }else{
+        correctAnswer='6010'
+    }
+    return correctAnswer;
+}
+
 router.post('/check-quiz-answer', (async(req, res)=> {
     console.log("calling check quiz answer", req.body)
     const quiz = await quizService.checkQuizAnswer(req.body.QuizId)
+    console.log("quizzz => ", quiz)
+    const correctAnswer = checkCorrectAnswer(quiz['6011'])
     if(quiz['6011'] === req.body.QuizAnswer){
         await quizService.updateQuizScoreUser(req.body.uid);
         res.json({
@@ -1638,7 +1654,7 @@ router.post('/check-quiz-answer', (async(req, res)=> {
         })
     }else{
         res.json({
-            "data": `${req.body.language==='English'?'Your answer is Wrong':'သင့်ရဲ့အဖြေမှားပါသည်'}`,
+            "data": `${req.body.language==='English'?`Your answer is Wrong \n Correct answer is ${quiz[correctAnswer]}.`:`သင့်ရဲ့အဖြေမှားပါသည် \n အဖြေမှန်ကတော့ ${quiz[correctAnswer]} ဖြစ်ပါတယ်။`}`,
             "success": true,
             "message": "Successful", 
             "attributes": {
