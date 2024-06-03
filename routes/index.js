@@ -944,14 +944,25 @@ router.get('/noti-message', async(req, res, next)=> {
         }
     }
    if(fixture!==null){
-        res.json({
-            "data": `Match Finished \n${fixture['5780']} - ${fixture['5782']} \nMatch Score: ${fixture['5781']}:${fixture['5783']} \nYou made the following prediction ${predict} \n${fixture['5897']==="Win"?"Congratulations!":"Try Again!"} Your prediction was ${fixture['5897']==="Win"?"correct":"incorrect"}! ${fixture['5897']==="Win"?"\n1 point added to your balance":""}`,
-            "success": true,
-            "message": "Successful", 
-            "attributes": {
-            },
-            "status": 200
-        })
+        if(req.body.language){
+            res.json({
+                "data": `Match Finished \n${fixture['5780']} - ${fixture['5782']} \nMatch Score: ${fixture['5781']}:${fixture['5783']} \nYou made the following prediction ${predict} \n${fixture['5897']==="Win"?"Congratulations!":"Try Again!"} Your prediction was ${fixture['5897']==="Win"?"correct":"incorrect"}! ${fixture['5897']==="Win"?"\n1 point added to your balance":""}`,
+                "success": true,
+                "message": "Successful", 
+                "attributes": {
+                },
+                "status": 200
+            })
+        }else{
+            res.json({
+                "data": `${fixture['5780']} - ${fixture['5782']} ပွဲပြီးပါပီ \nပွဲရလဒ်: ${fixture['5781']}:${fixture['5783']} \nသင် ${predict} ကို ခန်းမှန်းခဲ့သည့် \n${fixture['5897']==="Win"?"ဂုဏ်ယူပါတယ်!":"နောက်ထပ်ကြိုးစားပါ!"} သင့်ရဲ့ခန်းမှန်းမှု ${fixture['5897']==="Win"?"မှန်":"မှား"}! ${fixture['5897']==="Win"?"\n သင့်ရဲ့အမှတ်ထဲ့သို့ ၁ မှတ်‌ပေါင်းထည့်ထားပါသည်":""}`,
+                "success": true,
+                "message": "Successful", 
+                "attributes": {
+                },
+                "status": 200
+            })
+        }
    }
 })
 
