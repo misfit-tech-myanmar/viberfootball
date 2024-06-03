@@ -11,7 +11,11 @@ QuizService.prototype = {
         return new Promise(async(resolve, reject)=> {
             try{
                 const response = await self.Axios.get('/stable/bots/labs/2295/entries');
-                resolve(response.data.dataSource.filter(item=> item['6136'] !== "Finished").sort((a, b) => a['6004'] - b['6004'])[totalAnswer])
+                if(totalAnswer < 10){
+                    resolve(response.data.dataSource.filter(item=> item['6136'] !== "Finished").sort((a, b) => a['6004'] - b['6004'])[totalAnswer])
+                }else{
+                    resolve();
+                }
             }catch(err){
                 reject(err)
             }

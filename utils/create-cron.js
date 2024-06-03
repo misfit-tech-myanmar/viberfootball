@@ -38,7 +38,7 @@ module.exports = {
             console.error("running every start of day")
             console.log('today', today)
             console.log('next 2 day', dayAfterNext)
-            footballService.getFixtureFromApiAndPostToMyaliceDataLab(today, dayAfterNext)
+            footballService.getFixtureFromApiAndPostToMyaliceDataLab(getFormattedDate(today), getFormattedDate(dayAfterNext))
         })
     },
     everyAugest: () => {

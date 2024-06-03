@@ -12,7 +12,6 @@ function FootBallService(){
 FootBallService.prototype = {
     getFixtureFromApiAndPostToMyaliceDataLab: async(from, to) => {
         const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=1&APIkey=c75f5e6c8341750bc05cddef05c6544f7bf5c3b97dcf7264da6f22cb8596e53f&timezone=Asia/Yangon`);
-
         if(footballResponse.data.length > 0){
             let response = await self.Axios.get('/stable/bots/labs/2247/entries');
             let fixtures = footballResponse.data.filter( fixture => {
