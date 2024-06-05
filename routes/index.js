@@ -10,6 +10,7 @@ const HistoryService = require('../services/history.service');
 const ProfileService = require('../services/profile.service');
 const NotificationService = require('../services/notification.service');
 const LeaderBoardService = require('../services/leaderboard.service');
+const StandingService = require('../services/standing.service');
 const footballService = new FootballService();
 const predictionService = new PredictionService();
 const quizService = new QuizService();
@@ -18,6 +19,7 @@ const historyService = new HistoryService();
 const profileService = new ProfileService();
 const notiService = new NotificationService();
 const leaderboardService = new LeaderBoardService();
+const standingService= new StandingService();
 
 
 /**Make Prediction */
@@ -1722,6 +1724,11 @@ router.get('/check-quiz-batch', async(req, res) => {
         },
         "status": 200
     })
+})
+
+router.get('/standing', async(req, res) => {
+    const standing = await standingService.getStanding();
+    res.json(standing)
 })
 
 
