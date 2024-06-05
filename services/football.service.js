@@ -314,8 +314,9 @@ FootBallService.prototype = {
     fixtureResultSort: () => {
         return new Promise(async(resolve, reject)=> {
             let response = await self.Axios.get('/stable/bots/labs/2247/entries');
-            if(response.data.dataSource.length > 0){
-                resolve(response.data.dataSource.sort((a,b)=> {
+            let mergeObj = await self.mergeObj(response.data.dataSource)
+            if(mergeObj.length > 0){
+                resolve(mergeObj.sort((a,b)=> {
                     return new Date(`${a['5769']} ${a['5779']}`) - new Date(`${b['5769']} ${b['5779']}`)
                 }))
             }else{
@@ -327,13 +328,14 @@ FootBallService.prototype = {
         return new Promise(async(resolve, reject)=> {
             const fixtureResultSorted = await self.fixtureResultSort();
             resolve(fixtureResultSorted.map(fixture=> {
+                console.log(fixture)
                 return {
                     leagueName: fixture['5768'],
                     status: fixture['5778'],
                     home: fixture['5780'],
-                    homeLogo: fixture['5786'],
+                    homeLogo: fixture.homeLogo,
                     away: fixture['5782'],
-                    awayLogo: fixture['5787'],
+                    awayLogo: fixture.awayLogo,
                     homeScore: fixture['5781'],
                     awayScore: fixture['5783'],
                     matchDate: fixture['5769'],
@@ -343,7 +345,32 @@ FootBallService.prototype = {
                 }
             }))
         })
+    },
+    getTeamByTeamId: (teamId) => {
+        return new Promise(async(resolve, reject)=> {
+            let response = await self.Axios.get('/stable/bots/labs/2261/entries');
+            resolve(response.data.dataSource.filter(item => item['5811'] == teamId)[0])
+        })
+    },
+    mergeObj: (data)=> {
+        // console.log(data)
+        return new Promise(async(resolve, reject)=> {
+            var proceedData = Promise.all(data.map(async item=> {
+                const homeTeamById = await self.getTeamByTeamId(item['5956'])
+                const awayTeamById = await self.getTeamByTeamId(item['5957'])
+                return {...item,homeLogo: homeTeamById['5812'], awayLogo: awayTeamById['5812']}
+            }))
+            proceedData.then(data=> {
+                resolve(data)
+            })
+        })
     }
+    // storeFixtureToMatchDataLab: () => {
+    //     return new Promise(async(resolve, reject) => {
+    //     const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=1&APIkey=c75f5e6c8341750bc05cddef05c6544f7bf5c3b97dcf7264da6f22cb8596e53f&timezone=Asia/Yangon`);
+
+    //     })
+    // }
 }
 
 module.exports = FootBallService;
