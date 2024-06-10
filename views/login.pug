@@ -1,0 +1,17 @@
+doctype html
+html
+  head
+    title Login Page
+    link(rel='stylesheet', href='/css/style.css')
+  body
+    .login-container
+      .login-form
+        h2 Login
+        form(action='/login', method='POST')
+          .form-group
+            label(for='username', class='input-label') Username:
+            input(type='text', id='username', name='username', class='input-field', required)
+          .form-group
+            label(for='password', class='input-label') Password:
+            input(type='password', id='password', name='password', class='input-field', required)
+          button(type='submit') Login

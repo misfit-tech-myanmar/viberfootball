@@ -565,7 +565,7 @@ router.post('/active-histories-by-date-second', async(req, res,next)=> {
                 "success": true,
                 "message": "Successful", 
                 "attributes": {
-                    previousFixturesActive: "2",
+                    previousFixturesActive: "1",
                     nextFixturesActive: histories.total > 10?"1":"2"
                 },
                 "status": 200
@@ -921,8 +921,9 @@ router.post('/update-prediction', async(req, res, next) => {
 router.post('/profile', async(req, res, next)=> {
     console.log("Calling profile")
     const profile = await profileService.profile(req.body);
+    console.log(profile)
     res.json({
-        "data": `${profile['5755']}`,
+        "data": `${profile.username}`,
         "success": true,
         "message": "Successful", 
         "attributes": {
@@ -1236,16 +1237,16 @@ router.post('/top-five-player', async(req, res, next)=>{
     })
 })
 
-router.get('/myanmar-leaderboard', async(req, res)=> {
-    const leaderboard = await leaderboardService.getTopPredictionUserScore();
-    res.json(leaderboard.myanmar.map((item, index)=> {
-        return {
-            "id": index+1,
-            "name": item['5751'],
-            "score": item['5755']
-        }
-    }))
-})
+// router.get('/myanmar-leaderboard', async(req, res)=> {
+//     const leaderboard = await leaderboardService.getTopPredictionUserScore();
+//     res.json(leaderboard.myanmar.map((item, index)=> {
+//         return {
+//             "id": index+1,
+//             "name": item['5751'],
+//             "score": item['5755']
+//         }
+//     }))
+// })
 router.get('/myanmar-leaderboard', async(req, res)=> {
     const leaderboard = await leaderboardService.getTopPredictionUserScore();
     res.json(leaderboard.myanmar.map((item, index)=> {
