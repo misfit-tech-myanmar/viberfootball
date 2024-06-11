@@ -11,7 +11,9 @@ HistoryService.prototype = {
     histories: (userId,active)=>{
         return new Promise(async (resolve, reject) => {
             try{
-                const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+                const response = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+                console.log("calling active hsitories check", response)
+                const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries?limit=${response.data.count}`);
                 const userPredictions = await self.getPredictionByUser(userId, userHistories.data.dataSource.map(item=> {
                     return {
                         matchId: item['5860'],
@@ -177,7 +179,9 @@ HistoryService.prototype = {
     getUserPredictions: (date, userId) => {
         return new Promise(async(resolve, reject)=> {
             try{
-                const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+                const response = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+                console.log(response)
+                const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries?limit=${response.data.count}`);
                 var userPredictions = await self.getPredictionByUser(userId, userHistories.data.dataSource.map(item=> {
                     return {
                         matchId: item['5860'],

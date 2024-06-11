@@ -200,7 +200,10 @@ PredictionService.prototype = {
         return new Promise(async(resolve, reject)=> {
             try{
                 const response = await self.Axios.get('/stable/bots/labs/2268/entries');
-                const isPredicted = self.checkUserPredictByMatchIdAndUserId(response.data.dataSource, matchId, userId)
+                const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries?limit=${response.data.count}`);
+                console.log(userHistories)
+                const isPredicted = self.checkUserPredictByMatchIdAndUserId(userHistories.data.dataSource, matchId, userId)
+                console.log(isPredicted)
                 resolve(isPredicted)
             }catch(err){
                 console.log(err)
