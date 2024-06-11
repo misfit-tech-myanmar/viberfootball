@@ -52,8 +52,7 @@ PredictionService.prototype = {
     getUserPredictionsByUserId: (userId) => {
         return new Promise(async(resolve, reject) => {
             try{
-                const response = await self.Axios.get(`/stable/bots/labs/2268/entries`);
-                const userPredicts = await self.Axios.get(`/stable/bots/labs/2268/entries?limit=${response.data.count}`);
+                const userPredicts = await self.Axios.get(`/stable/bots/labs/2268/entries`);
                 const predicts = [];
                 userPredicts.data.dataSource.forEach(predict => {
                     // console.log(predict)
@@ -76,8 +75,7 @@ PredictionService.prototype = {
     getFixtureByMatchId: (matchId)=> {
         return new Promise(async(resolve, reject) => {
             try{
-                const response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
-                const fixture = await self.Axios.get(`/stable/bots/labs/2247/entries?limit=${response.data.count}`);
+                const fixture = await self.Axios.get(`/stable/bots/labs/2247/entries`);
                 if(fixture.data.dataSource.length > 0){
                     fixture.data.dataSource.forEach( fixture => {
                         if(fixture['5766'] === matchId){
@@ -176,8 +174,7 @@ PredictionService.prototype = {
     predict: () => {
         return new Promise( async(resolve, reject)=> {
             try{
-                const response = await self.Axios.get('/stable/bots/labs/2241/entries');
-                const userResponse = await self.Axios.get(`/stable/bots/labs/2241/entries?limit=${response.data.count}`);
+                const userResponse = await self.Axios.get(`/stable/bots/labs/2241/entries`);
                 userResponse.data.dataSource.forEach(async user=> {
                     await self.singlePredict(user.id)
                 })
@@ -203,8 +200,7 @@ PredictionService.prototype = {
     checkPredict: (userId, matchId) => {
         return new Promise(async(resolve, reject)=> {
             try{
-                const response = await self.Axios.get('/stable/bots/labs/2268/entries');
-                const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries?limit=${response.data.count}`);
+                const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries`);
                 console.log(userHistories)
                 const isPredicted = self.checkUserPredictByMatchIdAndUserId(userHistories.data.dataSource, matchId, userId)
                 console.log(isPredicted)
