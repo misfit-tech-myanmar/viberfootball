@@ -12,7 +12,8 @@ LeaderBoardService.prototype = {
     getTopPredictionUserScore : () => {
         return new Promise(async(resolve, reject)=> {
             try{
-                const userResponse = await self.Axios.get(`/stable/bots/labs/2241/entries`);
+                const response = await self.Axios.get(`/stable/bots/labs/2241/entries`);
+                const userResponse = await self.Axios.get(`/stable/bots/labs/2241/entries?limit=${response.data.count}`);
                 const users = userResponse.data.dataSource;
                 console.log(users.length)
                 resolve({
@@ -27,7 +28,8 @@ LeaderBoardService.prototype = {
     getQuizScores: () => {
         return new Promise(async(resolve, reject) => {
             try{
-                const userResponse = await self.Axios.get(`/stable/bots/labs/2241/entries`);
+                const response = await self.Axios.get(`/stable/bots/labs/2241/entries`);
+                const userResponse = await self.Axios.get(`/stable/bots/labs/2241/entries?limit=${response.data.count}`);
                 const users = userResponse.data.dataSource;
                 resolve({
                     inter: users.sort((a,b) =>  b['6137'] - a['6137'] ),
