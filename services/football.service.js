@@ -13,7 +13,8 @@ FootBallService.prototype = {
     getFixtureFromApiAndPostToMyaliceDataLab: async(from, to) => {
         const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=1&APIkey=c75f5e6c8341750bc05cddef05c6544f7bf5c3b97dcf7264da6f22cb8596e53f&timezone=Asia/Yangon`);
         if(footballResponse.data.length > 0){
-            let response = await self.Axios.get('/stable/bots/labs/2247/entries');
+            let responseUser = await self.Axios.get('/stable/bots/labs/2247/entries');
+            let response = await self.Axios.get(`/stable/bots/labs/2247/entries?limit=${responseUser.data.count}`);
             let fixtures = footballResponse.data.filter( fixture => {
                 return {
                     match_id: fixture.match_id,
@@ -88,7 +89,8 @@ FootBallService.prototype = {
     },
     checkPredictFixtures: () => {
         return new Promise(async(resolve, reject) => {
-            let response = await self.Axios.get('/stable/bots/labs/2247/entries');
+            let responseFixture = await self.Axios.get('/stable/bots/labs/2247/entries');
+            let response = await self.Axios.get(`/stable/bots/labs/2247/entries?limit=${responseFixture.data.count}`);
             response.data.dataSource = response.data.dataSource.sort((a,b)=> {
                 return new Date(`${a['5769']} ${a['5779']}`) - new Date(`${b['5769']} ${b['5779']}`)
             })
@@ -100,7 +102,8 @@ FootBallService.prototype = {
     getFixtures: (call, userId) => {
         return new Promise(async(resolve, reject) => {
             try{
-                let response = await self.Axios.get('/stable/bots/labs/2247/entries');
+                let responseFixture = await self.Axios.get('/stable/bots/labs/2247/entries');
+                let response = await self.Axios.get(`/stable/bots/labs/2247/entries?limit=${responseFixture.data.count}`);
                 response.data.dataSource = response.data.dataSource.sort((a,b)=> {
                     return new Date(`${a['5769']} ${a['5779']}`) - new Date(`${b['5769']} ${b['5779']}`)
                 })
@@ -194,7 +197,8 @@ FootBallService.prototype = {
     userPredictionsByUserId: (userId)=>{
         return new Promise(async(resolve, reject)=>{
             try{
-                const response = await self.Axios.get('/stable/bots/labs/2268/entries');
+                const responseUserPrediction = await self.Axios.get('/stable/bots/labs/2268/entries');
+                const response = await self.Axios.get(`/stable/bots/labs/2268/entries?limit=${responseUserPrediction.data.count}`);
                 const data = response.data.dataSource.filter(item=> {
                     if(item['5861'] == userId){
                         return item;
@@ -209,7 +213,8 @@ FootBallService.prototype = {
     getTeamShortFormByTeamName: async(homeTeam, awayTeam) => {
         return new Promise(async(resolve, reject)=> {
             try{
-                const teamResponses = await self.Axios.get('/stable/bots/labs/2261/entries');
+                const response = await self.Axios.get('/stable/bots/labs/2261/entries');
+                const teamResponses = await self.Axios.get(`/stable/bots/labs/2261/entries?limit=${response.data.count}`);
                 const getHomeTeam = teamResponses.data.dataSource.filter(team=>{
                     if(team['5811'] === homeTeam){
                         return team['5848'];
@@ -289,7 +294,8 @@ FootBallService.prototype = {
     },
     getSingleLabFixture: (matchId) => {
         return new Promise(async(resolve, reject)=>{
-            const response = await self.Axios.get('/stable/bots/labs/2247/entries');
+            const responseFixture = await self.Axios.get('/stable/bots/labs/2247/entries');
+            const response = await self.Axios.get(`/stable/bots/labs/2247/entries?limit=${responseFixture.data.count}`);
             const data = response.data.dataSource.filter(single=>{
                 if(single['5778'] === '' && single['5766'] === matchId){
                     return single;
@@ -313,7 +319,8 @@ FootBallService.prototype = {
     },
     fixtureResultSort: () => {
         return new Promise(async(resolve, reject)=> {
-            let response = await self.Axios.get('/stable/bots/labs/2247/entries');
+            let responseFixture = await self.Axios.get('/stable/bots/labs/2247/entries');
+            let response = await self.Axios.get(`/stable/bots/labs/2247/entries?limit=${responseFixture.data.count}`);
             let mergeObj = await self.mergeObj(response.data.dataSource)
             if(mergeObj.length > 0){
                 resolve(mergeObj.sort((a,b)=> {
@@ -348,6 +355,7 @@ FootBallService.prototype = {
     },
     getTeamByTeamId: (teamId) => {
         return new Promise(async(resolve, reject)=> {
+            let responseTeam = await self.Axios.get(`/stable/bots/labs/2261/entries?limit=${responseTeam.data.count}`);
             let response = await self.Axios.get('/stable/bots/labs/2261/entries');
             resolve(response.data.dataSource.filter(item => item['5811'] == teamId)[0])
         })

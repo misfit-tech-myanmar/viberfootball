@@ -33,7 +33,8 @@ StandingService.prototype = {
     },
     getTeamByTeamId: (teamId) => {
         return new Promise(async(resolve, reject)=> {
-            let response = await self.Axios.get('/stable/bots/labs/2261/entries');
+            let responseTeam = await self.Axios.get('/stable/bots/labs/2261/entries');
+            let response = await self.Axios.get(`/stable/bots/labs/2261/entries?limit=${responseTeam.data.count}`);
             resolve(response.data.dataSource.filter(item => item['5811'] == teamId)[0])
         })
     },

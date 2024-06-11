@@ -52,7 +52,8 @@ PredictionService.prototype = {
     getUserPredictionsByUserId: (userId) => {
         return new Promise(async(resolve, reject) => {
             try{
-                const userPredicts = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+                const response = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+                const userPredicts = await self.Axios.get(`/stable/bots/labs/2268/entries?limit=${response.data.count}`);
                 const predicts = [];
                 userPredicts.data.dataSource.forEach(predict => {
                     // console.log(predict)
@@ -75,7 +76,8 @@ PredictionService.prototype = {
     getFixtureByMatchId: (matchId)=> {
         return new Promise(async(resolve, reject) => {
             try{
-                const fixture = await self.Axios.get(`/stable/bots/labs/2247/entries`);
+                const response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
+                const fixture = await self.Axios.get(`/stable/bots/labs/2247/entries?limit=${response.data.count}`);
                 if(fixture.data.dataSource.length > 0){
                     fixture.data.dataSource.forEach( fixture => {
                         if(fixture['5766'] === matchId){
@@ -163,6 +165,7 @@ PredictionService.prototype = {
     getUserInfoByUserId: (userId) => {
         return new Promise(async(resolve, reject)=>{
             try{
+                const response = await self.Axios.get(`/stable/bots/labs/2241/entries/${userId}`);
                 const user = await self.Axios.get(`/stable/bots/labs/2241/entries/${userId}`);
                 resolve(user.data.dataSource)
             }catch(err){
@@ -173,7 +176,8 @@ PredictionService.prototype = {
     predict: () => {
         return new Promise( async(resolve, reject)=> {
             try{
-                const userResponse = await self.Axios.get('/stable/bots/labs/2241/entries');
+                const response = await self.Axios.get('/stable/bots/labs/2241/entries');
+                const userResponse = await self.Axios.get(`/stable/bots/labs/2241/entries?limit=${response.data.count}`);
                 userResponse.data.dataSource.forEach(async user=> {
                     await self.singlePredict(user.id)
                 })

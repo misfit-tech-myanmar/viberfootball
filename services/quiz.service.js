@@ -10,7 +10,8 @@ QuizService.prototype = {
     getQuizzes: (totalAnswer) => {
         return new Promise(async(resolve, reject)=> {
             try{
-                const response = await self.Axios.get('/stable/bots/labs/2295/entries');
+                const responseQuiz = await self.Axios.get('/stable/bots/labs/2295/entries');
+                const response = await self.Axios.get(`/stable/bots/labs/2295/entries?limit=${responseQuiz.data.count}`);
                 if(totalAnswer < 10){
                     resolve(response.data.dataSource.filter(item=> item['6136'] !== "Finished").sort((a, b) => a['6004'] - b['6004'])[totalAnswer])
                 }else{
@@ -49,7 +50,8 @@ QuizService.prototype = {
     },
     getQuizById: (quizId) => {
         return new Promise(async(resolve, reject) => {
-            const quizzes = await self.Axios.get('/stable/bots/labs/2295/entries');
+            const response = await self.Axios.get('/stable/bots/labs/2295/entries');
+            const quizzes = await self.Axios.get(`/stable/bots/labs/2295/entries?limit=${response.data.count}`);
             resolve(quizzes.data.dataSource.filter(item=> item.id === quizId)[0])
         })
     }, 
@@ -64,7 +66,8 @@ QuizService.prototype = {
     },
     getUserByUid: (creatorId) => {
         return new Promise(async(resolve, reject)=> {
-            const userResponse = await self.Axios.get('/stable/bots/labs/2241/entries');
+            const response = await self.Axios.get('/stable/bots/labs/2241/entries');
+            const userResponse = await self.Axios.get(`/stable/bots/labs/2241/entries?limit=${response.data.count}`);
             console.log(userResponse.data.dataSource)
             resolve(userResponse.data.dataSource.filter(user=> user.creator_id === creatorId)[0])
         })
@@ -106,7 +109,8 @@ QuizService.prototype = {
     },
     getAllQuizEntries: () => {
         return new Promise(async(resolve, reject)=> {
-            const quizResponse = await self.Axios.get('/stable/bots/labs/2295/entries');
+            const response = await self.Axios.get('/stable/bots/labs/2295/entries');
+            const quizResponse = await self.Axios.get(`/stable/bots/labs/2295/entries?limit=${response.data.count}`);
             resolve(quizResponse.data.dataSource.filter(item=> item['6136'] !== 'Finished').sort((a,b) => a['6004']- b['6004']))
         })
     },

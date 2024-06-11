@@ -50,7 +50,8 @@ NotificationService.prototype = {
         return new Promise(async(resolve, reject)=> {
             try{
                 // const result = 
-                let response = await self.Axios.get('/stable/bots/labs/2247/entries');
+                let responseFinishedFixture = await self.Axios.get('/stable/bots/labs/2247/entries');
+                let response = await self.Axios.get(`/stable/bots/labs/2247/entries?limit=${responseFinishedFixture.data.count}`);
                 resolve(response.data.dataSource.filter(item=> {
                     if(item['5778']){
                         return item;
@@ -79,7 +80,8 @@ NotificationService.prototype = {
     getUserPredictionsByMatchId: (matchId) => {
         return new Promise(async(resolve, reject) => {
             try{
-                let response = await self.Axios.get('/stable/bots/labs/2268/entries');
+                let responseUserPrediction = await self.Axios.get('/stable/bots/labs/2268/entries');
+                let response = await self.Axios.get(`/stable/bots/labs/2268/entries?limit=${responseUserPrediction.data.count}`);
                 resolve(response.data.dataSource.filter(item=> item['5860'] === matchId))
             }catch(err){
                 console.log(err)
@@ -89,7 +91,8 @@ NotificationService.prototype = {
     getUserPredictionsByUserId: (userId) => {
         return new Promise(async(resolve, reject) => {
             try{
-                let response = await self.Axios.get('/stable/bots/labs/2268/entries');
+                let responseUserPrediction = await self.Axios.get('/stable/bots/labs/2268/entries');
+                let response = await self.Axios.get(`/stable/bots/labs/2268/entries?limit=${responseUserPrediction.data.count}`);
                 resolve(response.data.dataSource.filter(item=> item['5861'] == userId))
             }catch(err){
                 console.log(err)
@@ -167,13 +170,15 @@ NotificationService.prototype = {
     },
     getAllUsers: () => {
         return new Promise(async(resolve, reject) => {
-            const users = await self.Axios.get(`/stable/bots/labs/2241/entries`);
+            const response = await self.Axios.get(`/stable/bots/labs/2241/entries`);
+            const users = await self.Axios.get(`/stable/bots/labs/2241/entries?limit=${response.data.count}`);
             resolve(users.data.dataSource)
         })
     },
     getAllUnfinishedFixtures: () => {
         return new Promise(async(resolve, reject)=> {
-            let response = await self.Axios.get('/stable/bots/labs/2247/entries');
+            let responseFixture = await self.Axios.get('/stable/bots/labs/2247/entries');
+            let response = await self.Axios.get(`/stable/bots/labs/2247/entries?limit=${responseFixture.data.count}`);
             resolve(response.data.dataSource.filter(fixture=> fixture['5781'] === '' ))
         })
     },

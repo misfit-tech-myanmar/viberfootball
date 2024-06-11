@@ -217,8 +217,9 @@ HistoryService.prototype = {
     getFixtures: () => {
         return new Promise(async(resolve, reject)=> {
             let response = await self.Axios.get('/stable/bots/labs/2247/entries');
-            if(response.data.dataSource.length > 0){
-                resolve(response.data.dataSource);
+            let fixtureResponse = await self.Axios.get(`/stable/bots/labs/2247/entries?limit=${response.data.count}`);
+            if(fixtureResponse.data.dataSource.length > 0){
+                resolve(fixtureResponse.data.dataSource);
             }else{
                 resolve('There is no fixtures.')
             }
