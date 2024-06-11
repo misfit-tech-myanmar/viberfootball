@@ -923,7 +923,7 @@ router.post('/profile', async(req, res, next)=> {
     const profile = await profileService.profile(req.body);
     console.log("Heyyyy", profile)
     res.json({
-        "data": `${profile['5755']}`,
+        "data": ``,
         "success": true,
         "message": "Successful", 
         "attributes": {
