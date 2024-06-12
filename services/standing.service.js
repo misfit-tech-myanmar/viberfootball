@@ -1,10 +1,12 @@
 const axios = require('axios')
 const {axiosInstance} = require('../libs/axios.instance');
+const redisClient = require('../libs/redis');
 
 let self;
 function StandingService(){
     self=this;
     self.Axios = axiosInstance
+    self.RedisClient = redisClient;
 }
 
 StandingService.prototype = {
@@ -33,8 +35,10 @@ StandingService.prototype = {
     },
     getTeamByTeamId: (teamId) => {
         return new Promise(async(resolve, reject)=> {
-            let response = await self.Axios.get(`/stable/bots/labs/2261/entries`);
-            resolve(response.data.dataSource.filter(item => item['5811'] == teamId)[0])
+            // let response = await self.Axios.get(`/stable/bots/labs/2261/entries`);
+            const teamsResponse = await self.RedisClient.get('teams');
+            const teamsCache = JSON.parse(teamsResponse)
+            resolve(teamsCache.filter(item => item['5811'] == teamId)[0])
         })
     },
     mergeObj: (data)=> {

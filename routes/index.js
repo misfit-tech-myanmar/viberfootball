@@ -923,7 +923,7 @@ router.post('/profile', async(req, res, next)=> {
     const profile = await profileService.profile(req.body);
     console.log("Heyyyy", profile)
     res.json({
-        "data": ``,
+        "data": `${profile['5755']}`,
         "success": true,
         "message": "Successful", 
         "attributes": {
@@ -1730,6 +1730,18 @@ router.get('/check-quiz-batch', async(req, res) => {
 router.get('/standing', async(req, res) => {
     const standing = await standingService.getStanding();
     res.json(standing)
+})
+
+const StoreRedisFromDatalab =require('../services/store.redis.datalab.service');
+const storeRedisFromDataLab = new StoreRedisFromDatalab();
+
+router.get('/store-redis', async(req, res)=> {
+    const result = await storeRedisFromDataLab.storeRedisFromDataLab()
+    res.json(result)
+})
+router.get('/get-redis', async(req, res)=> {
+    const result = await storeRedisFromDataLab.getDataFromRedis()
+    res.json(result)
 })
 
 

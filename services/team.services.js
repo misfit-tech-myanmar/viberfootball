@@ -1,16 +1,20 @@
 const {axiosInstance} = require('../libs/axios.instance');
+const redisClient = require('../libs/redis');
 
 let self;
 function TeamService(){
     self = this;
     self.Axios = axiosInstance;
+    self.RedisClient = redisClient;
 }
 
 TeamService.prototype = {
     getTeams: (call) => {
         return new Promise(async(resolve, reject)=> {
-            let response = await self.Axios.get('/stable/bots/labs/2261/entries');
-            response.data.dataSource.sort((a, b) => {
+            // let response = await self.Axios.get('/stable/bots/labs/2261/entries');
+            const teamsResponse = await self.RedisClient.get('teams');
+            let teamsCache = JSON.parse(teamsResponse)
+            teamsCache.sort((a, b) => {
                 const nameA = a['5810'].toUpperCase(); // ignore upper and lowercase
                 const nameB = b['5810'].toUpperCase(); // ignore upper and lowercase
               
@@ -38,7 +42,7 @@ TeamService.prototype = {
             //     })
             // }
             
-            resolve(response.data.dataSource)
+            resolve(teamsCache)
         })
     }
 }

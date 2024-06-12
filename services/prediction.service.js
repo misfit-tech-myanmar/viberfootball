@@ -1,17 +1,18 @@
 const { response } = require('express');
 const { axiosInstance } = require('../libs/axios.instance');
+const redisClient = require('../libs/redis');
 const axios = require('axios')
 
 let self;
 function PredictionService(){
     self = this;
     self.Axios = axiosInstance;
+    self.RedisClient = redisClient;
 }
 
 PredictionService.prototype = {
-    singlePredict: (userId) => {
+    singlePredict: (user) => {
         return new Promise(async(resolve, reject) => {
-            const user = await self.getUserInfoByUserId(userId);
             const userPredicts = await self.getUserPredictionsByUserId(user.creator_id);
             if(userPredicts.length > 0) {
                 userPredicts.forEach(async userPredict => {
@@ -52,21 +53,19 @@ PredictionService.prototype = {
     getUserPredictionsByUserId: (userId) => {
         return new Promise(async(resolve, reject) => {
             try{
-                const userPredicts = await self.Axios.get(`/stable/bots/labs/2268/entries`);
-                const predicts = [];
-                userPredicts.data.dataSource.forEach(predict => {
-                    // console.log(predict)
-                    if(predict['5861'] === userId && predict['5897'] === undefined){
-                        predicts.push({
-                            id: predict.id,
-                            user_id: predict['5861'],
-                            match_id: predict['5860'],
-                            win_lose: predict['5897'],
-                            predict: predict['5862'],
-                        })
+                // const userPredicts = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+                const predictionResponse = await self.RedisClient.get('user-predictions');
+                let predictionCache = JSON.parse(predictionResponse)
+                predictionCache = predictionCache.map(predict=> {
+                    return {
+                        id: predict.id,
+                        user_id: predict['5861'],
+                        match_id: predict['5860'],
+                        win_lose: predict['5897'],
+                        predict: predict['5862'],
                     }
                 })
-                resolve(predicts)
+                resolve(predictionCache.filter(predict=> predict.user_id === userId && predict.win_lose === undefined))
             }catch(err){
                 reject(err)
             }
@@ -75,9 +74,11 @@ PredictionService.prototype = {
     getFixtureByMatchId: (matchId)=> {
         return new Promise(async(resolve, reject) => {
             try{
-                const fixture = await self.Axios.get(`/stable/bots/labs/2247/entries`);
-                if(fixture.data.dataSource.length > 0){
-                    fixture.data.dataSource.forEach( fixture => {
+                // const fixture = await self.Axios.get(`/stable/bots/labs/2247/entries`);
+                const fixturesResponse = await self.RedisClient.get('fixtures');
+                let fixturesCache = JSON.parse(fixturesResponse)
+                if(fixturesCache.length > 0){
+                    fixturesCache.forEach( fixture => {
                         if(fixture['5766'] === matchId){
                             const singleFixture = {
                                 "match_id": fixture['5766'],
@@ -137,7 +138,15 @@ PredictionService.prototype = {
             try{
                 self.Axios.put(`/stable/bots/labs/2268/entries/${userPredict.id}`, {
                     "5897": result
-                }).then(response => {
+                }).then(async response => {
+                    const predictionResponse = await self.RedisClient.get('user-predictions');
+                    let predictionCache = JSON.parse(predictionResponse)
+                    predictionCache.forEach(item => {
+                        if(item.id === userPredict.id){
+                            item['5897'] = result
+                        }
+                    })
+                    await self.RedisClient.set('fixtures', JSON.stringify(fixturesCache))
                     resolve()
                 }).catch(err=> {
                     console.log('Error updating data: ')
@@ -152,7 +161,15 @@ PredictionService.prototype = {
             try{
                 self.Axios.put(`/stable/bots/labs/2241/entries/${userId}`, {
                     "5755": scores
-                }).then(response=> {
+                }).then(async response=> {
+                    const userResponse = await self.RedisClient.get('users');
+                    let userCache = JSON.parse(userResponse)
+                    userCache.forEach(item=> {
+                        if(item.id === userId){
+                            item['5755'] = scores
+                        }
+                    })
+                    await self.RedisClient.set('users', JSON.stringify(userCache))
                     resolve()
                 })
             }catch(err){
@@ -163,9 +180,11 @@ PredictionService.prototype = {
     getUserInfoByUserId: (userId) => {
         return new Promise(async(resolve, reject)=>{
             try{
-                const response = await self.Axios.get(`/stable/bots/labs/2241/entries/${userId}`);
-                const user = await self.Axios.get(`/stable/bots/labs/2241/entries/${userId}`);
-                resolve(user.data.dataSource)
+                // const response = await self.Axios.get(`/stable/bots/labs/2241/entries/${userId}`);
+                // const user = await self.Axios.get(`/stable/bots/labs/2241/entries/${userId}`);
+                const userResponse = await self.RedisClient.get('users');
+                let userCache = JSON.parse(userResponse)
+                resolve(userCache.filter(item=> item.id === userId))
             }catch(err){
                 reject(err)
             }
@@ -174,9 +193,11 @@ PredictionService.prototype = {
     predict: () => {
         return new Promise( async(resolve, reject)=> {
             try{
-                const userResponse = await self.Axios.get(`/stable/bots/labs/2241/entries`);
-                userResponse.data.dataSource.forEach(async user=> {
-                    await self.singlePredict(user.id)
+                // const userResponse = await self.Axios.get(`/stable/bots/labs/2241/entries`);
+                const userResponse = await self.RedisClient.get('users');
+                let userCache = JSON.parse(userResponse)
+                userCache.forEach(async user=> {
+                    await self.singlePredict(user)
                 })
             }catch(err){
                 reject(err)
@@ -186,12 +207,17 @@ PredictionService.prototype = {
     storeUserPrediction: (data) => {
         return new Promise(async(resolve, reject)=> {
             try{
-                await self.Axios.post('/stable/bots/labs/2268/entries', {
+                const userPredictionStore = await self.Axios.post('/stable/bots/labs/2268/entries', {
                     "5861": data.uid,
                     "5860": data.match_id,
                     "5862": data.predict,
                     "6002": "No"
                 });
+                const userPredictions = await self.RedisClient.get('user-predictions');
+                let predictions = JSON.parse(userPredictions)
+                predictions.push(userPredictionStore.data.dataSource)
+                await self.RedisClient.set('user-predictions', JSON.stringify(predictions))
+                resolve()
             }catch(err){
                 console.log(err)
             }
@@ -200,9 +226,11 @@ PredictionService.prototype = {
     checkPredict: (userId, matchId) => {
         return new Promise(async(resolve, reject)=> {
             try{
-                const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries`);
-                console.log(userHistories)
-                const isPredicted = self.checkUserPredictByMatchIdAndUserId(userHistories.data.dataSource, matchId, userId)
+                // const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+                const userPredictions = await self.RedisClient.get('user-predictions');
+                let predictionCache = JSON.parse(userPredictions)
+                console.log(predictionCache)
+                const isPredicted = self.checkUserPredictByMatchIdAndUserId(predictionCache, matchId, userId)
                 console.log(isPredicted)
                 resolve(isPredicted)
             }catch(err){
@@ -237,7 +265,15 @@ PredictionService.prototype = {
             const singlePrediction = await self.predictedMatch(data.match_id, data.uid);
             self.Axios.put(`https://api.myalice.ai/stable/bots/labs/2268/entries/${singlePrediction.id}`, {
                 '5862': data.predict
-            }).then(response=> {
+            }).then(async response=> {
+                const userPredictions = await self.RedisClient.get('user-predictions');
+                let predictionCache = JSON.parse(userPredictions)
+                predictionCache.forEach(item=> {
+                    if(item.id === singlePrediction.id){
+                        item['5862'] = data.predict
+                    }
+                })
+                await self.RedisClient.set('user-predictions', JSON.stringify(predictionCache))
                 resolve(true)
             }).catch(err=> {
                 console.log(err)

@@ -1,18 +1,22 @@
 const {axiosInstance} = require('../libs/axios.instance');
 const moment = require('moment-timezone');
+const redisClient = require('../libs/redis');
 
 let self;
 function HistoryService(){
     self = this;
     self.Axios = axiosInstance;
+    self.RedisClient = redisClient;
 }
 
 HistoryService.prototype = {
     histories: (userId,active)=>{
         return new Promise(async (resolve, reject) => {
             try{
-                const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries`);
-                const userPredictions = await self.getPredictionByUser(userId, userHistories.data.dataSource.map(item=> {
+                // const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+                const histories = await self.RedisClient.get('user-predictions')
+                const userHistories = JSON.parse(histories);
+                const userPredictions = await self.getPredictionByUser(userId, userHistories.map(item=> {
                     return {
                         matchId: item['5860'],
                         userId: item['5861'],
@@ -177,8 +181,10 @@ HistoryService.prototype = {
     getUserPredictions: (date, userId) => {
         return new Promise(async(resolve, reject)=> {
             try{
-                const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries`);
-                var userPredictions = await self.getPredictionByUser(userId, userHistories.data.dataSource.map(item=> {
+                // const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+                const histories = await self.RedisClient.get('user-predictions')
+                const userHistories = JSON.parse(histories);
+                var userPredictions = await self.getPredictionByUser(userId, userHistories.map(item=> {
                     return {
                         matchId: item['5860'],
                         userId: item['5861'],
@@ -212,9 +218,11 @@ HistoryService.prototype = {
     },
     getFixtures: () => {
         return new Promise(async(resolve, reject)=> {
-            let fixtureResponse = await self.Axios.get(`/stable/bots/labs/2247/entries`);
-            if(fixtureResponse.data.dataSource.length > 0){
-                resolve(fixtureResponse.data.dataSource);
+            // let fixtureResponse = await self.Axios.get(`/stable/bots/labs/2247/entries`);
+            const fixtureData = await self.RedisClient.get('fixtures')
+            const fixtures = JSON.parse(fixtureData);
+            if(fixtures.length > 0){
+                resolve(fixtures);
             }else{
                 resolve('There is no fixtures.')
             }

@@ -2,10 +2,11 @@
 const {axiosInstance} = require('../libs/axios.instance');
 const axios = require('axios')
 const moment = require('moment-timezone');
+const redisClient = require('../libs/redis');
 let self;
 function FootBallService(){
     self = this;
-    // self.RedisClient = redisClient;
+    self.RedisClient = redisClient;
     self.Axios = axiosInstance;
 }
 
@@ -13,7 +14,6 @@ FootBallService.prototype = {
     getFixtureFromApiAndPostToMyaliceDataLab: async(from, to) => {
         const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=1&APIkey=c75f5e6c8341750bc05cddef05c6544f7bf5c3b97dcf7264da6f22cb8596e53f&timezone=Asia/Yangon`);
         if(footballResponse.data.length > 0){
-            let response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
             let fixtures = footballResponse.data.filter( fixture => {
                 return {
                     match_id: fixture.match_id,
@@ -35,9 +35,11 @@ FootBallService.prototype = {
                     team_away_badge: fixture.team_away_badge
                 }
             });
-    
+            // let response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
+            const fixturesResponse = await self.RedisClient.get('fixtures');
+            let fixturesCache = JSON.parse(fixturesResponse)
             fixtures.forEach(async fixture=> {
-                const checkFixtureExitByMatchId = await self.checkFixtureExitByMatchId(response.data.dataSource, fixture.match_id)
+                const checkFixtureExitByMatchId = await self.checkFixtureExitByMatchId(fixturesCache, fixture.match_id)
                 if(checkFixtureExitByMatchId === undefined){
                     const response = await self.Axios.post('/stable/bots/labs/2247/entries', {
                             "5766": fixture.match_id, //match_id
@@ -58,6 +60,8 @@ FootBallService.prototype = {
                             "5956": fixture.match_hometeam_id,
                             "5957": fixture.match_awayteam_id
                     });
+                    fixturesCache.push(response.data.dataSource)
+                    await self.RedisClient.set('fixtures', JSON.stringify(fixturesCache));
                     if(response.data.success){
                         console.log("successful created fixtures.");
                     }
@@ -88,11 +92,13 @@ FootBallService.prototype = {
     },
     checkPredictFixtures: () => {
         return new Promise(async(resolve, reject) => {
-            let response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
-            response.data.dataSource = response.data.dataSource.sort((a,b)=> {
+            // let response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
+            const fixturesResponse = await self.RedisClient.get('fixtures');
+            const fixturesCache = JSON.parse(fixturesResponse)
+            fixturesCache = fixturesCache.sort((a,b)=> {
                 return new Date(`${a['5769']} ${a['5779']}`) - new Date(`${b['5769']} ${b['5779']}`)
             })
-            const unfinishedFixtures = await self.getUnfinishedFixtures(response.data.dataSource)
+            const unfinishedFixtures = await self.getUnfinishedFixtures(fixturesCache)
             const getFixtureBeforeOneHours = await self.getFixtureBeforeOneHour(unfinishedFixtures);
             resolve(getFixtureBeforeOneHours)
         })
@@ -100,13 +106,15 @@ FootBallService.prototype = {
     getFixtures: (call, userId) => {
         return new Promise(async(resolve, reject) => {
             try{
-                let response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
-                response.data.dataSource = response.data.dataSource.sort((a,b)=> {
+                // let response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
+                const fixturesResponse = await self.RedisClient.get('fixtures');
+                let fixturesCache = JSON.parse(fixturesResponse)
+                fixturesCache =fixturesCache.sort((a,b)=> {
                     return new Date(`${a['5769']} ${a['5779']}`) - new Date(`${b['5769']} ${b['5779']}`)
                 })
                 const userPredicts = await self.userPredictionsByUserId(userId)
-                const notPredictedFixtures = self.getNotPredictedFixture(response.data.dataSource, userPredicts)
-                const unfinishedFixtures = await self.getUnfinishedFixtures(response.data.dataSource)
+                const notPredictedFixtures = self.getNotPredictedFixture(fixturesCache, userPredicts)
+                const unfinishedFixtures = await self.getUnfinishedFixtures(fixturesCache)
                 const getFixtureBeforeOneHours = await self.getFixtureBeforeOneHour(unfinishedFixtures);
                 // if(unfinishedFixtures.length > 15 && call === 'third' ){
                 //     result = {
@@ -136,7 +144,7 @@ FootBallService.prototype = {
                 resolve({
                     result: getFixtureBeforeOneHours.filter((item, index)=> {
                         if(item['5781'] === ''){
-                            if(response.data.dataSource.length > 5){
+                            if(fixturesCache.length > 5){
                                 if(call === "first"){
                                     if(index < 5){
                                         return item;
@@ -194,8 +202,10 @@ FootBallService.prototype = {
     userPredictionsByUserId: (userId)=>{
         return new Promise(async(resolve, reject)=>{
             try{
-                const response = await self.Axios.get(`/stable/bots/labs/2268/entries`);
-                const data = response.data.dataSource.filter(item=> {
+                // const response = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+                const fixturesResponse = await self.RedisClient.get('fixtures');
+                const fixturesCache = JSON.parse(fixturesResponse)
+                const data = fixturesCache.filter(item=> {
                     if(item['5861'] == userId){
                         return item;
                     }
@@ -209,13 +219,15 @@ FootBallService.prototype = {
     getTeamShortFormByTeamName: async(homeTeam, awayTeam) => {
         return new Promise(async(resolve, reject)=> {
             try{
-                const teamResponses = await self.Axios.get(`/stable/bots/labs/2261/entries`);
-                const getHomeTeam = teamResponses.data.dataSource.filter(team=>{
+                // const teamResponses = await self.Axios.get(`/stable/bots/labs/2261/entries`);
+                const teamsResponse = await self.RedisClient.get('teams');
+                const teamsCache = JSON.parse(teamsResponse)
+                const getHomeTeam = teamsCache.filter(team=>{
                     if(team['5811'] === homeTeam){
                         return team['5848'];
                     }
                 })[0];
-                const getAwayTeam = teamResponses.data.dataSource.filter(team=>{
+                const getAwayTeam = teamsCache.filter(team=>{
                     if(team['5811'] === awayTeam){
                         return team['5848'];
                     }
@@ -235,6 +247,7 @@ FootBallService.prototype = {
             try{
                 const teamsResponse = await axios.get('https://apiv3.apifootball.com/?action=get_teams&league_id=1&APIkey=c75f5e6c8341750bc05cddef05c6544f7bf5c3b97dcf7264da6f22cb8596e53f&timezone=Asia/Yangon')
                 if(teamsResponse.data.length > 0){
+
                     teamsResponse.data.forEach(async team=> {
                         await self.Axios.post('/stable/bots/labs/2261/entries',{
                             "5810": team.team_name,
@@ -264,14 +277,24 @@ FootBallService.prototype = {
             const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=1&APIkey=c75f5e6c8341750bc05cddef05c6544f7bf5c3b97dcf7264da6f22cb8596e53f&timezone=Asia/Yangon`);
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
+                    
                     const singleMatch = await self.getSingleLabFixture(match.match_id)
                     if(match.match_status === 'Finished' && singleMatch.length >0){
                         self.Axios.put(`/stable/bots/labs/2247/entries/${singleMatch[0].id}`, {
                             "5778": match.match_status,
                             "5781": match.match_hometeam_ft_score,
                             "5783": match.match_awayteam_ft_score
-                        }).then(response => {
-                            console.log("updated")
+                        }).then(async response => {
+                            const fixturesResponse = await self.RedisClient.get('fixtures');
+                            let fixturesCache = JSON.parse(fixturesResponse)
+                            fixturesCache.forEach(item => {
+                                if(item['5766'] === response.data.dataSource['5766']){
+                                    item["5778"] =  match.match_status,
+                                    item["5781"] =  match.match_hometeam_ft_score,
+                                    item["5783"] =  match.match_awayteam_ft_score
+                                }
+                            })
+                            await self.RedisClient.set('fixtures', JSON.stringify(fixturesCache))
                             resolve()
                         }).catch(err=> {
                             console.log('Error updating data: ')
@@ -289,8 +312,10 @@ FootBallService.prototype = {
     },
     getSingleLabFixture: (matchId) => {
         return new Promise(async(resolve, reject)=>{
-            const response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
-            const data = response.data.dataSource.filter(single=>{
+            // const response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
+            const fixturesResponse = await self.RedisClient.get('fixtures');
+            const fixturesCache = JSON.parse(fixturesResponse)
+            const data = fixturesCache.filter(single=>{
                 if(single['5778'] === '' && single['5766'] === matchId){
                     return single;
                 }
@@ -313,8 +338,10 @@ FootBallService.prototype = {
     },
     fixtureResultSort: () => {
         return new Promise(async(resolve, reject)=> {
-            let response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
-            let mergeObj = await self.mergeObj(response.data.dataSource)
+            // let response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
+            const fixturesResponse = await self.RedisClient.get('fixtures');
+            const fixturesCache = JSON.parse(fixturesResponse)
+            let mergeObj = await self.mergeObj(fixturesCache)
             if(mergeObj.length > 0){
                 resolve(mergeObj.sort((a,b)=> {
                     return new Date(`${a['5769']} ${a['5779']}`) - new Date(`${b['5769']} ${b['5779']}`)
@@ -349,7 +376,9 @@ FootBallService.prototype = {
     getTeamByTeamId: (teamId) => {
         return new Promise(async(resolve, reject)=> {
             let response = await self.Axios.get('/stable/bots/labs/2261/entries');
-            resolve(response.data.dataSource.filter(item => item['5811'] == teamId)[0])
+            const teamsResponse = await self.RedisClient.get('teams');
+            const teamsCache = JSON.parse(teamsResponse)
+            resolve(teamsCache.filter(item => item['5811'] == teamId)[0])
         })
     },
     mergeObj: (data)=> {
