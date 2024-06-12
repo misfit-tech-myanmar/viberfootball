@@ -2,11 +2,13 @@ const { axiosInstance } = require('../libs/axios.instance');
 const moment = require('moment-timezone');
 moment().tz('Asia/Yangon');
 const axios = require('axios')
+const redisClient = require('../libs/redis');
 
 let self;
 function NotificationService(){
     self = this;
     self.Axios = axiosInstance;
+    self.RedisClient = redisClient;
 }
 
 NotificationService.prototype = {
@@ -50,9 +52,11 @@ NotificationService.prototype = {
         return new Promise(async(resolve, reject)=> {
             try{
                 // const result = 
-                let response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
-                resolve(response.data.dataSource.filter(item=> {
-                    if(item['5778']){
+                // let response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
+                const fixtureResponse = await self.RedisClient.get('fixtures');
+                let fixtureCache = JSON.parse(fixtureResponse)
+                resolve(fixtureCache.filter(item=> {
+                    if(item['5778'] === "Finished"){
                         return item;
                     }
                 }))
@@ -79,8 +83,9 @@ NotificationService.prototype = {
     getUserPredictionsByMatchId: (matchId) => {
         return new Promise(async(resolve, reject) => {
             try{
-                let response = await self.Axios.get(`/stable/bots/labs/2268/entries`);
-                resolve(response.data.dataSource.filter(item=> item['5860'] === matchId))
+                const predictionResponse = await self.RedisClient.get('user-predictions');
+                let predictionCache = JSON.parse(predictionResponse)
+                resolve(predictionCache.filter(item=> item['5860'] === matchId))
             }catch(err){
                 console.log(err)
             }
@@ -89,8 +94,10 @@ NotificationService.prototype = {
     getUserPredictionsByUserId: (userId) => {
         return new Promise(async(resolve, reject) => {
             try{
-                let response = await self.Axios.get(`/stable/bots/labs/2268/entries`);
-                resolve(response.data.dataSource.filter(item=> item['5861'] == userId))
+                // let response = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+                const predictionResponse = await self.RedisClient.get('user-predictions');
+                let predictionCache = JSON.parse(predictionResponse)
+                resolve(predictionCache.filter(item=> item['5861'] == userId))
             }catch(err){
                 console.log(err)
             }
@@ -113,7 +120,15 @@ NotificationService.prototype = {
         return new Promise(async(resolve, reject)=> {
             self.Axios.put(`/stable/bots/labs/2268/entries/${predictId}`, {
                 "6002": 'Yes'
-            }).then(response => {
+            }).then(async response => {
+                const predictionResponse = await self.RedisClient.get('user-predictions');
+                let predictionCache = JSON.parse(predictionResponse)
+                predictionCache.forEach(item=> {
+                    if(item.id === response.data.dataSource.id){
+                        item["6002"]= 'Yes'
+                    }
+                })
+                await self.RedisClient.set('user-predictions', JSON.stringify(predictionCache))
                 resolve()
             }).catch(err=> {
                 console.log('Error updating data: ')
@@ -132,7 +147,7 @@ NotificationService.prototype = {
     },
     getPredictedAndFinishedMatchByUserId: (userId) => {
         return new Promise(async(resolve, reject) => {
-            const testUserId = '79003341';
+            const testUserId = '92906985';
             const finishedFixtures = await self.getFinishedFixtures();
             const userPredicts = await self.getUserPredictionsByUserId(userId)
             const singlePredict = await self.filterNoSentNotiUserPredict(userPredicts);
@@ -167,14 +182,18 @@ NotificationService.prototype = {
     },
     getAllUsers: () => {
         return new Promise(async(resolve, reject) => {
-            const users = await self.Axios.get(`/stable/bots/labs/2241/entries`);
-            resolve(users.data.dataSource)
+            // const users = await self.Axios.get(`/stable/bots/labs/2241/entries`);
+            const userResponse = await self.RedisClient.get('users');
+            let userCache = JSON.parse(userResponse)
+            resolve(userCache)
         })
     },
     getAllUnfinishedFixtures: () => {
         return new Promise(async(resolve, reject)=> {
-            let response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
-            resolve(response.data.dataSource.filter(fixture=> fixture['5781'] === '' ))
+            // let response = await self.Axios.get(`/stable/bots/labs/2247/entries`);
+            const fixtureResponse = await self.RedisClient.get('fixtures');
+            let fixtureCache = JSON.parse(fixtureResponse)
+            resolve(fixtureCache.filter(fixture=> fixture['5781'] === '' ))
         })
     },
     checkFavTeamMatchForUser: (user, fixtures) => {

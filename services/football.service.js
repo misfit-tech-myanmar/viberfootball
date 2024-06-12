@@ -288,7 +288,7 @@ FootBallService.prototype = {
                             const fixturesResponse = await self.RedisClient.get('fixtures');
                             let fixturesCache = JSON.parse(fixturesResponse)
                             fixturesCache.forEach(item => {
-                                if(item['5766'] === response.data.dataSource['5766']){
+                                if(item['5766'] === match.match_id){
                                     item["5778"] =  match.match_status,
                                     item["5781"] =  match.match_hometeam_ft_score,
                                     item["5783"] =  match.match_awayteam_ft_score

@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 require('dotenv').config();
 const helper = require('./helpers/helper')
-const { everySecond, everyStartOfDay, everyAugest, everyMorningSixthAm, everyMonday7AM, everyFiveHour30Minutes } = require('./utils/create-cron');
+const { everySecond, everyStartOfDay, everyAugest, everyMorningSixthAm, everyMonday7AM, everyFiveHour30Minutes, every15Minutes } = require('./utils/create-cron');
 // const bot = require('./libs/viber.bot')
 const indexRouter = require('./routes/index')
 const adminRouter = require('./routes/admin')
@@ -13,7 +13,9 @@ const moment = require('moment-timezone');
 var cors = require('cors')
 var logger = require('./libs/logger');
 const FootBallService = require('./services/football.service')
+const StoreRedisFromDatalab = require('./services/store.redis.datalab.service');
 const footballService = new FootBallService();
+const storeRedisFromDataLab = new StoreRedisFromDatalab()
 
 // footballService.addTeamToMyalice();
 
@@ -42,6 +44,7 @@ everySecond();
 everyAugest();
 everyMonday7AM();
 everyFiveHour30Minutes();
+every15Minutes()
 // everyMorningSixthAm();
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1.0', indexRouter)
@@ -51,6 +54,7 @@ app.use('/admin', adminRouter)
 
 app.listen(port, async(err) => {
     await login()
+    await storeRedisFromDataLab.storeRedisFromDataLab()
     await helper.createAdminUser();
     if(!err) logger.info(`Server is running on ${port}`);
     // bot.setWebhook(`${process.env.EXPOSE_URL}/viber/webhook`).catch(error => {
