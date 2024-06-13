@@ -20,7 +20,7 @@ function getFormattedDate(date) {
   }
 
 module.exports = {
-    everySecond: () => {
+    every5Minutes: () => {
         let currentDate = new Date();
         // Extract year, month, and day components
         const startDate = `${currentDate.getFullYear()}-${currentDate.getMonth()+1}-${currentDate.getDate()}`;
@@ -28,13 +28,18 @@ module.exports = {
         cron.schedule('*/5 * * * *', async() => {
             // footballService.getFixtureFromApiAndPostToMyaliceDataLab('2024-06-14', '2024-06-27')
             footballService.updateFixtureAfterFinishedMatches(startDate, startDate);
-            predictionService.predict();
             footballService.getTeams();
+        });
+    },
+    every10Minutes: () => {
+        cron.schedule('*/6 * * * *', async() => {
+            console.log("prediction running")
+            predictionService.predict();
         });
     },
     every15Minutes: () => {
         cron.schedule('*/15 * * * *', async() => {
-            // storeRedis.storeRedisFromDataLab();
+            storeRedis.storeRedisFromDataLab();
         });
     },
     everyStartOfDay: () => {

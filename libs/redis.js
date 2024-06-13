@@ -4,7 +4,7 @@ const redis = require('ioredis');
 const client = redis.createClient({
     host: 'localhost',
     port: 6379,
-    maxRetriesPerRequest: null
+    maxRetriesPerRequest: 100
     // Add any other options as needed
 });
 

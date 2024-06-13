@@ -11,7 +11,8 @@ function PredictionService(){
 }
 
 PredictionService.prototype = {
-    singlePredict: (user) => {
+    singlePredict: (user, users) => {
+        console.log(users)
         return new Promise(async(resolve, reject) => {
             const userPredicts = await self.getUserPredictionsByUserId(user.creator_id);
             if(userPredicts.length > 0) {
@@ -22,10 +23,10 @@ PredictionService.prototype = {
                             const result = await self.checkW1W2D(fixture, userPredict);
                             if((result==="Draw" || result==="W1" || result==="W2")){
                                 if(result === userPredict.predict){
-                                    await self.updateUserPredict('Win', userPredict)
-                                    await self.updateUserScore((parseInt(user['5755']===''?0:user['5755']) + 1), user.id)
+                                    await self.updateUserPredict('Win', userPredict, userPredicts)
+                                    await self.updateUserScore((parseInt(user['5755']===''?0:user['5755']) + 1), user.id, users)
                                 }else{
-                                    await self.updateUserPredict('Lose', userPredict)
+                                    await self.updateUserPredict('Lose', userPredict, userPredicts)
                                 }
                             }else{
                                 console.log(result)
@@ -133,20 +134,20 @@ PredictionService.prototype = {
             }
         })
     },
-    updateUserPredict: (result, userPredict) => {
+    updateUserPredict: (result, userPredict, allUserPredicts) => {
         return new Promise(async(resolve, reject)=> {
             try{
                 self.Axios.put(`/stable/bots/labs/2268/entries/${userPredict.id}`, {
                     "5897": result
                 }).then(async response => {
-                    const predictionResponse = await self.RedisClient.get('user-predictions');
-                    let predictionCache = JSON.parse(predictionResponse)
-                    predictionCache.forEach(item => {
+                    // const predictionResponse = await self.RedisClient.get('user-predictions');
+                    // let predictionCache = JSON.parse(predictionResponse)
+                    allUserPredicts.forEach(item => {
                         if(item.id === userPredict.id){
                             item['5897'] = result
                         }
                     })
-                    await self.RedisClient.set('fixtures', JSON.stringify(fixturesCache))
+                    await self.RedisClient.set('user-prediction', JSON.stringify(allUserPredicts))
                     resolve()
                 }).catch(err=> {
                     console.log('Error updating data: ')
@@ -156,20 +157,20 @@ PredictionService.prototype = {
             }
         })
     },
-    updateUserScore: (scores, userId) => {
+    updateUserScore: (scores, userId, users) => {
         return new Promise(async(resolve, reject)=> {
             try{
                 self.Axios.put(`/stable/bots/labs/2241/entries/${userId}`, {
                     "5755": scores
                 }).then(async response=> {
-                    const userResponse = await self.RedisClient.get('users');
-                    let userCache = JSON.parse(userResponse)
-                    userCache.forEach(item=> {
+                    // const userResponse = await self.RedisClient.get('users');
+                    // let userCache = JSON.parse(userResponse)
+                    users.forEach(item=> {
                         if(item.id === userId){
                             item['5755'] = scores
                         }
                     })
-                    await self.RedisClient.set('users', JSON.stringify(userCache))
+                    await self.RedisClient.set('users', JSON.stringify(users))
                     resolve()
                 })
             }catch(err){
@@ -197,7 +198,7 @@ PredictionService.prototype = {
                 const userResponse = await self.RedisClient.get('users');
                 let userCache = JSON.parse(userResponse)
                 userCache.forEach(async user=> {
-                    await self.singlePredict(user)
+                    await self.singlePredict(user, userCache)
                 })
             }catch(err){
                 reject(err)
