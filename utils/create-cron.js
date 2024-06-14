@@ -6,12 +6,14 @@ const NotificationService = require('../services/notification.service')
 const {login} = require('../services/login.service')
 const QuizService = require('../services/quiz.service');
 const StoreRedisFromDatalab = require('../services/store.redis.datalab.service');
+const CheckPredictionService = require('../services/prediction.check')
 
 const footballService = new FootBallService();
 const predictionService = new PredictionService();
 const notificationService = new NotificationService(); 
 const quizService = new QuizService()
 const storeRedis = new StoreRedisFromDatalab();
+const checkPredictionService = new CheckPredictionService()
 function getFormattedDate(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
@@ -32,14 +34,13 @@ module.exports = {
         });
     },
     every10Minutes: () => {
-        cron.schedule('*/6 * * * *', async() => {
-            console.log("prediction running")
-            predictionService.predict();
+        cron.schedule('* * * * *', async() => {
+            await checkPredictionService.checkPrediction();
         });
     },
     every15Minutes: () => {
         cron.schedule('*/15 * * * *', async() => {
-            storeRedis.storeRedisFromDataLab();
+            // storeRedis.storeRedisFromDataLab();
         });
     },
     everyStartOfDay: () => {
