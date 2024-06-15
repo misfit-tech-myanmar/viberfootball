@@ -38,6 +38,11 @@ module.exports = {
             await checkPredictionService.checkPrediction();
         });
     },
+    every30Minutes: () => {
+        cron.schedule("*/30 * * * *", async() => {
+            await checkPredictionService.updateScoreAndSentNoti()
+        })
+    },
     every15Minutes: () => {
         cron.schedule('*/15 * * * *', async() => {
             // storeRedis.storeRedisFromDataLab();

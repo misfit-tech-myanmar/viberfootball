@@ -7,6 +7,7 @@ function CheckPredictionService(){
     self = this;
     self.Axios = axiosInstance;
     self.RedisClient = redisClient;
+    self.data = ""
 }
 
 CheckPredictionService.prototype = {
@@ -16,11 +17,13 @@ CheckPredictionService.prototype = {
             let startedFixturesCache = await self.getDataFromRedis('started-fixtures')
             let userPredictionsCache = await self.getDataFromRedis('user-predictions');
             let userCache = await self.getDataFromRedis('users');
+            let finishedPredictionCache = await self.getDataFromRedis('finished-predictions');
             const matchStarted = await self.checkStartMatch(fixturesCache, startedFixturesCache);
             startedFixturesCache = startedFixturesCache===null?matchStarted:startedFixturesCache.concat(matchStarted)
             if(matchStarted.length > 0){
                 await self.setDataToRedis('started-fixtures', startedFixturesCache)
             }
+            finishedPredictionCache = finishedPredictionCache === null?[]:finishedPredictionCache;
             if(startedFixturesCache.length > 0 ){
                 startedFixturesCache.forEach(async fixture => {
                     const resultFixture = await self.findResultFixtureById(fixture.id, fixturesCache)
@@ -37,8 +40,20 @@ CheckPredictionService.prototype = {
                                                 if(result === predict['5862']){
                                                     userPredictionsCache = await self.filterAndMapForUpdatePrediction('Win', predict, userPredictionsCache)
                                                     userCache = await self.updateUserScore((parseInt(user['5755']===''?0:user['5755']) + 1), user.id, userCache)
+                                                    finishedPredictionCache.push({
+                                                        predictId: predict.id,
+                                                        "5897": 'Win',
+                                                        userId: user.id,
+                                                        scores: (parseInt(user['5755']===''?0:user['5755']) + 1)
+                                                    })
                                                 }else{
                                                     userPredictionsCache = await self.filterAndMapForUpdatePrediction('Lose', predict, userPredictionsCache)
+                                                    finishedPredictionCache.push({
+                                                        predictId: predict.id,
+                                                        "5897": 'Win',
+                                                        userId: user.id,
+                                                        scores: (parseInt(user['5755']===''?0:user['5755']) + 1)
+                                                    })
                                                 }
                                                 
                                             }
@@ -56,6 +71,7 @@ CheckPredictionService.prototype = {
                                     console.log("Already update result")
                                 }
                             }
+                            await self.setDataToRedis('finished-predictions', finishedPredictionCache)
                             await self.setDataToRedis('user-predictions', userPredictionsCache)
                             await self.setDataToRedis('users', userCache)
                             await self.removeFixtureAfterFinished(resultFixture.id, startedFixturesCache);
@@ -192,6 +208,57 @@ CheckPredictionService.prototype = {
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
+    },
+    updatePredictResult: (predictId, result, userId, scores)=> {
+        return new Promise(async(resolve, reject)=> {
+            try{
+                await self.Axios.put(`/stable/bots/labs/2241/entries/${userId}`, {
+                    "5755": scores
+                })
+                await self.Axios.put(`/stable/bots/labs/2268/entries/${predictId}`, {
+                    "5897": result
+                })
+                console.log("calling update api",  predictId)
+            }catch(err){
+                console.log("fail update requestttt")
+            }
+        })
+    },
+    updateScoreAndSentNoti: async()=> {
+        return new Promise(async(resolve, reject) => {
+            self.data = self.data.length > 0?self.data:await self.getDataFromRedis('finished-predictions')
+            if(self.data.length > 0){
+                let batch = self.data.slice(0, 30);
+                console.log("datalength", self.data.length)
+                // Update the third-party API for each prediction in the batch
+                batch.forEach(async(prediction, index) => {
+                    await self.updatePredictResult(prediction.predictId, prediction['5897'], prediction.userId, prediction.scores);
+                    
+                    console.log("noti response", prediction.userId)
+                });
+                // Remove the processed batch from the predictions array
+                self.data = self.data.slice(30);
+                if (self.data.length > 0) {
+                    setTimeout(()=> {
+                        self.updateScoreAndSentNoti()
+                    }, 10000); // Wait 1 second before starting the next batch
+                } else {
+                    console.log("All predictions processed.");
+                    self.setDataToRedis('finished-predictions', [])
+                }   
+            }else{
+                console.log("no data to update")
+                resolve()
+            }
+            
+        })
+
+        // If there are remaining predictions, schedule the next batch processing
+        
+    },
+    processNextBatch: async() => {
+        
+        
     }
 }
 

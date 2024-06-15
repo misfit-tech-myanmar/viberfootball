@@ -22,6 +22,7 @@ const leaderboardService = new LeaderBoardService();
 const standingService= new StandingService();
 
 
+
 /**Make Prediction */
 router.get('/first-fixtures', async(req, res, next) => {
     const fixtures = await footballService.getFixtures("first", req.query.customer_id);
@@ -933,8 +934,10 @@ router.post('/profile', async(req, res, next)=> {
 })
 
 //get update fixtures
-router.post('/noti-message', async(req, res, next)=> {
-    const fixture = await notiService.getPredictedAndFinishedMatchByUserId(req.body.customer_id)
+router.post('/noti-message', async(req, res)=> {
+    console.log("calling noti", req.body)
+    const fixture = await notiService.getPredictedAndFinishedMatchByUserId(req.body.uid)
+    console.log(fixture)
     var predict;
     if(fixture !== null){
         if(fixture['5862']==='W1'){
@@ -1731,7 +1734,8 @@ router.get('/standing', async(req, res) => {
 
 const StoreRedisFromDatalab =require('../services/store.redis.datalab.service');
 const storeRedisFromDataLab = new StoreRedisFromDatalab();
-
+const PredictionCheck = require('../services/prediction.check');
+const predictionCheck = new PredictionCheck()
 router.get('/store-redis', async(req, res)=> {
     const result = await storeRedisFromDataLab.storeRedisFromDataLab()
     res.json(result)
@@ -1741,6 +1745,18 @@ router.get('/get-redis', async(req, res)=> {
     res.json(result)
 })
 
+router.get('/update-result', async(req, res)=> {
+    predictionCheck.updateScoreAndSentNoti();
+    // await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+    //     "sequence_id":"138700",
+    //     "customer_id": `92906985`
+    // }, {
+    //     headers: {
+    //         'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+    //     }
+    // })
+    res.json("sent noti")
+})
 
 
 module.exports = router;
