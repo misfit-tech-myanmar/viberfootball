@@ -45,7 +45,7 @@ module.exports = {
     },
     every15Minutes: () => {
         cron.schedule('*/15 * * * *', async() => {
-            // storeRedis.storeRedisFromDataLab();
+            storeRedis.storeRedisFromDataLab();
         });
     },
     everyStartOfDay: () => {
