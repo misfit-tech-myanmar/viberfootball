@@ -149,7 +149,7 @@ NotificationService.prototype = {
         return new Promise(async(resolve, reject) => {
             const testUserId = '92906985';
             const finishedFixtures = await self.getFinishedFixtures();
-            const userPredicts = await self.getUserPredictionsByUserId(testUserId)
+            const userPredicts = await self.getUserPredictionsByUserId(userId)
             const singlePredict = await self.filterNoSentNotiUserPredict(userPredicts);
             if(singlePredict){
                 const fixture = await self.filterMatchByMatchId(singlePredict['5860'], finishedFixtures);

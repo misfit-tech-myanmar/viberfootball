@@ -935,7 +935,6 @@ router.post('/profile', async(req, res, next)=> {
 
 //get update fixtures
 router.post('/noti-message', async(req, res)=> {
-    console.log("calling noti", req.body)
     const fixture = await notiService.getPredictedAndFinishedMatchByUserId(req.body.uid)
     console.log(fixture)
     var predict;

@@ -12,7 +12,7 @@ function FootBallService(){
 
 FootBallService.prototype = {
     getFixtureFromApiAndPostToMyaliceDataLab: async(from, to) => {
-        const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=1&APIkey=c75f5e6c8341750bc05cddef05c6544f7bf5c3b97dcf7264da6f22cb8596e53f&timezone=Asia/Yangon`);
+        const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=1&APIkey=4010abfac05575b83123fb1094fec4bbca56bea29fe6d56d95e542fc98520058&timezone=Asia/Yangon`);
         if(footballResponse.data.length > 0){
             let fixtures = footballResponse.data.filter( fixture => {
                 return {
@@ -245,7 +245,7 @@ FootBallService.prototype = {
         console.log("calling add team")
         return new Promise(async(resolve, reject)=> {
             try{
-                const teamsResponse = await axios.get('https://apiv3.apifootball.com/?action=get_teams&league_id=1&APIkey=c75f5e6c8341750bc05cddef05c6544f7bf5c3b97dcf7264da6f22cb8596e53f&timezone=Asia/Yangon')
+                const teamsResponse = await axios.get('https://apiv3.apifootball.com/?action=get_teams&league_id=1&APIkey=4010abfac05575b83123fb1094fec4bbca56bea29fe6d56d95e542fc98520058&timezone=Asia/Yangon')
                 if(teamsResponse.data.length > 0){
 
                     teamsResponse.data.forEach(async team=> {
@@ -274,7 +274,7 @@ FootBallService.prototype = {
     },
     updateFixtureAfterFinishedMatches: async(from, to) => {
         return new Promise(async(resolve, reject)=>{
-            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=1&APIkey=c75f5e6c8341750bc05cddef05c6544f7bf5c3b97dcf7264da6f22cb8596e53f&timezone=Asia/Yangon`);
+            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=1&APIkey=4010abfac05575b83123fb1094fec4bbca56bea29fe6d56d95e542fc98520058&timezone=Asia/Yangon`);
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
                     

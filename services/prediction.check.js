@@ -44,7 +44,8 @@ CheckPredictionService.prototype = {
                                                         predictId: predict.id,
                                                         "5897": 'Win',
                                                         userId: user.id,
-                                                        scores: (parseInt(user['5755']===''?0:user['5755']) + 1)
+                                                        scores: (parseInt(user['5755']===''?0:user['5755']) + 1),
+                                                        creatorId: user.creator_id
                                                     })
                                                 }else{
                                                     userPredictionsCache = await self.filterAndMapForUpdatePrediction('Lose', predict, userPredictionsCache)
@@ -52,7 +53,8 @@ CheckPredictionService.prototype = {
                                                         predictId: predict.id,
                                                         "5897": 'Win',
                                                         userId: user.id,
-                                                        scores: (parseInt(user['5755']===''?0:user['5755']) + 1)
+                                                        scores: (parseInt(user['5755']===''?0:user['5755']) + 1),
+                                                        creatorId: user.creator_id
                                                     })
                                                 }
                                                 
@@ -209,7 +211,7 @@ CheckPredictionService.prototype = {
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     },
-    updatePredictResult: (predictId, result, userId, scores)=> {
+    updatePredictResult: (predictId, result, userId, scores, customer_id)=> {
         return new Promise(async(resolve, reject)=> {
             try{
                 await self.Axios.put(`/stable/bots/labs/2241/entries/${userId}`, {
@@ -218,6 +220,14 @@ CheckPredictionService.prototype = {
                 await self.Axios.put(`/stable/bots/labs/2268/entries/${predictId}`, {
                     "5897": result
                 })
+                // await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                //     "sequence_id":"138700",
+                //     "customer_id": `92906985`
+                // }, {
+                //     headers: {
+                //         'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                //     }
+                // })
                 console.log("calling update api",  predictId)
             }catch(err){
                 console.log("fail update requestttt")
@@ -232,7 +242,7 @@ CheckPredictionService.prototype = {
                 console.log("datalength", self.data.length)
                 // Update the third-party API for each prediction in the batch
                 batch.forEach(async(prediction, index) => {
-                    await self.updatePredictResult(prediction.predictId, prediction['5897'], prediction.userId, prediction.scores);
+                    await self.updatePredictResult(prediction.predictId, prediction['5897'], prediction.userId, prediction.scores, prediction.creatorId);
                     
                     console.log("noti response", prediction.userId)
                 });
