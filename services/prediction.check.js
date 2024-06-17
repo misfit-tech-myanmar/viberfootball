@@ -51,7 +51,7 @@ CheckPredictionService.prototype = {
                                                     userPredictionsCache = await self.filterAndMapForUpdatePrediction('Lose', predict, userPredictionsCache)
                                                     finishedPredictionCache.push({
                                                         predictId: predict.id,
-                                                        "5897": 'Win',
+                                                        "5897": 'Lose',
                                                         userId: user.id,
                                                         scores: (parseInt(user['5755']===''?0:user['5755']) + 1),
                                                         creatorId: user.creator_id

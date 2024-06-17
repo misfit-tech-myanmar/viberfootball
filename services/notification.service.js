@@ -123,9 +123,9 @@ NotificationService.prototype = {
             }).then(async response => {
                 const predictionResponse = await self.RedisClient.get('user-predictions');
                 let predictionCache = JSON.parse(predictionResponse)
-                predictionCache.forEach(item=> {
+                predictionCache.map(item=> {
                     if(item.id === response.data.dataSource.id){
-                        item["6002"]= 'Yes'
+                        return {...item, "6002": "Yes"}
                     }
                 })
                 await self.RedisClient.set('user-predictions', JSON.stringify(predictionCache))
@@ -153,7 +153,7 @@ NotificationService.prototype = {
             const singlePredict = await self.filterNoSentNotiUserPredict(userPredicts);
             if(singlePredict){
                 const fixture = await self.filterMatchByMatchId(singlePredict['5860'], finishedFixtures);
-                // await self.updateUserPredict(singlePredict.id)
+                await self.updateUserPredict(singlePredict.id)
                 resolve({...singlePredict, ...fixture[0]})
             }else{
                 resolve(null)
