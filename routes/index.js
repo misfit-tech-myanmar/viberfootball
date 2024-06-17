@@ -935,21 +935,22 @@ router.post('/profile', async(req, res, next)=> {
 
 //get update fixtures
 router.post('/noti-message', async(req, res)=> {
-    const fixture = await notiService.getPredictedAndFinishedMatchByUserId(req.body.uid)
-    console.log(fixture)
+    // const fixture = await notiService.getPredictedAndFinishedMatchByUserId(req.body.uid)
+    const notification = await notiService.findNotificationByUserId(req.body.uid)
+    // console.log(fixture)
     var predict;
-    if(fixture !== null){
-        if(fixture['5862']==='W1'){
-            predict=fixture['5780']
-        }else if(fixture['5862']==='W2'){
-            predict=fixture['5783']
+    if(notification !== null){
+        if(notification.predict==='W1'){
+            predict=notification.homeTeam
+        }else if(notification.predict==='W2'){
+            predict=notification.awayTeam
         }else{
-            predict=fixture['5862']
+            predict="Draw"
         }
     }
-    if(req.body.language){
+    if(req.body.language === "English"){
         res.json({
-            "data": `Match Finished \n${fixture['5780']} - ${fixture['5782']} \nMatch Score: ${fixture['5781']}:${fixture['5783']} \nYou made the following prediction ${predict} \n${fixture['5897']==="Win"?"Congratulations!":"Try Again!"} Your prediction was ${fixture['5897']==="Win"?"correct":"incorrect"}! ${fixture['5897']==="Win"?"\n1 point added to your balance":""}`,
+            "data": `Match Finished \n${notification.homeTeam} - ${notification.awayTeam} \nMatch Score: ${notification.homeScore}:${notification.awayScore} \nYou made the following prediction ${predict} \n${notification.predictResult==="Win"?"Congratulations!":"Try Again!"} Your prediction was ${notification.predictResult==="Win"?"correct":"incorrect"}! ${notification.predictResult==="Win"?"\n1 point added to your balance":""}`,
             "success": true,
             "message": "Successful", 
             "attributes": {
@@ -958,7 +959,7 @@ router.post('/noti-message', async(req, res)=> {
         })
     }else{
         res.json({
-            "data": `${fixture['5780']} - ${fixture['5782']} ပွဲပြီးပါပီ \nပွဲရလဒ်: ${fixture['5781']}:${fixture['5783']} \nသင် ${predict} ကို ခန်းမှန်းခဲ့သည့် \n${fixture['5897']==="Win"?"ဂုဏ်ယူပါတယ်!":"နောက်ထပ်ကြိုးစားပါ!"} သင့်ရဲ့ခန်းမှန်းမှု ${fixture['5897']==="Win"?"မှန်":"မှား"}! ${fixture['5897']==="Win"?"\n သင့်ရဲ့အမှတ်ထဲ့သို့ ၁ မှတ်‌ပေါင်းထည့်ထားပါသည်":""}`,
+            "data": `${notification.homeTeam} - ${notification.awayTeam} ပွဲပြီးပါပီ \nပွဲရလဒ်: ${notification.homeScore}:${notification.awayScore} \nသင် ${predict} ကို ခန်းမှန်းခဲ့သည့် \n${notification.predictResult==="Win"?"ဂုဏ်ယူပါတယ်!":"နောက်ထပ်ကြိုးစားပါ!"} သင့်ရဲ့ခန်းမှန်းမှု ${notification.predictResult==="Win"?"မှန်":"မှား"}! \n${notification.predictResult==="Win"?"\nသင့်ရဲ့အမှတ်ထဲ့သို့ ၁ မှတ်‌ပေါင်းထည့်ထားပါသည်":""}`,
             "success": true,
             "message": "Successful", 
             "attributes": {

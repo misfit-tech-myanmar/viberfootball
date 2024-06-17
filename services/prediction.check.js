@@ -18,12 +18,14 @@ CheckPredictionService.prototype = {
             let userPredictionsCache = await self.getDataFromRedis('user-predictions');
             let userCache = await self.getDataFromRedis('users');
             let finishedPredictionCache = await self.getDataFromRedis('finished-predictions');
+            let notificationCache = await self.getDataFromRedis('notifications');
             const matchStarted = await self.checkStartMatch(fixturesCache, startedFixturesCache);
             startedFixturesCache = startedFixturesCache===null?matchStarted:startedFixturesCache.concat(matchStarted)
             if(matchStarted.length > 0){
                 await self.setDataToRedis('started-fixtures', startedFixturesCache)
             }
             finishedPredictionCache = finishedPredictionCache === null?[]:finishedPredictionCache;
+            notificationCache = notificationCache === null?[]:notificationCache;
             if(startedFixturesCache.length > 0 ){
                 startedFixturesCache.forEach(async fixture => {
                     const resultFixture = await self.findResultFixtureById(fixture.id, fixturesCache)
@@ -47,6 +49,16 @@ CheckPredictionService.prototype = {
                                                         scores: (parseInt(user['5755']===''?0:user['5755']) + 1),
                                                         creatorId: user.creator_id
                                                     })
+                                                    notificationCache.push({
+                                                        creatorId: user.creator_id,
+                                                        predict: predict['5862'],
+                                                        homeTeam: resultFixture['5780'],
+                                                        awayTeam: resultFixture['5782'],
+                                                        homeScore: resultFixture['5781'],
+                                                        awayScore: resultFixture['5783'],
+                                                        predictResult: "Win",
+                                                        isSent: false
+                                                    })
                                                 }else{
                                                     userPredictionsCache = await self.filterAndMapForUpdatePrediction('Lose', predict, userPredictionsCache)
                                                     finishedPredictionCache.push({
@@ -55,6 +67,16 @@ CheckPredictionService.prototype = {
                                                         userId: user.id,
                                                         scores: (parseInt(user['5755']===''?0:user['5755']) + 1),
                                                         creatorId: user.creator_id
+                                                    })
+                                                    notificationCache.push({
+                                                        creatorId: user.creator_id,
+                                                        predict: predict['5862'],
+                                                        homeTeam: resultFixture['5780'],
+                                                        awayTeam: resultFixture['5782'],
+                                                        homeScore: resultFixture['5781'],
+                                                        awayScore: resultFixture['5783'],
+                                                        predictResult: "Lose",
+                                                        isSent: false
                                                     })
                                                 }
                                                 
@@ -74,6 +96,7 @@ CheckPredictionService.prototype = {
                                 }
                             }
                             await self.setDataToRedis('finished-predictions', finishedPredictionCache)
+                            await self.setDataToRedis('notifications', notificationCache)
                             await self.setDataToRedis('user-predictions', userPredictionsCache)
                             await self.setDataToRedis('users', userCache)
                             await self.removeFixtureAfterFinished(resultFixture.id, startedFixturesCache);
@@ -220,14 +243,14 @@ CheckPredictionService.prototype = {
                 await self.Axios.put(`/stable/bots/labs/2268/entries/${predictId}`, {
                     "5897": result
                 })
-                // await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
-                //     "sequence_id":"138700",
-                //     "customer_id": `92906985`
-                // }, {
-                //     headers: {
-                //         'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
-                //     }
-                // })
+                await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                    "sequence_id":"138700",
+                    "customer_id": `${customer_id}`
+                }, {
+                    headers: {
+                        'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                    }
+                })
                 console.log("calling update api",  predictId)
             }catch(err){
                 console.log("fail update requestttt")

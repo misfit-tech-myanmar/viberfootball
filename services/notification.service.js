@@ -201,6 +201,18 @@ NotificationService.prototype = {
             resolve(fixtures.filter(fixture=> (fixture['5956'] === user['6012'] || fixture['5957'] === user['6012'])))
         })
     },
+    findNotificationByUserId: (userId) => {
+        return new Promise(async(resolve, reject) => {
+            const response = await self.RedisClient.get('notifications');
+            let data = JSON.parse(response);
+            // await self.RedisClient.set(data.map(item=> {
+            //     if(data.creatorId === userId){
+            //         return {...item, isSent: true}
+            //     }
+            // }))
+            resolve(data.find(item=> item.creatorId === userId))
+        })
+    }
     // checkFixtureDate: (fixture) => {
     //     let today = new Date();
     //     // Extracting the day, month, and year
