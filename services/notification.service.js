@@ -205,7 +205,7 @@ NotificationService.prototype = {
         return new Promise(async(resolve, reject) => {
             const response = await self.RedisClient.get('notifications');
             let data = JSON.parse(response);
-            const noti = data.find(item=> item.creatorId === userId && isSent===false);
+            const noti = data.find(item=> item.creatorId === userId);
             await self.RedisClient.set(data.filter(item => item.creatorId !== userId))
             resolve(noti)
         })
