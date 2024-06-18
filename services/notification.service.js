@@ -205,12 +205,9 @@ NotificationService.prototype = {
         return new Promise(async(resolve, reject) => {
             const response = await self.RedisClient.get('notifications');
             let data = JSON.parse(response);
-            // await self.RedisClient.set(data.map(item=> {
-            //     if(data.creatorId === userId){
-            //         return {...item, isSent: true}
-            //     }
-            // }))
-            resolve(data.find(item=> item.creatorId === userId))
+            const noti = data.find(item=> item.creatorId === userId && isSent===false);
+            await self.RedisClient.set(data.filter(item => item.creatorId !== userId))
+            resolve(noti)
         })
     }
     // checkFixtureDate: (fixture) => {
