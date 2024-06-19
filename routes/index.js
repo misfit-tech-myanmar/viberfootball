@@ -959,7 +959,7 @@ router.post('/noti-message', async(req, res)=> {
         })
     }else{
         res.json({
-            "data": `${notification.homeTeam} - ${notification.awayTeam} ပွဲပြီးပါပီ \nပွဲရလဒ်: ${notification.homeScore}:${notification.awayScore} \nသင် ${predict} ကို ခန်းမှန်းခဲ့သည့် \n${notification.predictResult==="Win"?"ဂုဏ်ယူပါတယ်!":"နောက်ထပ်ကြိုးစားပါ!"} သင့်ရဲ့ခန်းမှန်းမှု ${notification.predictResult==="Win"?"မှန်":"မှား"}! \n${notification.predictResult==="Win"?"\nသင့်ရဲ့အမှတ်ထဲ့သို့ ၁ မှတ်‌ပေါင်းထည့်ထားပါသည်":""}`,
+            "data": `${notification.homeTeam} - ${notification.awayTeam} ပွဲပြီးပါပီ \nပွဲရလဒ်: ${notification.homeScore}:${notification.awayScore} \nသင် ${predict} ကို ခန်းမှန်းခဲ့သည့် \n${notification.predictResult==="Win"?"ဂုဏ်ယူပါတယ်!":"နောက်ထပ်ကြိုးစားပါ!"} သင့်ရဲ့ခန်းမှန်းမှု ${notification.predictResult==="Win"?"မှန်ပါသည်":"မှားပါသည်"}! \n${notification.predictResult==="Win"?"သင့်ရဲ့အမှတ်ထဲ့သို့ ၁ မှတ်‌ပေါင်းထည့်ထားပါသည်":""}`,
             "success": true,
             "message": "Successful", 
             "attributes": {
