@@ -2,8 +2,10 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 require('dotenv').config();
 const helper = require('./helpers/helper')
+const { sessionSecret, dbUri } = require('./configs/config')
 const { every5Minutes, everyStartOfDay, everyAugest, every30Minutes,  every10Minutes, everyMorningSixthAm, everyMonday7AM, everyFiveHour30Minutes, every15Minutes } = require('./utils/create-cron');
 // const bot = require('./libs/viber.bot')
 const indexRouter = require('./routes/index')
@@ -30,23 +32,27 @@ const port = process.env.PORT || 5000;
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-
-
+app.use(session({
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: dbUri })
+  }));
 
 app.get('/', (req, res, next)=>{
     res.send("Welcome using WSL ON Window!!!")
 })
 
-everyStartOfDay();
-every5Minutes();
-everyAugest();
-everyMonday7AM();
-everyFiveHour30Minutes();
-every15Minutes()
-every10Minutes();
-every30Minutes()
+// everyStartOfDay();
+// every5Minutes();
+// everyAugest();
+// everyMonday7AM();
+// everyFiveHour30Minutes();
+// every15Minutes()
+// every10Minutes();
+// every30Minutes()
 // everyMorningSixthAm();
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1.0', indexRouter)
@@ -56,7 +62,7 @@ app.use('/admin', adminRouter)
 
 app.listen(port, async(err) => {
     await login()
-    await storeRedisFromDataLab.storeRedisFromDataLab()
+    // await storeRedisFromDataLab.storeRedisFromDataLab()
     await helper.createAdminUser();
     if(!err) logger.info(`Server is running on ${port}`);
     // bot.setWebhook(`${process.env.EXPOSE_URL}/viber/webhook`).catch(error => {
