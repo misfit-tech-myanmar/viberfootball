@@ -5,6 +5,7 @@ const { checkAuth, redirectIfAuthenticated } = require('../middlewares/auth.midd
 const router = express.Router();
 
 const AuthController = require('../controllers/admin/auth.controller');
+const UserController = require('../controllers/admin/dashboard.controller');
 
 router.get('/login', redirectIfAuthenticated, async(req, res) => {
     console.log("renderrrrr")
@@ -21,5 +22,10 @@ router.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/admin/login');
 });
+
+router.get('/user-data', async(req, res) => {
+    const userData = await UserController.userData()
+    res.status(200).json(userData)
+})
 
 module.exports = router;

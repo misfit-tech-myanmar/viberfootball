@@ -1,4 +1,259 @@
-extends layouts/app.layout
+meta(charset="UTF-8")
+meta(http-equiv="X-UA-Compatible", content="IE=edge")
+meta(name="viewport", content="width=device-width,initial-scale=1")
+title GeeksForGeeks
+link(rel="stylesheet", href="/dashboard/style.css")
+link(rel="stylesheet", href="/dashboard/responsive.css")
+//  for header part 
+header
+  .logosec
+    .logo FOOTBALL360
+    img.icn.menuicn#menuicn(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182541/Untitled-design-(30).png", alt="menu-icon")
+  .searchbar
+    input(type="text", placeholder="Search")
+    .searchbtn
+      img.icn.srchicn(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png", alt="search-icon")
+  .message
+    .circle
+    img.icn(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/8.png", alt)
+    .dp
+      img.dpicn(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180014/profile-removebg-preview.png", alt="dp")
+.main-container
+  .navcontainer
+    nav.nav
+      .nav-upper-options
+        .nav-option.option1
+          img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182148/Untitled-design-(29).png", alt="dashboard")
+          h3 Dashboard
+        .option2.nav-option
+          img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/9.png", alt="articles")
+          h3 Articles
+        .nav-option.option3
+          img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/5.png", alt="report")
+          h3 Report
+        .nav-option.option4
+          img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183321/6.png", alt="institution")
+          h3 Institution
+        .nav-option.option5
+          img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183323/10.png", alt="blog")
+          h3 Profile
+        .nav-option.option6
+          img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/4.png", alt="settings")
+          h3 Settings
+        .nav-option.logout
+          img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183321/7.png", alt="logout")
+          h3 Logout
+  .main
+    //- .searchbar2
+    //-   input(type="text", name, placeholder="Search")
+    //-   .searchbtn
+    //-     img.icn.srchicn(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png", alt="search-button")
+    //- .box-container
+    //-   .box.box1
+    //-     .text
+    //-       h2.topic-heading 60.5k
+    //-       h2.topic Article Views
+    //-     img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210184645/Untitled-design-(31).png", alt="Views")
+    //-   .box.box2
+    //-     .text
+    //-       h2.topic-heading 150
+    //-       h2.topic Likes
+    //-     img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210185030/14.png", alt="likes")
+    //-   .box.box3
+    //-     .text
+    //-       h2.topic-heading 320
+    //-       h2.topic Comments
+    //-     img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210184645/Untitled-design-(32).png", alt="comments")
+    //-   .box.box4
+    //-     .text
+    //-       h2.topic-heading 70
+    //-       h2.topic Published
+    //-     img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210185029/13.png", alt="published")
+    //- .report-container
+    //-   .report-header
+    //-     h1.recent-Articles Recent Articles
+    //-     button.view View All
+    //-   .report-body
+        .report-topic-heading
+          h3.t-op Article
+          h3.t-op Views
+          h3.t-op Comments
+          h3.t-op Status
+        .items
+          .item1
+            h3.t-op-nextlvl Article 73
+            h3.t-op-nextlvl 2.9k
+            h3.t-op-nextlvl 210
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 72
+            h3.t-op-nextlvl 1.5k
+            h3.t-op-nextlvl 360
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 71
+            h3.t-op-nextlvl 1.1k
+            h3.t-op-nextlvl 150
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 70
+            h3.t-op-nextlvl 1.2k
+            h3.t-op-nextlvl 420
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 69
+            h3.t-op-nextlvl 2.6k
+            h3.t-op-nextlvl 190
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 68
+            h3.t-op-nextlvl 1.9k
+            h3.t-op-nextlvl 390
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 67
+            h3.t-op-nextlvl 1.2k
+            h3.t-op-nextlvl 580
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 66
+            h3.t-op-nextlvl 3.6k
+            h3.t-op-nextlvl 160
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 65
+            h3.t-op-nextlvl 1.3k
+            h3.t-op-nextlvl 220
+            h3.t-op-nextlvl.label-tag Published
+    .chart-container 
+        .telecom 
+            div
+                canvas(id="telecom" width="400" height="100")
+    .country-container 
+      .country 
+          div
+              canvas(id="country")
+    .favorite-team-container
+        .favorite-team 
+            div
+                canvas(id="favorite-team" width="100%")
+        
 
-block content
-    h1 Welcome Dashboard
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+script(src="/dashboard/index.js")
+script. 
+    const telecomCTX = document.getElementById('telecom');
+    const favoriteTeamCTX = document.getElementById('favorite-team');
+    const countryCTX = document.getElementById('country');
+
+    async function displayChart(){
+      try{
+        const response = await fetch('http://localhost:5000/admin/user-data')
+        const data = await response.json();
+        updateTelecomChart(telecomCTX, data.telecom)
+        updateFavTeamChart(favoriteTeamCTX, data.favTeam)
+        updateCountryChart(countryCTX, data.country)
+      }catch(err){
+        console.log(err)
+      }
+      
+    }
+
+    function updateTelecomChart(ctx, data){
+      console.log(data)
+      new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: ['OOREDOO', 'MPT', 'ATOM', 'MYTEL', "OTHERS"],
+            datasets: [{
+                label: 'Telecom',
+                data: [data.OOREDOO, data.MPT, data.ATOM, data.MYTEL, data.OTHER],
+                backgroundColor: [
+                    'rgba(228, 11, 38, 0.8)',
+                    'rgba(250, 250, 33, 0.8)',
+                    'rgba(39, 163, 245, 0.8)',
+                    'rgba(246, 175, 34, 0.8)',
+                    'rgba(54, 162, 235, 0.2)',
+                ],
+                hoverOffset: 4
+            }]
+        },
+    });
+    }
+
+    function updateFavTeamChart(ctx, data){
+      console.log(data)
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+              labels: Object.keys(data),
+              datasets: [{
+                  label: 'Favorite Team',
+                  data: Object.values(data),
+                  backgroundColor: [
+                      'rgba(228, 11, 38, 0.8)',
+                      'rgba(250, 250, 33, 0.8)',
+                      'rgba(39, 163, 245, 0.8)',
+                      'rgba(246, 175, 34, 0.8)',
+                      'rgba(54, 162, 235, 0.2)',
+                  ],
+                  borderColor: [
+                      'rgb(255, 99, 132)',
+                      'rgb(255, 159, 64)',
+                      'rgb(255, 205, 86)',
+                      'rgb(75, 192, 192)',
+                      'rgb(54, 162, 235)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+              y: {
+                  beginAtZero: true
+              }
+              }
+          },
+      });
+    }
+
+    function updateCountryChart(ctx, data){
+      console.log(Object.keys(data))
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: Object.keys(data),
+            datasets: [{
+                label: 'Country',
+                data: Object.values(data),
+                //- backgroundColor: [
+                //-     'rgba(228, 11, 38, 0.8)',
+                //-     'rgba(250, 250, 33, 0.8)',
+                //-     'rgba(39, 163, 245, 0.8)',
+                //-     'rgba(246, 175, 34, 0.8)',
+                //-     'rgba(54, 162, 235, 0.2)',
+                //- ],
+                //- borderColor: [
+                //-     'rgb(255, 99, 132)',
+                //-     'rgb(255, 159, 64)',
+                //-     'rgb(255, 205, 86)',
+                //-     'rgb(75, 192, 192)',
+                //-     'rgb(54, 162, 235)'
+                //- ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            categoryPercentage: 1,
+            scales: {
+            y: {
+                beginAtZero: true
+            }
+            }
+        },
+    });
+    }
+
+    displayChart()
