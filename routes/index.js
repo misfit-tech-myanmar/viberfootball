@@ -1495,14 +1495,6 @@ router.get('/get-redis', async(req, res)=> {
 
 router.get('/update-result', async(req, res)=> {
     predictionCheck.updateScoreAndSentNoti();
-    // await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
-    //     "sequence_id":"138700",
-    //     "customer_id": `92906985`
-    // }, {
-    //     headers: {
-    //         'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
-    //     }
-    // })
     res.json("sent noti")
 })
 

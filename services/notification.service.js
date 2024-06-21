@@ -209,18 +209,37 @@ NotificationService.prototype = {
             await self.RedisClient.set('notifications',JSON.stringify(data.filter(item => item.creatorId !== userId)))
             resolve(noti)
         })
+    },
+    sentNotificationBefore30MinutesMatchStart: () => {
+        return new Promise(async(resolve, reject) => {
+            // Get current datetime in UTC
+            const currentDatetime = moment.utc();
+            //add current time to 30 minutes
+            const datetimeAfter30Minutes  = currentDatetime.add(30, 'minutes')
+            // Convert to a specific timezone (Asia/Yangon for Myanmar time)
+            const formattedDatetime = datetimeAfter30Minutes.tz('Asia/Yangon').format('YYYY-MM-DD HH:mm');
+            const response = await self.RedisClient.get('fixtures');
+            let fixtures = JSON.parse(response)
+            const matchHave = fixtures.find(fixture=>  `${fixture['5769']} ${fixture['5779']}`=== formattedDatetime);
+            if(matchHave !== undefined){
+                const users = await self.getAllUsers();
+                for(const user of users){
+                    await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                        "sequence_id":"147158",
+                        "customer_id": `${user.creator_id}`
+                    }, {
+                        headers: {
+                            'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                        }
+                    })
+                }
+                
+            }else{
+                console.log("There is no matches after 30 minutes of current time")
+            }
+            resolve()
+        })
     }
-    // checkFixtureDate: (fixture) => {
-    //     let today = new Date();
-    //     // Extracting the day, month, and year
-    //     const day = today.getDate() + 1;
-    //     const month = today.getMonth() + 1; // January is 0, so we add 1
-    //     const year = today.getFullYear();
-
-    //     // Formatting the date as YYYY-MM-DD
-    //     const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
-    //     console.log(formattedDate)
-    // }
 }
 
 module.exports = NotificationService;

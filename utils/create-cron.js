@@ -81,5 +81,10 @@ module.exports = {
         cron.schedule('*/30 */5 * * *', async()=> {
             await login();
         })
+    },
+    sentNotiBefore30MinutesMatchStart:() => {
+        cron.schedule('* * * * *', async() => {
+            await notificationService.sentNotificationBefore30MinutesMatchStart()
+        });
     }
 }

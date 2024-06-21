@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 require('dotenv').config();
 const helper = require('./helpers/helper')
-const { every5Minutes, everyStartOfDay, everyAugest, every30Minutes,  every10Minutes, everyMorningSixthAm, everyMonday7AM, everyFiveHour30Minutes, every15Minutes } = require('./utils/create-cron');
+const { every5Minutes, everyStartOfDay, everyAugest, every30Minutes,  every10Minutes, everyMorningSixthAm, everyMonday7AM, everyFiveHour30Minutes, every15Minutes, sentNotiBefore30MinutesMatchStart } = require('./utils/create-cron');
 // const bot = require('./libs/viber.bot')
 const indexRouter = require('./routes/index')
 const adminRouter = require('./routes/admin')
@@ -48,6 +48,7 @@ every15Minutes()
 every10Minutes();
 every30Minutes()
 // everyMorningSixthAm();
+sentNotiBefore30MinutesMatchStart()
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1.0', indexRouter)
 app.use('/admin', adminRouter)
