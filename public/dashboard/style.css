@@ -361,3 +361,42 @@ header {
   padding: 10px;
   margin: 5px;
 }
+
+.leaderboard-container .leaderboard {
+  display: grid;
+  grid-template-columns: 1fr;
+  background-color: #ffffff;
+  margin: 5;
+  padding:10px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+thead {
+  background-color: #8b71e9;
+  color: #ffffff;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f3f3f3;
+}
+
+tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+td {
+  color: #333;
+}
