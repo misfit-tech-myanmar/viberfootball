@@ -1,4 +1,7 @@
 const redisClient = require('../../libs/redis');
+const fs = require('fs');
+const csv = require('csv-parser');
+const path = require('path')
 
 const userData = () => {
     return new Promise(async(resolve, reject)=> {
@@ -334,6 +337,41 @@ const groupByCountry = (data) => {
             }, {}))
     })
 }
+
+const importCustomerCSV = (req, res) => {
+    const results = [];
+        if(!req.file){
+            return res.status(400).json({
+                status: false,
+                message: "No file uploaded."
+            })
+        }
+        const filePath = path.join(__dirname, '../../' ,req.file.path);
+        fs.createReadStream(filePath)
+        .pipe(csv())
+        .on('headers', (headers) => {
+          })
+          .on('data', (row) => {
+            // Process each row here
+            const combinedObject = {};
+            Object.keys(row).forEach(key => {
+              combinedObject[key.trim()] = row[key].trim();
+            });
+            results.push(combinedObject);
+          })
+          .on('end', () => {
+            // Optionally remove the file after processing
+            fs.unlinkSync(filePath);
+            console.log(results.length)
+            res.json(results);
+          })
+          .on('error', (error) => {
+            console.error('Error while reading the CSV file:', error);
+            res.status(500).send('Error while processing the file.');
+          });
+}
+
 module.exports = {
-    userData
+    userData,
+    importCustomerCSV
 }

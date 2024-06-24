@@ -1,4 +1,6 @@
+const multer = require('multer')
 const express = require('express');
+
 const User = require('../models/User');
 const { checkAuth, redirectIfAuthenticated } = require('../middlewares/auth.middleware');
 
@@ -8,6 +10,9 @@ const AuthController = require('../controllers/admin/auth.controller');
 const UserController = require('../controllers/admin/dashboard.controller');
 const LeaderBoardService = require('../services/leaderboard.service');
 const leaderBoardService = new LeaderBoardService();
+
+const upload = multer({ dest: 'uploads/csv' });
+
 
 router.get('/login', redirectIfAuthenticated, async(req, res) => {
     res.render('login');
@@ -40,17 +45,8 @@ router.get('/user-data', async(req, res) => {
     res.status(200).json(userData)
 })
 
-// router.get('/leader-boards', async(req, res) => {
-//     const leaderBoards = await leaderBoardService.getTopPredictionUserScore();
-//     let ranksWithName = leaderBoards.inter.map((user, index)=> {
-//         console.log(index===10477?user['5751']:"")
-//         return {
-//             name: user['5751']===''?'Unknown':user['5751'],
-//             phone: user['5752'],
-//             scores: user['5755']
-//         }
-//     })
-//     res.json(ranksWithName.sli)
-// })
+router.post('/upload-csv', upload.single('file'), async (req, res) => {
+    await UserController.importCustomerCSV(req, res)
+})
 
 module.exports = router;
