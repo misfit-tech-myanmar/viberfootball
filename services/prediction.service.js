@@ -12,7 +12,6 @@ function PredictionService(){
 
 PredictionService.prototype = {
     singlePredict: (user, users) => {
-        console.log(users)
         return new Promise(async(resolve, reject) => {
             const userPredicts = await self.getUserPredictionsByUserId(user.creator_id);
             if(userPredicts.length > 0) {
@@ -230,9 +229,7 @@ PredictionService.prototype = {
                 // const userHistories = await self.Axios.get(`/stable/bots/labs/2268/entries`);
                 const userPredictions = await self.RedisClient.get('user-predictions');
                 let predictionCache = JSON.parse(userPredictions)
-                console.log(predictionCache)
                 const isPredicted = self.checkUserPredictByMatchIdAndUserId(predictionCache, matchId, userId)
-                console.log(isPredicted)
                 resolve(isPredicted)
             }catch(err){
                 console.log(err)

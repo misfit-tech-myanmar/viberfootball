@@ -42,7 +42,6 @@ QuizService.prototype = {
     },
     checkQuizAnswer: (quizId) => {
         return new Promise(async(resolve, reject)=> {
-            console.log("Hello Quizzz")
             const quiz = await self.getQuizById(quizId);
             resolve(quiz)
         })
@@ -56,7 +55,6 @@ QuizService.prototype = {
     updateQuizScoreUser: (creatorId) => {
         return new Promise(async(resolve, reject) => {
             const user = await self.getUserByUid(creatorId)
-            console.log("update user", user)
             var scores = user['6137']===undefined? 1 : (parseInt(user['6137'])+1)
             await self.updateUserQuizScore(scores, user.id)
             resolve()
@@ -65,7 +63,6 @@ QuizService.prototype = {
     getUserByUid: (creatorId) => {
         return new Promise(async(resolve, reject)=> {
             const userResponse = await self.Axios.get(`/stable/bots/labs/2241/entries`);
-            console.log(userResponse.data.dataSource)
             resolve(userResponse.data.dataSource.filter(user=> user.creator_id === creatorId)[0])
         })
     }, 
@@ -74,7 +71,6 @@ QuizService.prototype = {
             self.Axios.put(`/stable/bots/labs/2241/entries/${userId}`, {
                 "6137": scores
             }).then(response=> {
-                console.log("updated quiz score")
                 resolve()
             })
         })
@@ -99,7 +95,6 @@ QuizService.prototype = {
             self.Axios.put(`/stable/bots/labs/2295/entries/${quizId}`, {
                 "6136": 'Finished'
             }).then(response=> {
-                console.log("updated quiz status")
                 resolve()
             })
         })

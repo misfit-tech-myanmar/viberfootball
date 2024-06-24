@@ -53,9 +53,6 @@ module.exports = {
         const dayAfterNext = new Date();
         dayAfterNext.setDate(today.getDate() + 2);
         cron.schedule('0 0 * * *', ()=> {
-            console.error("running every start of day")
-            console.log('today', today)
-            console.log('next 2 day', dayAfterNext)
             footballService.getFixtureFromApiAndPostToMyaliceDataLab(getFormattedDate(today), getFormattedDate(dayAfterNext))
         })
     },

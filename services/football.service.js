@@ -355,7 +355,6 @@ FootBallService.prototype = {
         return new Promise(async(resolve, reject)=> {
             const fixtureResultSorted = await self.fixtureResultSort();
             resolve(fixtureResultSorted.map(fixture=> {
-                console.log(fixture)
                 return {
                     leagueName: fixture['5768'],
                     status: fixture['5778'],
@@ -382,7 +381,6 @@ FootBallService.prototype = {
         })
     },
     mergeObj: (data)=> {
-        // console.log(data)
         return new Promise(async(resolve, reject)=> {
             var proceedData = Promise.all(data.map(async item=> {
                 const homeTeamById = await self.getTeamByTeamId(item['5956'])

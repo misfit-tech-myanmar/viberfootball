@@ -440,7 +440,6 @@ router.get('/inactive-history-check', async(req, res, next)=> {
     })
 })
 router.post('/inactive-histories', async(req, res, next)=> {
-    console.log("calling inactive histories")
     const active = false;
     const histories = await historyService.histories(req.query.customer_id, active);
     // Loop through the groupedData object by keys
@@ -477,7 +476,6 @@ router.post('/active-histories-by-date-first', async(req, res,next)=> {
     const active=true;
     const histories = await historyService.getHistoriesByDate(req.body.date_history, req.query.customer_id, active, "first");
     let proceedData=[];
-    console.log("active histories => ", histories)
     if(histories.result.length>0){
          proceedData = Promise.all(histories.result.map(async (fixture, index)=> {
             const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
@@ -700,7 +698,6 @@ router.post('/inactive-histories-by-date-first', async(req, res,next)=> {
     const proceedData = Promise.all(histories.result.map(async (fixture, index)=> {
         const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
         const guest = await footballService.getPredictedTeamName(teams, fixture.predict)
-        console.log(req.query.customer_id, " - ", fixture)
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
             "subtitle": `${fixture['5769']} <font color="black">${req.body.language==="English"?'Result':'ရလဒ်'}: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
@@ -920,9 +917,7 @@ router.post('/update-prediction', async(req, res, next) => {
 
 /**Profile */
 router.post('/profile', async(req, res, next)=> {
-    console.log("Calling profile", req.body)
     const profile = await profileService.profile(req.body);
-    console.log("Heyyyy", profile)
     res.json({
         "data": `${profile['5755']}`,
         "success": true,
@@ -937,7 +932,6 @@ router.post('/profile', async(req, res, next)=> {
 router.post('/noti-message', async(req, res)=> {
     // const fixture = await notiService.getPredictedAndFinishedMatchByUserId(req.body.uid)
     const notification = await notiService.findNotificationByUserId(req.body.uid)
-    // console.log(fixture)
     var predict;
     if(notification !== null){
         if(notification.predict==='W1'){
@@ -1289,10 +1283,8 @@ function checkAnswer(userAnwer, correctAnswer){
 
 /**Quizzes */
 router.post('/quizzes', async(req, res)=> {
-    console.log("calling quizzes api")
     const totalAnswer = req.body.totalAnswer===''?0:req.body.totalAnswer;
     const quizz = await quizService.getQuizzes(req.body.QuizDone===''?0:req.body.QuizDone);
-    console.log("quizzz", quizz)
     if(quizz !== undefined ){
         res.json({
             "data": [
@@ -1354,10 +1346,8 @@ router.post('/quizzes', async(req, res)=> {
     
 })
 router.post('/question', (async(req, res) => {
-    console.log("total answer => ", req.body)
     const totalAnswer = req.body.totalAnswer ===''?0:req.body.totalAnswer;
     const quizz = await quizService.getQuizzes(req.body.QuizDone===''?0:req.body.QuizDone);
-    console.log("quizzz", quizz)
 
     if(quizz !== undefined){
         res.json({
@@ -1397,9 +1387,7 @@ const checkCorrectAnswer = (answer)=> {
 }
 
 router.post('/check-quiz-answer', (async(req, res)=> {
-    console.log("calling check quiz answer", req.body)
     const quiz = await quizService.checkQuizAnswer(req.body.QuizId)
-    console.log("quizzz => ", quiz)
     const correctAnswer = checkCorrectAnswer(quiz['6011'])
     if(quiz['6011'] === req.body.QuizAnswer){
         await quizService.updateQuizScoreUser(req.body.uid);
@@ -1449,7 +1437,6 @@ router.get('/send-noti-favteam', async(req, res) => {
 })
 
 router.get('/fixtures-results', async(req, res, next)=> {
-    console.log("calling fixture and result")
     const fixtures = await footballService.getFixtureAndResult();
     res.json(fixtures.sort((a, b)=> {
         if (a.status === "Finished" && b.status !== "Finished") {

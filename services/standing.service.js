@@ -30,7 +30,6 @@ StandingService.prototype = {
                 groupedData[group].push(item)
             }
         })
-        console.log(groupedData)
         return groupedData
     },
     getTeamByTeamId: (teamId) => {

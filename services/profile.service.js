@@ -23,7 +23,6 @@ ProfileService.prototype = {
     },
     filterByUid: (uid, data) => {
         return new Promise(async(resolve, reject)=> {
-            console.log(data.length)
             resolve(data.filter(item=> item.creator_id == uid)[0])
         })
     }

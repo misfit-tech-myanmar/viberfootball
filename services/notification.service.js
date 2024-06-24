@@ -112,7 +112,6 @@ NotificationService.prototype = {
                 var matchingObj2 = arr2.find(obj2 =>obj2['5766'] === obj1['5860']);
                 return { ...obj1,predictId: obj1.id, ...matchingObj2 };
             });
-            // console.log("matching object", matchingObjects)
             resolve(matchingObjects)
         })
     },

@@ -65,7 +65,7 @@ CheckPredictionService.prototype = {
                                                         predictId: predict.id,
                                                         "5897": 'Lose',
                                                         userId: user.id,
-                                                        scores: (parseInt(user['5755']===''?0:user['5755']) + 1),
+                                                        scores: (parseInt(user['5755']===''?0:user['5755'])),
                                                         creatorId: user.creator_id
                                                     })
                                                     notificationCache.push({
@@ -251,7 +251,6 @@ CheckPredictionService.prototype = {
                         'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
                     }
                 })
-                console.log("calling update api",  predictId)
             }catch(err){
                 console.log("fail update requestttt")
             }
@@ -262,12 +261,9 @@ CheckPredictionService.prototype = {
             self.data = self.data.length > 0?self.data:await self.getDataFromRedis('finished-predictions')
             if(self.data.length > 0){
                 let batch = self.data.slice(0, 30);
-                console.log("datalength", self.data.length)
                 // Update the third-party API for each prediction in the batch
                 batch.forEach(async(prediction, index) => {
                     await self.updatePredictResult(prediction.predictId, prediction['5897'], prediction.userId, prediction.scores, prediction.creatorId);
-                    
-                    console.log("noti response", prediction.userId)
                 });
                 // Remove the processed batch from the predictions array
                 self.data = self.data.slice(30);
@@ -276,11 +272,9 @@ CheckPredictionService.prototype = {
                         self.updateScoreAndSentNoti()
                     }, 10000); // Wait 1 second before starting the next batch
                 } else {
-                    console.log("All predictions processed.");
                     self.setDataToRedis('finished-predictions', [])
                 }   
             }else{
-                console.log("no data to update")
                 resolve()
             }
             

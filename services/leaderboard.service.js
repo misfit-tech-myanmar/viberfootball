@@ -18,7 +18,6 @@ LeaderBoardService.prototype = {
                 // const users = userResponse.data.dataSource;
                 const userResponse = await self.RedisClient.get('users');
                 const users = JSON.parse(userResponse);
-                console.log(users.length)
                 resolve({
                     inter: users.sort((a,b) =>  b['5755'] - a['5755'] ),
                     myanmar: users.sort((a,b) =>  b['5755'] - a['5755'] ).filter(item=> item['5754'] === 'en_MM')

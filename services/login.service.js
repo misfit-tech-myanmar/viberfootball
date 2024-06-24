@@ -7,7 +7,6 @@ const login =  () => {
             username: 'kyawhlaingbwar18@gmail.com',
             password: 'alice@101'
         });
-        console.log(response.data)
         // await redisClient.set('accessToken', response.data.access)
         // Set a key
         redisClient.set('accessToken', response.data.access, function(err, reply) {
