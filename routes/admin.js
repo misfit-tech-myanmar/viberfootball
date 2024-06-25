@@ -48,5 +48,22 @@ router.get('/user-data', async(req, res) => {
 router.post('/upload-csv', upload.single('file'), async (req, res) => {
     await UserController.importCustomerCSV(req, res)
 })
+router.get('/subscribers', checkAuth, async(req, res) => {
+    res.render('customer')
+})
+router.get('/subscribers-monthly', async(req, res) => {
+    const monthly = await UserController.monthlyUsers(req, res)
+    const weekly = await UserController.weeklyUsers(req, res)
+    const daily = await UserController.dailyUsers(req, res)
+    res.status(200).json({
+        monthly,
+        weekly,
+        daily
+    })
+})
+router.get('/all-subscribers', async(req, res) => {
+    const customers = await UserController.getAllCustomer(req, res)
+    res.status(200).json({data: customers})
+})
 
 module.exports = router;

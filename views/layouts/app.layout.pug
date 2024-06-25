@@ -1,37 +1,150 @@
 meta(charset="UTF-8")
 meta(http-equiv="X-UA-Compatible", content="IE=edge")
 meta(name="viewport", content="width=device-width,initial-scale=1")
-title GeeksForGeeks
+title Football360
 link(rel="stylesheet", href="/dashboard/style.css")
 link(rel="stylesheet", href="/dashboard/responsive.css")
+link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css')
+link(rel='stylesheet', href='https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css')
+
 //  for header part 
 header
-  include header
+  .logosec
+    .logo FOOTBALL360
+    img.icn.menuicn#menuicn(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182541/Untitled-design-(30).png", alt="menu-icon")
+  .searchbar
+    //- input(type="text", placeholder="Search")
+    //- .searchbtn
+    //-   img.icn.srchicn(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png", alt="search-icon")
+  .message
+    a(href="http://localhost:5000/admin/logout") Logout
+    //- .circle
+    //- img.icn(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/8.png", alt)
+    //- .dp
+      //- img.dpicn(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180014/profile-removebg-preview.png", alt="dp")
+        img.dpicn(src="/dashboard/logout-svgrepo-com.svg")
 .main-container
   .navcontainer
     nav.nav
       .nav-upper-options
-        .nav-option.option1
-          img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182148/Untitled-design-(29).png", alt="dashboard")
-          h3 Dashboard
-        .option2.nav-option
-          img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/9.png", alt="articles")
-          h3 Articles
-        .nav-option.option3
-          img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/5.png", alt="report")
-          h3 Report
-        .nav-option.option4
-          img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183321/6.png", alt="institution")
-          h3 Institution
-        .nav-option.option5
-          img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183323/10.png", alt="blog")
-          h3 Profile
-        .nav-option.option6
-          img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/4.png", alt="settings")
-          h3 Settings
-        .nav-option.logout
-          img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183321/7.png", alt="logout")
-          h3 Logout
+        //- .nav-option.option1
+        //-   a(href="http://localhost:5000/admin/dashboard")
+        //-     img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182148/Untitled-design-(29).png", alt="dashboard")
+        //-     h3 Dashboard
+        //- .nav-option.option1
+        //-   a(href="http://localhost:5000/admin/dashboard")
+        //-     img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182148/Untitled-design-(29).png", alt="dashboard")
+        //-     h3 Customers
+        .option.nav-option
+          a(href="http://localhost:5000/admin/dashboard" class="nav-tag")
+            //- img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182148/Untitled-design-(29).png", alt="dashboard")
+            i(class='fa-solid fa-tachometer-alt fa-2x')
+            h3 Dashboard
+        .option.nav-option
+            a(href="http://localhost:5000/admin/subscribers" class="nav-tag")
+              i(class='fa-solid fa-users fa-2x')
+              h3 Subscribers
+        //- .nav-option.option3
+        //-   img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/5.png", alt="report")
+        //-   h3 Report
+        //- .nav-option.option4
+        //-   img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183321/6.png", alt="institution")
+        //-   h3 Institution
+        //- .nav-option.option5
+        //-   img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183323/10.png", alt="blog")
+        //-   h3 Profile
+        //- .nav-option.option6
+        //-   img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/4.png", alt="settings")
+        //-   h3 Settings
+        //- .nav-option.logout
+        //-   a(href="localhost:5000/admin/logout")
+        //-     img.nav-img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183321/7.png", alt="logout")
+        //-     h3 Logout
   .main
+    //- .searchbar2
+    //-   input(type="text", name, placeholder="Search")
+    //-   .searchbtn
+    //-     img.icn.srchicn(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png", alt="search-button")
+    //- .box-container
+    //-   .box.box1
+    //-     .text
+    //-       h2.topic-heading 60.5k
+    //-       h2.topic Article Views
+    //-     img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210184645/Untitled-design-(31).png", alt="Views")
+    //-   .box.box2
+    //-     .text
+    //-       h2.topic-heading 150
+    //-       h2.topic Likes
+    //-     img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210185030/14.png", alt="likes")
+    //-   .box.box3
+    //-     .text
+    //-       h2.topic-heading 320
+    //-       h2.topic Comments
+    //-     img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210184645/Untitled-design-(32).png", alt="comments")
+    //-   .box.box4
+    //-     .text
+    //-       h2.topic-heading 70
+    //-       h2.topic Published
+    //-     img(src="https://media.geeksforgeeks.org/wp-content/uploads/20221210185029/13.png", alt="published")
+    //- .report-container
+    //-   .report-header
+    //-     h1.recent-Articles Recent Articles
+    //-     button.view View All
+    //-   .report-body
+        .report-topic-heading
+          h3.t-op Article
+          h3.t-op Views
+          h3.t-op Comments
+          h3.t-op Status
+        .items
+          .item1
+            h3.t-op-nextlvl Article 73
+            h3.t-op-nextlvl 2.9k
+            h3.t-op-nextlvl 210
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 72
+            h3.t-op-nextlvl 1.5k
+            h3.t-op-nextlvl 360
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 71
+            h3.t-op-nextlvl 1.1k
+            h3.t-op-nextlvl 150
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 70
+            h3.t-op-nextlvl 1.2k
+            h3.t-op-nextlvl 420
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 69
+            h3.t-op-nextlvl 2.6k
+            h3.t-op-nextlvl 190
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 68
+            h3.t-op-nextlvl 1.9k
+            h3.t-op-nextlvl 390
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 67
+            h3.t-op-nextlvl 1.2k
+            h3.t-op-nextlvl 580
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 66
+            h3.t-op-nextlvl 3.6k
+            h3.t-op-nextlvl 160
+            h3.t-op-nextlvl.label-tag Published
+          .item1
+            h3.t-op-nextlvl Article 65
+            h3.t-op-nextlvl 1.3k
+            h3.t-op-nextlvl 220
+            h3.t-op-nextlvl.label-tag Published
     block content
-script(src="./index.js")
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+script(src="/dashboard/index.js")
+script(src='https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js')
+script(src='https://cdn.datatables.net/2.0.8/js/dataTables.min.js')
+block scripts

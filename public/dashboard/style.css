@@ -346,6 +346,17 @@ header {
     padding: 10px;
     margin: 5px;
 }
+.graph-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.graph-container .monthly-user{
+  width: auto;
+  height: auto;
+  background-color: #ffffff;
+  padding: 10px;
+  margin: 5px;
+}
 #favorite-team{
     display: block;
     width: 80%;
@@ -365,6 +376,14 @@ header {
 .leaderboard-container .leaderboard {
   display: grid;
   grid-template-columns: 1fr;
+  background-color: #ffffff;
+  margin: 5;
+  padding:10px;
+}
+
+.subscriber-container{
+  margin: 5px;
+  padding: 10px;
   background-color: #ffffff;
   margin: 5;
   padding:10px;
@@ -401,6 +420,16 @@ td {
   color: #333;
 }
 .message a{
+  text-decoration: none;
+  color: #000000;
+}
+.nav-tag{
+  width: 250px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: all 0.1s ease-in-out;
   text-decoration: none;
   color: #000000;
 }

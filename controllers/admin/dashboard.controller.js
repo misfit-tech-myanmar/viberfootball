@@ -2,6 +2,7 @@ const redisClient = require('../../libs/redis');
 const fs = require('fs');
 const csv = require('csv-parser');
 const path = require('path')
+const Customer = require('../../models/Customer');
 
 const userData = () => {
     return new Promise(async(resolve, reject)=> {
@@ -340,38 +341,363 @@ const groupByCountry = (data) => {
 
 const importCustomerCSV = (req, res) => {
     const results = [];
-        if(!req.file){
-            return res.status(400).json({
-                status: false,
-                message: "No file uploaded."
-            })
-        }
-        const filePath = path.join(__dirname, '../../' ,req.file.path);
-        fs.createReadStream(filePath)
-        .pipe(csv())
-        .on('headers', (headers) => {
-          })
-          .on('data', (row) => {
-            // Process each row here
-            const combinedObject = {};
-            Object.keys(row).forEach(key => {
-              combinedObject[key.trim()] = row[key].trim();
-            });
+    if(!req.file){
+        return res.status(400).json({
+            status: false,
+            message: "No file uploaded."
+        })
+    }
+    const filePath = path.join(__dirname, '../../' ,req.file.path);
+    fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('headers', (headers) => {})
+    .on('data', (row) => {
+        // Process each row here
+        const combinedObject = {};
+        Object.keys(row).forEach(key => {
+            combinedObject[key.trim()] = row[key].trim();
+        });
             results.push(combinedObject);
-          })
-          .on('end', () => {
-            // Optionally remove the file after processing
+        })
+    .on('end', async() => {
+        // Optionally remove the file after processing
             fs.unlinkSync(filePath);
-            console.log(results.length)
-            res.json(results);
-          })
-          .on('error', (error) => {
-            console.error('Error while reading the CSV file:', error);
-            res.status(500).send('Error while processing the file.');
-          });
+            const customers = await Customer.find({});
+            console.log(customers)
+            // customerData = customerData===null?[]:JSON.parse(response)
+            // console.log(customerData.length)
+            if(customers.length > 0){
+                for(const result of results){
+                    const customer = await Customer.findOne({customer_id: result.id})
+                    if(customer !== null){
+                        await Customer.findByIdAndUpdate(customer._id, {
+                            customer_id: result.id,
+                            history_nav: result.HistoryNav,
+                            no_quiz_left: result.NoQuizLeft,
+                            quiz_done: result.QuizDone,
+                            quiz_score: result.QuizScore,
+                            quiz_total_answer: result.QuizTotalAnswer,
+                            quiz_total_score: result.QuizTotalScore,
+                            total_prediction: result.TotalPredictions,
+                            weekly_prediction: result.WeeklyPredictions,
+                            active_history: result.activehistory,
+                            address: result.address,
+                            avatar: result.avatar,
+                            business_hours: result.business_hours,
+                            country: result.country,
+                            created_at: result.created_at,
+                            default: result.default,
+                            email:result.email,
+                            fav_team: result.fav_team,
+                            fav_team_id: result.fav_team_id,
+                            first_name: result.first_name,
+                            fteam: result.fteam,
+                            full_name: result.full_name,
+                            gender: result.gender,
+                            inactive_history: result.inactivehistory,
+                            is_predicted: result.isPredicted,
+                            language: result.language,
+                            last_message_text: result.last_message_text,
+                            last_message_time: result.last_message_time,
+                            last_name: result.last_name,
+                            last_sequence: result.last_sequence,
+                            locale: result.locale,
+                            next_fixtures: result.nextFixtures,
+                            next_fixtures_active: result.nextFixturesActive,
+                            next_fixtures_inactive: result.nextFixturesInActive,
+                            phone: result.phone,
+                            predict: result.predict,
+                            predict_fixture:result.predictFixture,
+                            previous_fixtures: result.previousFixtures,
+                            previous_fixtures_active: result.previousFixturesActive,
+                            previous_fixtures_inactive: result.previousFixturesInActive,
+                            primary_id: result.primary_id,
+                            registered: result.registered,
+                            score: result.score
+                        },{ new: true, runValidators: true })
+                    }else{
+                        await Customer.create({
+                            customer_id: result.id,
+                            history_nav: result.HistoryNav,
+                            no_quiz_left: result.NoQuizLeft,
+                            quiz_done: result.QuizDone,
+                            quiz_score: result.QuizScore,
+                            quiz_total_answer: result.QuizTotalAnswer,
+                            quiz_total_score: result.QuizTotalScore,
+                            total_prediction: result.TotalPredictions,
+                            weekly_prediction: result.WeeklyPredictions,
+                            active_history: result.activehistory,
+                            address: result.address,
+                            avatar: result.avatar,
+                            business_hours: result.business_hours,
+                            country: result.country,
+                            created_at: result.created_at,
+                            default: result.default,
+                            email:result.email,
+                            fav_team: result.fav_team,
+                            fav_team_id: result.fav_team_id,
+                            first_name: result.first_name,
+                            fteam: result.fteam,
+                            full_name: result.full_name,
+                            gender: result.gender,
+                            inactive_history: result.inactivehistory,
+                            is_predicted: result.isPredicted,
+                            language: result.language,
+                            last_message_text: result.last_message_text,
+                            last_message_time: result.last_message_time,
+                            last_name: result.last_name,
+                            last_sequence: result.last_sequence,
+                            locale: result.locale,
+                            next_fixtures: result.nextFixtures,
+                            next_fixtures_active: result.nextFixturesActive,
+                            next_fixtures_inactive: result.nextFixturesInActive,
+                            phone: result.phone,
+                            predict: result.predict,
+                            predict_fixture:result.predictFixture,
+                            previous_fixtures: result.previousFixtures,
+                            previous_fixtures_active: result.previousFixturesActive,
+                            previous_fixtures_inactive: result.previousFixturesInActive,
+                            primary_id: result.primary_id,
+                            registered: result.registered,
+                            score: result.score
+                        })
+                    }
+                }
+            }else{
+                for(const result of results){
+                    await Customer.create({
+                        customer_id: result.id,
+                        history_nav: result.HistoryNav,
+                        no_quiz_left: result.NoQuizLeft,
+                        quiz_done: result.QuizDone,
+                        quiz_score: result.QuizScore,
+                        quiz_total_answer: result.QuizTotalAnswer,
+                        quiz_total_score: result.QuizTotalScore,
+                        total_prediction: result.TotalPredictions,
+                        weekly_prediction: result.WeeklyPredictions,
+                        active_history: result.activehistory,
+                        address: result.address,
+                        avatar: result.avatar,
+                        business_hours: result.business_hours,
+                        country: result.country,
+                        created_at: result.created_at,
+                        default: result.default,
+                        email:result.email,
+                        fav_team: result.fav_team,
+                        fav_team_id: result.fav_team_id,
+                        first_name: result.first_name,
+                        fteam: result.fteam,
+                        full_name: result.full_name,
+                        gender: result.gender,
+                        inactive_history: result.inactivehistory,
+                        is_predicted: result.isPredicted,
+                        language: result.language,
+                        last_message_text: result.last_message_text,
+                        last_message_time: result.last_message_time,
+                        last_name: result.last_name,
+                        last_sequence: result.last_sequence,
+                        locale: result.locale,
+                        next_fixtures: result.nextFixtures,
+                        next_fixtures_active: result.nextFixturesActive,
+                        next_fixtures_inactive: result.nextFixturesInActive,
+                        phone: result.phone,
+                        predict: result.predict,
+                        predict_fixture:result.predictFixture,
+                        previous_fixtures: result.previousFixtures,
+                        previous_fixtures_active: result.previousFixturesActive,
+                        previous_fixtures_inactive: result.previousFixturesInActive,
+                        primary_id: result.primary_id,
+                        registered: result.registered,
+                        score: result.score
+                    })
+                }
+            }
+            res.json({
+                success: true,
+                message: "Complete imported CSV!",
+                data: results
+            });
+        })
+    .on('error', (error) => {
+        console.error('Error while reading the CSV file:', error);
+        res.status(500).send('Error while processing the file.');
+    });
+}
+
+const monthlyUsers = (req, res) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const monthly = await Customer.aggregate([
+                {
+                    $group: {
+                        _id: {
+                            year: { $year: '$created_at' }, // Extract year from created_at
+                            month: { $month: '$created_at' } // Extract month from created_at
+                        },
+                        count: { $sum: 1 } // Count documents in each group
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0, // Exclude _id field from results
+                        year: '$_id.year', // Extracted year
+                        month: '$_id.month', // Extracted month
+                        count: 1 // Include count in results
+                    }
+                },
+                {
+                    $sort: { year: 1, month: 1 } // Optionally sort by year and month
+                }
+            ]);
+    
+            resolve(monthly.map(item=> {
+                console.log(item)
+                return {
+                    count: item.count,
+                    month: getMonthName(item.month)
+                }
+            }));
+            // result will contain an array of objects like [{ year: 2023, month: 1, count: 10 }, { year: 2023, month: 2, count: 15 }, ...]
+    
+        } catch (err) {
+            console.error(err);
+        }
+    })
+}
+const weeklyUsers = (req, res) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const result = await Customer.aggregate([
+                {
+                    $project: {
+                        year: { $year: '$created_at' },   // Extract year from created_at
+                        week: {
+                            $isoWeek: '$created_at'      // Extract ISO week number from created_at
+                        }
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            year: '$year',
+                            week: '$week'
+                        },
+                        count: { $sum: 1 } // Count documents in each group
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,            // Exclude _id field from results
+                        year: '$_id.year', // Extracted year
+                        week: '$_id.week', // Extracted week
+                        count: 1           // Include count in results
+                    }
+                },
+                {
+                    $sort: { year: 1, week: 1 } // Optionally sort by year and week
+                }
+            ]);
+    
+            resolve(result.map(item=> {
+                console.log(item)
+                return {
+                    count: item.count,
+                    week: item.week
+                    // month: getMonthName(item.month)
+                }
+            }));
+            // result will contain an array of objects like [{ year: 2023, month: 1, count: 10 }, { year: 2023, month: 2, count: 15 }, ...]
+    
+        } catch (err) {
+            console.error(err);
+        }
+    })
+}
+
+const dailyUsers = (req, res) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const result = await Customer.aggregate([
+                {
+                    $project: {
+                        year: { $year: '$created_at' }, 
+                        month: { $month: '$created_at' },  // Extract year from created_at
+                        day: { $dayOfMonth: '$created_at' }
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            year: '$year',
+                            month: '$month',
+                            day: '$day'
+                        },
+                        count: { $sum: 1 } // Count documents in each group
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,            // Exclude _id field from results
+                        year: '$_id.year', // Extracted year
+                        month: '$_id.month',// Extracted month
+                        day: '$_id.day', // Extracted week
+                        count: 1           // Include count in results
+                    }
+                },
+                {
+                    $sort: { year: 1, month:1, day: 1 } // Optionally sort by year and week
+                }
+            ]);
+    
+            resolve(result.map(item=> {
+                console.log(item)
+                return {
+                    count: item.count,
+                    day: `${item.year}-${item.month}-${item.day}`
+                    // month: getMonthName(item.month)
+                }
+            }));
+            // result will contain an array of objects like [{ year: 2023, month: 1, count: 10 }, { year: 2023, month: 2, count: 15 }, ...]
+    
+        } catch (err) {
+            console.error(err);
+        }
+    })
+}
+
+function getMonthName(monthNumber) {
+    const date = new Date(Date.UTC(2000, monthNumber - 1, 1)); // Create a date object for the given month number (subtract 1 because months are zero-indexed)
+    const monthName = date.toLocaleString('default', { month: 'long' }); // Get the full name of the month
+    return monthName;
+}
+
+const getAllCustomer = () => {
+    return new Promise(async(resolve, reject) => {
+        try{
+            const customers = await Customer.find({});
+            if(customers.length > 0){
+                resolve(customers.map(customer=> {
+                    return{
+                        customer_id: customer.customer_id,
+                        full_name: customer.full_name,
+                        phone: customer.phone,
+                        last_message_time: customer.last_message_time,
+                        last_sequence: customer.last_sequence
+                    }
+                }))
+            }
+        }catch(err){
+            console.log(err)
+            throw err;
+        }
+    })
 }
 
 module.exports = {
     userData,
-    importCustomerCSV
+    importCustomerCSV,
+    monthlyUsers,
+    getAllCustomer,
+    weeklyUsers,
+    dailyUsers
 }
