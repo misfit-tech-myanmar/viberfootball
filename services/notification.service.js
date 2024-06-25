@@ -202,11 +202,27 @@ NotificationService.prototype = {
     },
     findNotificationByUserId: (userId) => {
         return new Promise(async(resolve, reject) => {
-            const response = await self.RedisClient.get('notifications');
-            let data = JSON.parse(response);
-            const noti = data.find(item=> item.creatorId === userId);
-            await self.RedisClient.set('notifications',JSON.stringify(data.filter(item => item.creatorId !== userId)))
-            resolve(noti)
+            try{
+                const response = await self.RedisClient.get('notifications');
+                let data = JSON.parse(response);
+                const result = await self.filterByUserIdInNotification(data, userId);
+                if (result.length === 0) {
+                    throw new Error('No data found for the user');
+                }
+                const singleData = result[0];
+                data = data.filter(item => item.creatorId !== singleData.creatorId);
+                await self.RedisClient.set('notifications', JSON.stringify(data));
+                resolve(singleData)
+            }catch(err){
+                console.log(err)
+                throw err;
+            }
+        })
+    },
+    filterByUserIdInNotification: (data, userId) => {
+        return new Promise(async(resolve, reject)=> {
+            // console.log("data", data)
+            resolve(data.filter(item => item.creatorId == userId))
         })
     },
     sentNotificationBefore30MinutesMatchStart: () => {

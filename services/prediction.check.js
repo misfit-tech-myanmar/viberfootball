@@ -13,6 +13,7 @@ function CheckPredictionService(){
 CheckPredictionService.prototype = {
     checkPrediction: () => {
         return new Promise(async(resolve, reject) => {
+            console.log("checking prediction")
             let fixturesCache = await self.getDataFromRedis('fixtures');
             let startedFixturesCache = await self.getDataFromRedis('started-fixtures')
             let userPredictionsCache = await self.getDataFromRedis('user-predictions');
@@ -251,6 +252,7 @@ CheckPredictionService.prototype = {
                         'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
                     }
                 })
+                console.log("caling update predict result")
             }catch(err){
                 console.log("fail update requestttt")
             }
@@ -266,6 +268,7 @@ CheckPredictionService.prototype = {
                     await self.updatePredictResult(prediction.predictId, prediction['5897'], prediction.userId, prediction.scores, prediction.creatorId);
                 });
                 // Remove the processed batch from the predictions array
+                console.log(self.data.length)
                 self.data = self.data.slice(30);
                 if (self.data.length > 0) {
                     setTimeout(()=> {

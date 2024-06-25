@@ -63,11 +63,6 @@ module.exports = {
             footballService.addTeamToMyalice();
         });
     },
-    everyMorningSixthAm: () => {
-        cron.schedule(' * * * * *', async()=> {
-            await notificationService.sendNotiToPredictUsers();
-        })
-    },
     everyMonday7AM: () => {
         cron.schedule('0 7 * * 1', async()=> {
             await notificationService.sentNotiUserFavouriteTeam();
