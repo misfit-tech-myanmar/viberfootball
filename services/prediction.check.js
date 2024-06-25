@@ -31,78 +31,82 @@ CheckPredictionService.prototype = {
                 startedFixturesCache.forEach(async fixture => {
                     const resultFixture = await self.findResultFixtureById(fixture.id, fixturesCache)
                     if(resultFixture['5778'] === "Finished"){
-                        const userPredictions = await self.getUserPredictionByFixture(userPredictionsCache, fixture);
-                        if(userPredictions.length > 0){
-                            for(const predict of userPredictions){
-                                if(predict['5897'] === undefined){
-                                    if(resultFixture['5778'] == 'Finished'){
-                                        const result = await self.checkW1W2D(resultFixture, predict)
-                                        const user = await self.getUserByUserId(predict['5861'], userCache)
-                                        if((result==="Draw" || result==="W1" || result==="W2")){
-                                            if(user !== undefined){
-                                                if(result === predict['5862']){
-                                                    userPredictionsCache = await self.filterAndMapForUpdatePrediction('Win', predict, userPredictionsCache)
-                                                    userCache = await self.updateUserScore((parseInt(user['5755']===''?0:user['5755']) + 1), user.id, userCache)
-                                                    finishedPredictionCache.push({
-                                                        predictId: predict.id,
-                                                        "5897": 'Win',
-                                                        userId: user.id,
-                                                        scores: (parseInt(user['5755']===''?0:user['5755']) + 1),
-                                                        creatorId: user.creator_id
-                                                    })
-                                                    notificationCache.push({
-                                                        creatorId: user.creator_id,
-                                                        predict: predict['5862'],
-                                                        homeTeam: resultFixture['5780'],
-                                                        awayTeam: resultFixture['5782'],
-                                                        homeScore: resultFixture['5781'],
-                                                        awayScore: resultFixture['5783'],
-                                                        predictResult: "Win",
-                                                        isSent: false
-                                                    })
-                                                }else{
-                                                    userPredictionsCache = await self.filterAndMapForUpdatePrediction('Lose', predict, userPredictionsCache)
-                                                    finishedPredictionCache.push({
-                                                        predictId: predict.id,
-                                                        "5897": 'Lose',
-                                                        userId: user.id,
-                                                        scores: (parseInt(user['5755']===''?0:user['5755'])),
-                                                        creatorId: user.creator_id
-                                                    })
-                                                    notificationCache.push({
-                                                        creatorId: user.creator_id,
-                                                        predict: predict['5862'],
-                                                        homeTeam: resultFixture['5780'],
-                                                        awayTeam: resultFixture['5782'],
-                                                        homeScore: resultFixture['5781'],
-                                                        awayScore: resultFixture['5783'],
-                                                        predictResult: "Lose",
-                                                        isSent: false
-                                                    })
+                        if(finishedPredictionCache.length === 0){
+                            const userPredictions = await self.getUserPredictionByFixture(userPredictionsCache, fixture);
+                            if(userPredictions.length > 0){
+                                for(const predict of userPredictions){
+                                    if(predict['5897'] === undefined){
+                                        if(resultFixture['5778'] == 'Finished'){
+                                            const result = await self.checkW1W2D(resultFixture, predict)
+                                            const user = await self.getUserByUserId(predict['5861'], userCache)
+                                            if((result==="Draw" || result==="W1" || result==="W2")){
+                                                if(user !== undefined){
+                                                    if(result === predict['5862']){
+                                                        userPredictionsCache = await self.filterAndMapForUpdatePrediction('Win', predict, userPredictionsCache)
+                                                        userCache = await self.updateUserScore((parseInt(user['5755']===''?0:user['5755']) + 1), user.id, userCache)
+                                                        finishedPredictionCache.push({
+                                                            predictId: predict.id,
+                                                            "5897": 'Win',
+                                                            userId: user.id,
+                                                            scores: (parseInt(user['5755']===''?0:user['5755']) + 1),
+                                                            creatorId: user.creator_id
+                                                        })
+                                                        notificationCache.push({
+                                                            creatorId: user.creator_id,
+                                                            predict: predict['5862'],
+                                                            homeTeam: resultFixture['5780'],
+                                                            awayTeam: resultFixture['5782'],
+                                                            homeScore: resultFixture['5781'],
+                                                            awayScore: resultFixture['5783'],
+                                                            predictResult: "Win",
+                                                            isSent: false
+                                                        })
+                                                    }else{
+                                                        userPredictionsCache = await self.filterAndMapForUpdatePrediction('Lose', predict, userPredictionsCache)
+                                                        finishedPredictionCache.push({
+                                                            predictId: predict.id,
+                                                            "5897": 'Lose',
+                                                            userId: user.id,
+                                                            scores: (parseInt(user['5755']===''?0:user['5755'])),
+                                                            creatorId: user.creator_id
+                                                        })
+                                                        notificationCache.push({
+                                                            creatorId: user.creator_id,
+                                                            predict: predict['5862'],
+                                                            homeTeam: resultFixture['5780'],
+                                                            awayTeam: resultFixture['5782'],
+                                                            homeScore: resultFixture['5781'],
+                                                            awayScore: resultFixture['5783'],
+                                                            predictResult: "Lose",
+                                                            isSent: false
+                                                        })
+                                                    }
+                                                    
                                                 }
-                                                
                                             }
+                                            // await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                                            //     "sequence_id":"138700",
+                                            //     "customer_id": `92906985`
+                                            // }, {
+                                            //     headers: {
+                                            //         'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                                            //     }
+                                            // })
                                         }
-                                        // await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
-                                        //     "sequence_id":"138700",
-                                        //     "customer_id": `92906985`
-                                        // }, {
-                                        //     headers: {
-                                        //         'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
-                                        //     }
-                                        // })
+                                    }else{
+                                        console.log("Already update result")
                                     }
-                                }else{
-                                    console.log("Already update result")
                                 }
+                                await self.setDataToRedis('finished-predictions', finishedPredictionCache)
+                                await self.setDataToRedis('notifications', notificationCache)
+                                await self.setDataToRedis('user-predictions', userPredictionsCache)
+                                await self.setDataToRedis('users', userCache)
+                                await self.removeFixtureAfterFinished(resultFixture.id, startedFixturesCache);
+                            }else{
+                                console.log("No user prediction for : ", `${resultFixture['5780']} - ${resultFixture['5782']}`)
                             }
-                            await self.setDataToRedis('finished-predictions', finishedPredictionCache)
-                            await self.setDataToRedis('notifications', notificationCache)
-                            await self.setDataToRedis('user-predictions', userPredictionsCache)
-                            await self.setDataToRedis('users', userCache)
-                            await self.removeFixtureAfterFinished(resultFixture.id, startedFixturesCache);
                         }else{
-                            console.log("No user prediction for : ", `${resultFixture['5780']} - ${resultFixture['5782']}`)
+                            console.log("Previous finished fixture operation not finished yet")
                         }
                     }else{
                         console.log("Fixture not finished")

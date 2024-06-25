@@ -35,6 +35,7 @@ module.exports = {
     },
     every10Minutes: () => {
         cron.schedule('* * * * *', async() => {
+            console.log("running check prediction")
             await checkPredictionService.checkPrediction();
         });
     },
