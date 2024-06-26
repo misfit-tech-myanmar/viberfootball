@@ -18,15 +18,15 @@ block content
                 th Last Message Time 
                 th Last Sequence
             tbody
-block scripts
 block scripts 
   script. 
+    const baseURL = "#{baseURL}";
     const monthlyCTX = document.getElementById('monthly');
     const weeklyCTX = document.getElementById('weekly');
     const dailyCTX = document.getElementById('daily');
     async function displayChart(){
         try{
-          const response = await fetch('http://localhost:5000/admin/subscribers-monthly')
+          const response = await fetch(`${baseURL}/admin/subscribers-monthly`)
           const data = await response.json();
           updateMonthlyChart(monthlyCTX, data.monthly)
           updateWeeklyChart(weeklyCTX, data.weekly)
@@ -215,7 +215,7 @@ block scripts
     $(document).ready(function() {
         $('#subscriberTable').DataTable({
           "ajax": {
-            "url": "http://localhost:5000/admin/all-subscribers",
+            "url": `${baseURL}/admin/all-subscribers`,
             "type": "GET"
           },
           "columns": [

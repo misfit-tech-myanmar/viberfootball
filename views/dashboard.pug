@@ -1,6 +1,6 @@
 extends layouts/app.layout.pug
 
-block content 
+block content
   .chart-container 
         .telecom 
             div
@@ -29,13 +29,15 @@ block content
                   td= rank.scores
 block scripts 
   script. 
+      const baseURL = "#{baseURL}";
+      console.log(baseURL)
       const telecomCTX = document.getElementById('telecom');
       const favoriteTeamCTX = document.getElementById('favorite-team');
       const countryCTX = document.getElementById('country');
 
       async function displayChart(){
         try{
-          const response = await fetch('http://localhost:5000/admin/user-data')
+          const response = await fetch(`${baseURL}/admin/user-data`)
           const data = await response.json();
           updateTelecomChart(telecomCTX, data.telecom)
           updateFavTeamChart(favoriteTeamCTX, data.favTeam)

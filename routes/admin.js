@@ -13,7 +13,6 @@ const leaderBoardService = new LeaderBoardService();
 
 const upload = multer({ dest: 'uploads/csv' });
 
-
 router.get('/login', redirectIfAuthenticated, async(req, res) => {
     res.render('login');
 })
@@ -35,7 +34,6 @@ router.get('/dashboard', checkAuth,  async(req, res) => {
 
 // Logout route
 router.get('/logout', (req, res) => {
-    console.log("calling logout")
     req.session.destroy();
     res.redirect('/admin/login');
 });

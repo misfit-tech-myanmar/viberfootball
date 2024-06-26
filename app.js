@@ -27,6 +27,10 @@ require('./utils/db.connect');
 const app = express();
 app.use(cors())
 
+const env = process.env.NODE_ENV || 'development';
+const baseURL = env === 'development' ? process.env.BASE_URL : process.env.BASE_URL_PRODUCTION;
+app.locals.baseURL = baseURL;
+
 const port = process.env.PORT || 5000;
 
 // view engine setup

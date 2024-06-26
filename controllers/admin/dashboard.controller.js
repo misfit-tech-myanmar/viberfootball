@@ -11,7 +11,6 @@ const userData = () => {
         const gpFavTeam = groupByFavTeam(users)
         const telecom = await filterByTelecom(await convertToName(users))
         const country = await filterByCountry(users)
-        console.log(country)
         const gpCountry = await groupByCountry(country)
         let favTeamLength ={};
         let gpByCountry={}
@@ -363,7 +362,6 @@ const importCustomerCSV = (req, res) => {
         // Optionally remove the file after processing
             fs.unlinkSync(filePath);
             const customers = await Customer.find({});
-            console.log(customers)
             // customerData = customerData===null?[]:JSON.parse(response)
             // console.log(customerData.length)
             if(customers.length > 0){
@@ -551,7 +549,6 @@ const monthlyUsers = (req, res) => {
             ]);
     
             resolve(monthly.map(item=> {
-                console.log(item)
                 return {
                     count: item.count,
                     month: getMonthName(item.month)
@@ -599,7 +596,6 @@ const weeklyUsers = (req, res) => {
             ]);
     
             resolve(result.map(item=> {
-                console.log(item)
                 return {
                     count: item.count,
                     week: item.week
@@ -650,7 +646,6 @@ const dailyUsers = (req, res) => {
             ]);
     
             resolve(result.map(item=> {
-                console.log(item)
                 return {
                     count: item.count,
                     day: `${item.year}-${item.month}-${item.day}`

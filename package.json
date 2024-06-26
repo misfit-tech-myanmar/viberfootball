@@ -36,6 +36,7 @@
     "winston": "^3.13.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "json-server": "^1.0.0-alpha.23"
   }
 }
