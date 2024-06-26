@@ -54,7 +54,7 @@ app.use('/admin', adminRouter)
 
 // app.use("/viber/webhook", bot.middleware());
 
-app.listen(port, async(err) => {
+app.listen(port,'0.0.0.0', async(err) => {
     await login()
     await storeRedisFromDataLab.storeRedisFromDataLab()
     await helper.createAdminUser();
