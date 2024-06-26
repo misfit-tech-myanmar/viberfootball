@@ -1,17 +1,22 @@
 doctype html
-html
+html(lang='en')
   head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
     title Login Page
-    link(rel='stylesheet', href='/css/style.css')
+    link(rel='stylesheet', href='/css/login.css')
   body
     .login-container
-      .login-form
+      .login-box
         h2 Login
-        form(action='/login', method='POST')
-          .form-group
-            label(for='username', class='input-label') Username:
-            input(type='text', id='username', name='username', class='input-field', required)
-          .form-group
-            label(for='password', class='input-label') Password:
-            input(type='password', id='password', name='password', class='input-field', required)
-          button(type='submit') Login
+        form(action="http://localhost:5000/admin/login" method="POST")
+          .input-group
+            label(for="username") Username
+            input(type="text" id="username" name="username" required)
+          .input-group
+            label(for="password") Password
+            input(type="password" id="password" name="password" required)
+          button(type="submit") Login
+          p.signup-link
+            | Don't have an account? 
+            a(href="#") Sign Up

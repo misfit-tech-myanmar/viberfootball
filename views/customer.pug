@@ -1,0 +1,231 @@
+extends layouts/app.layout.pug
+
+block content 
+    h1 Customers
+    .graph-container 
+        .monthly-user
+            canvas(id="monthly" width="500" height="300")
+        .monthly-user
+            canvas(id="weekly" width="500" height="300")
+    .subscriber-container
+        canvas(id="daily" width="500" height="150")
+    .subscriber-container
+        table#subscriberTable
+            thead
+                tr
+                th Name
+                th Phone
+                th Last Message Time 
+                th Last Sequence
+            tbody
+block scripts 
+  script. 
+    const baseURL = "#{baseURL}";
+    const monthlyCTX = document.getElementById('monthly');
+    const weeklyCTX = document.getElementById('weekly');
+    const dailyCTX = document.getElementById('daily');
+    async function displayChart(){
+        try{
+          const response = await fetch(`${baseURL}/admin/subscribers-monthly`)
+          const data = await response.json();
+          updateMonthlyChart(monthlyCTX, data.monthly)
+          updateWeeklyChart(weeklyCTX, data.weekly)
+          updateDailyChart(dailyCTX, data.daily)
+        }catch(err){
+          console.log(err)
+        }
+        
+    }
+
+    function updateMonthlyChart(ctx, data){
+        const countByMatch = data.reduce((acc, { count, month }) => {
+            acc[month] = count;
+            return acc;
+        }, {});
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Object.keys(countByMatch),
+                datasets: [
+                    {
+                        label: 'Subscriber Monthly',
+                        data: Object.values(countByMatch),
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        fill: true
+                    },
+                    //- {
+                    //-     label: 'MAU VIEWER',
+                    //-     data: [0, 90000, 120000, 140000, 200000, 250000],
+                    //-     backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    //-     borderColor: 'rgba(255, 99, 132, 1)',
+                    //-     borderWidth: 1,
+                    //-     fill: true
+                    //- },
+                    //- {
+                    //-     label: 'DAU VIEWER',
+                    //-     data: [0, 5000, 7000, 9000, 12000, 15000],
+                    //-     backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                    //-     borderColor: 'rgba(255, 206, 86, 1)',
+                    //-     borderWidth: 1,
+                    //-     fill: true
+                    //- }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 50000
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Subscribers Monthly'
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+    function updateWeeklyChart(ctx, data){
+        const countByMatch = data.reduce((acc, { count, week }) => {
+            acc[week] = count;
+            return acc;
+        }, {});
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Object.keys(countByMatch),
+                datasets: [
+                    {
+                        label: 'Subscribers Weekly',
+                        data: Object.values(countByMatch),
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        fill: true
+                    },
+                    //- {
+                    //-     label: 'MAU VIEWER',
+                    //-     data: [0, 90000, 120000, 140000, 200000, 250000],
+                    //-     backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    //-     borderColor: 'rgba(255, 99, 132, 1)',
+                    //-     borderWidth: 1,
+                    //-     fill: true
+                    //- },
+                    //- {
+                    //-     label: 'DAU VIEWER',
+                    //-     data: [0, 5000, 7000, 9000, 12000, 15000],
+                    //-     backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                    //-     borderColor: 'rgba(255, 206, 86, 1)',
+                    //-     borderWidth: 1,
+                    //-     fill: true
+                    //- }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 50000
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Subscribers Daily'
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+    function updateDailyChart(ctx, data){
+        const countByMatch = data.reduce((acc, { count, day }) => {
+            acc[day] = count;
+            return acc;
+        }, {});
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Object.keys(countByMatch),
+                datasets: [
+                    {
+                        label: 'Subscribers Daily',
+                        data: Object.values(countByMatch),
+                        backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 1,
+                        fill: true
+                    },
+                    //- {
+                    //-     label: 'MAU VIEWER',
+                    //-     data: [0, 90000, 120000, 140000, 200000, 250000],
+                    //-     backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    //-     borderColor: 'rgba(255, 99, 132, 1)',
+                    //-     borderWidth: 1,
+                    //-     fill: true
+                    //- },
+                    //- {
+                    //-     label: 'DAU VIEWER',
+                    //-     data: [0, 5000, 7000, 9000, 12000, 15000],
+                    //-     backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                    //-     borderColor: 'rgba(255, 206, 86, 1)',
+                    //-     borderWidth: 1,
+                    //-     fill: true
+                    //- }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 50000
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Subscribers Daily'
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        $('#subscriberTable').DataTable({
+          "ajax": {
+            "url": `${baseURL}/admin/all-subscribers`,
+            "type": "GET"
+          },
+          "columns": [
+            { "data": "full_name" },
+            { "data": "phone", "defaultContent": "N/A" },
+            { "data": "last_message_time" },
+            { "data": "last_sequence", "defaultContent": "N/A" }
+          ]
+        });
+      });
+    
+
+    displayChart()
