@@ -66,7 +66,7 @@ app.use('/admin', adminRouter)
 
 app.listen(port, async(err) => {
     await login()
-    // await storeRedisFromDataLab.storeRedisFromDataLab()
+    await storeRedisFromDataLab.storeRedisFromDataLab()
     await helper.createAdminUser();
     if(!err) logger.info(`Server is running on ${port}`);
     // bot.setWebhook(`${process.env.EXPOSE_URL}/viber/webhook`).catch(error => {
