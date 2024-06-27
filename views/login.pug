@@ -9,7 +9,7 @@ html(lang='en')
     .login-container
       .login-box
         h2 Login
-        form(action="http://localhost:5000/admin/login" method="POST")
+        form(action=`${baseURL}/admin/login` method="POST")
           .input-group
             label(for="username") Username
             input(type="text" id="username" name="username" required)

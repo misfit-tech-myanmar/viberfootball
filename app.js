@@ -47,7 +47,7 @@ app.use(session({
   }));
 
 app.get('/', (req, res, next)=>{
-    res.send("Welcome using WSL ON Window!!!")
+    res.redirect('/admin/login')
 })
 
 everyStartOfDay();
