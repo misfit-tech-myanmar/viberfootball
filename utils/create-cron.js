@@ -79,5 +79,41 @@ module.exports = {
         cron.schedule('* * * * *', async() => {
             await notificationService.sentNotificationBefore30MinutesMatchStart()
         });
+    },
+    sentNotiPredictMore: () => {
+        cron.schedule("0 18 27 6 *",async() => {
+            await notificationService.sentNotiPredictMore();
+        })
+    },
+    sentNotiNoPointUser: () => {
+        //no point not sent
+        cron.schedule("* * * * *",async() => {
+            await notificationService.sentNotiNoPointUser();
+        })
+    },
+    sentNotiRound16: () => {
+        cron.schedule("0 0 28 6 *",async() => {
+            await notificationService.sentNotiByDate("147236");
+        })
+    },
+    sentNotiQuatar: () => {
+        cron.schedule("0 0 4 7 *",async() => {
+            await notificationService.sentNotiByDate("147238");
+        })
+    },
+    sentNotiSemi: () => {
+        cron.schedule("0 0 8 7 *",async() => {
+            await notificationService.sentNotiByDate("147240");
+        })
+    },
+    sentNotiGrand: () => {
+        cron.schedule("0 0 13 7 *",async() => {
+            await notificationService.sentNotiByDate("147242");
+        })
+    },
+    sentNotiMidCampain: () => {
+        cron.schedule("* * 30 6 *",async() => {
+            await notificationService.sentNotiByDate("147180");
+        })
     }
 }

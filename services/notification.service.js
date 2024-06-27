@@ -3,12 +3,14 @@ const moment = require('moment-timezone');
 moment().tz('Asia/Yangon');
 const axios = require('axios')
 const redisClient = require('../libs/redis');
+const Customer = require('../models/Customer');
 
 let self;
 function NotificationService(){
     self = this;
     self.Axios = axiosInstance;
     self.RedisClient = redisClient;
+    self.Customer = Customer;
 }
 
 NotificationService.prototype = {
@@ -238,21 +240,87 @@ NotificationService.prototype = {
             const matchHave = fixtures.find(fixture=>  `${fixture['5769']} ${fixture['5779']}`=== formattedDatetime);
             if(matchHave !== undefined){
                 const users = await self.getAllUsers();
-                for(const user of users){
+                // for(const user of users){
+                //     await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                //         "sequence_id":"147158",
+                //         "customer_id": `${user.creator_id}`
+                //     }, {
+                //         headers: {
+                //             'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                //         }
+                //     })
+                // }
+                
+            }else{
+                console.log("There is no matches after 30 minutes of current time")
+            }
+            resolve()
+        })
+    },
+    sentNotiPredictMore: () =>{
+        return new Promise(async(resolve, reject)=> {
+            try{
+                console.log("Sending at leaset predict once customer")
+                const customers = await self.Customer.find({});
+                for(const customer of customers){
+                    if(parseInt(customer.total_prediction) > 0){
+                        await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                            "sequence_id":"147172",
+                            "customer_id": `${customer.customer_id}`
+                        }, {
+                            headers: {
+                                'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                            }
+                        })
+                    }
+                }
+                resolve(customers);
+            }catch(err){
+                console.log("sending no point noti error")
+            }
+        })
+    },
+    sentNotiNoPointUser: () => {
+        return new Promise(async(resolve, reject)=> {
+            try{
+                const customers = await self.Customer.find({});
+                for(const customer of customers){
+                    if(parseInt(customer.total_prediction) > 0 && customer.customer_id === "92906985" && parseInt(customer.score) > 0){
+                        await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                            "sequence_id":"147172",
+                            "customer_id": `${customer.customer_id}`
+                        }, {
+                            headers: {
+                                'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                            }
+                        })
+                    }
+                }
+                resolve(customers);
+            }catch(err){
+                console.log("sending no point noti error")
+            }
+        })
+    },
+    sentNotiByDate: (sequence) => {
+        return new Promise(async(resolve, reject)=> {
+            try{
+                console.log("Sending round 16")
+                const customers = await self.Customer.find({});
+                for(const customer of customers){
                     await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
-                        "sequence_id":"147158",
-                        "customer_id": `${user.creator_id}`
+                        "sequence_id":sequence,
+                        "customer_id": `${customer.customer_id}`
                     }, {
                         headers: {
                             'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
                         }
                     })
                 }
-                
-            }else{
-                console.log("There is no matches after 30 minutes of current time")
+                resolve(customers);
+            }catch(err){
+                console.log("sending no point noti error")
             }
-            resolve()
         })
     }
 }
