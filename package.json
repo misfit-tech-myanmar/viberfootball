@@ -21,6 +21,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.18.2",
     "express-session": "^1.18.0",
+    "fast-csv": "^5.0.1",
     "ioredis": "^5.4.1",
     "libphonenumber-js": "^1.10.57",
     "moment": "^2.30.1",

@@ -1,6 +1,6 @@
 const redisClient = require('../../libs/redis');
 const fs = require('fs');
-const csv = require('csv-parser');
+const csv = require('fast-csv');
 const path = require('path')
 const Customer = require('../../models/Customer');
 const moment = require('moment-timezone');
@@ -340,7 +340,6 @@ const groupByCountry = (data) => {
 }
 
 const importCustomerCSV = (req, res) => {
-    const results = [];
     if(!req.file){
         return res.status(400).json({
             status: false,
@@ -348,180 +347,52 @@ const importCustomerCSV = (req, res) => {
         })
     }
     const filePath = path.join(__dirname, '../../' ,req.file.path);
-    fs.createReadStream(filePath)
-    .pipe(csv())
-    .on('headers', (headers) => {})
-    .on('data', (row) => {
-        // Process each row here
-        const combinedObject = {};
-        Object.keys(row).forEach(key => {
-            combinedObject[key.trim()] = row[key].trim();
-        });
-            results.push(combinedObject);
-        })
-    .on('end', async() => {
-        // Optionally remove the file after processing
-            fs.unlinkSync(filePath);
-            const customers = await Customer.find({});
-            // customerData = customerData===null?[]:JSON.parse(response)
-            // console.log(customerData.length)
-            if(customers.length > 0){
-                for(const result of results){
-                    const customer = await Customer.findOne({customer_id: result.id})
-                    if(customer !== null){
-                        await Customer.findByIdAndUpdate(customer._id, {
-                            customer_id: result.id,
-                            history_nav: result.HistoryNav,
-                            no_quiz_left: result.NoQuizLeft,
-                            quiz_done: result.QuizDone,
-                            quiz_score: result.QuizScore,
-                            quiz_total_answer: result.QuizTotalAnswer,
-                            quiz_total_score: result.QuizTotalScore,
-                            total_prediction: result.TotalPredictions,
-                            weekly_prediction: result.WeeklyPredictions,
-                            active_history: result.activehistory,
-                            address: result.address,
-                            avatar: result.avatar,
-                            business_hours: result.business_hours,
-                            country: result.country,
-                            created_at: result.created_at,
-                            default: result.default,
-                            email:result.email,
-                            fav_team: result.fav_team,
-                            fav_team_id: result.fav_team_id,
-                            first_name: result.first_name,
-                            fteam: result.fteam,
-                            full_name: result.full_name,
-                            gender: result.gender,
-                            inactive_history: result.inactivehistory,
-                            is_predicted: result.isPredicted,
-                            language: result.language,
-                            last_message_text: result.last_message_text,
-                            last_message_time: result.last_message_time,
-                            last_name: result.last_name,
-                            last_sequence: result.last_sequence,
-                            locale: result.locale,
-                            next_fixtures: result.nextFixtures,
-                            next_fixtures_active: result.nextFixturesActive,
-                            next_fixtures_inactive: result.nextFixturesInActive,
-                            phone: result.phone,
-                            predict: result.predict,
-                            predict_fixture:result.predictFixture,
-                            previous_fixtures: result.previousFixtures,
-                            previous_fixtures_active: result.previousFixturesActive,
-                            previous_fixtures_inactive: result.previousFixturesInActive,
-                            primary_id: result.primary_id,
-                            registered: result.registered,
-                            score: result.score
-                        },{ new: true, runValidators: true })
-                    }else{
-                        await Customer.create({
-                            customer_id: result.id,
-                            history_nav: result.HistoryNav,
-                            no_quiz_left: result.NoQuizLeft,
-                            quiz_done: result.QuizDone,
-                            quiz_score: result.QuizScore,
-                            quiz_total_answer: result.QuizTotalAnswer,
-                            quiz_total_score: result.QuizTotalScore,
-                            total_prediction: result.TotalPredictions,
-                            weekly_prediction: result.WeeklyPredictions,
-                            active_history: result.activehistory,
-                            address: result.address,
-                            avatar: result.avatar,
-                            business_hours: result.business_hours,
-                            country: result.country,
-                            created_at: result.created_at,
-                            default: result.default,
-                            email:result.email,
-                            fav_team: result.fav_team,
-                            fav_team_id: result.fav_team_id,
-                            first_name: result.first_name,
-                            fteam: result.fteam,
-                            full_name: result.full_name,
-                            gender: result.gender,
-                            inactive_history: result.inactivehistory,
-                            is_predicted: result.isPredicted,
-                            language: result.language,
-                            last_message_text: result.last_message_text,
-                            last_message_time: result.last_message_time,
-                            last_name: result.last_name,
-                            last_sequence: result.last_sequence,
-                            locale: result.locale,
-                            next_fixtures: result.nextFixtures,
-                            next_fixtures_active: result.nextFixturesActive,
-                            next_fixtures_inactive: result.nextFixturesInActive,
-                            phone: result.phone,
-                            predict: result.predict,
-                            predict_fixture:result.predictFixture,
-                            previous_fixtures: result.previousFixtures,
-                            previous_fixtures_active: result.previousFixturesActive,
-                            previous_fixtures_inactive: result.previousFixturesInActive,
-                            primary_id: result.primary_id,
-                            registered: result.registered,
-                            score: result.score
-                        })
+    try{
+        let bulkOps = [];
+        let batchSize = 0;
+        fs.createReadStream(filePath)
+        .pipe(csv.parse({headers: true}))
+        .on("data", async(data) => {
+            if(data.id){
+                bulkOps.push({
+                    updateOne: {
+                      filter: { customer_id: data.id },
+                      update: { $set: data },
+                      upsert: true
                     }
-                }
-            }else{
-                for(const result of results){
-                    await Customer.create({
-                        customer_id: result.id,
-                        history_nav: result.HistoryNav,
-                        no_quiz_left: result.NoQuizLeft,
-                        quiz_done: result.QuizDone,
-                        quiz_score: result.QuizScore,
-                        quiz_total_answer: result.QuizTotalAnswer,
-                        quiz_total_score: result.QuizTotalScore,
-                        total_prediction: result.TotalPredictions,
-                        weekly_prediction: result.WeeklyPredictions,
-                        active_history: result.activehistory,
-                        address: result.address,
-                        avatar: result.avatar,
-                        business_hours: result.business_hours,
-                        country: result.country,
-                        created_at: result.created_at,
-                        default: result.default,
-                        email:result.email,
-                        fav_team: result.fav_team,
-                        fav_team_id: result.fav_team_id,
-                        first_name: result.first_name,
-                        fteam: result.fteam,
-                        full_name: result.full_name,
-                        gender: result.gender,
-                        inactive_history: result.inactivehistory,
-                        is_predicted: result.isPredicted,
-                        language: result.language,
-                        last_message_text: result.last_message_text,
-                        last_message_time: result.last_message_time,
-                        last_name: result.last_name,
-                        last_sequence: result.last_sequence,
-                        locale: result.locale,
-                        next_fixtures: result.nextFixtures,
-                        next_fixtures_active: result.nextFixturesActive,
-                        next_fixtures_inactive: result.nextFixturesInActive,
-                        phone: result.phone,
-                        predict: result.predict,
-                        predict_fixture:result.predictFixture,
-                        previous_fixtures: result.previousFixtures,
-                        previous_fixtures_active: result.previousFixturesActive,
-                        previous_fixtures_inactive: result.previousFixturesInActive,
-                        primary_id: result.primary_id,
-                        registered: result.registered,
-                        score: result.score
-                    })
-                }
+                });
+                batchSize++;
+    
+                // Adjust batch size based on your performance and memory constraints
+                if (batchSize === 1000) { // Example: Batch size of 1000
+                    await Customer.bulkWrite(bulkOps);
+                    bulkOps = [];
+                    batchSize = 0;
+                  }
             }
-            res.json({
+        })
+        .on('end', async () => {
+            if (bulkOps.length > 0) {
+              await Customer.bulkWrite(bulkOps);
+            }
+            fs.unlink(filePath, (err) => {
+                if (err) console.error('Failed to delete the uploaded file:', err);
+            });
+            res.status(200).json({
                 success: true,
                 message: "Complete imported CSV!",
-                data: results,
-                importCount: results.length
-            });
-        })
-    .on('error', (error) => {
-        console.error('Error while reading the CSV file:', error);
-        res.status(500).send('Error while processing the file.');
-    });
+            })
+          });
+    }catch(error){
+        console.error('Error processing file:', error);
+        res.status(500).send('An error occurred while processing the file.');
+    }
+    // finally {
+    //     fs.unlink(filePath, (err) => {
+    //         if (err) console.error('Failed to delete the uploaded file:', err);
+    //     });
+    // }
+    
 }
 
 const monthlyUsers = (req, res) => {
