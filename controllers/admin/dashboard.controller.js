@@ -3,6 +3,7 @@ const fs = require('fs');
 const csv = require('csv-parser');
 const path = require('path')
 const Customer = require('../../models/Customer');
+const moment = require('moment-timezone');
 
 const userData = () => {
     return new Promise(async(resolve, reject)=> {
@@ -513,7 +514,8 @@ const importCustomerCSV = (req, res) => {
             res.json({
                 success: true,
                 message: "Complete imported CSV!",
-                data: results
+                data: results,
+                importCount: results.length
             });
         })
     .on('error', (error) => {
@@ -666,21 +668,32 @@ function getMonthName(monthNumber) {
     return monthName;
 }
 
-const getAllCustomer = () => {
+const beforeTenDayAgo = () => {
     return new Promise(async(resolve, reject) => {
         try{
-            const customers = await Customer.find({});
-            if(customers.length > 0){
-                resolve(customers.map(customer=> {
-                    return{
-                        customer_id: customer.customer_id,
-                        full_name: customer.full_name,
-                        phone: customer.phone,
-                        last_message_time: customer.last_message_time,
-                        last_sequence: customer.last_sequence
-                    }
-                }))
-            }
+            const tenDaysAgo = moment().tz('Asia/Yangon').subtract(10, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+            const beforeTendayCount = await Customer.countDocuments({
+                last_message_time: {
+                    $lt: tenDaysAgo
+                }
+            });
+            const groupBySequenceBeforeTenDay = await Customer.aggregate([
+                {
+                  $match: {
+                    last_message_time: { $lt: tenDaysAgo },
+                  },
+                },
+                {
+                  $group: {
+                    _id: '$last_sequence',
+                    count: { $sum: 1 },
+                  },
+                },
+                {
+                  $sort: { _id: 1 },
+                },
+              ]);
+            resolve({beforeTendayCount, groupBySequenceBeforeTenDay})
         }catch(err){
             console.log(err)
             throw err;
@@ -692,7 +705,7 @@ module.exports = {
     userData,
     importCustomerCSV,
     monthlyUsers,
-    getAllCustomer,
+    beforeTenDayAgo,
     weeklyUsers,
     dailyUsers
 }

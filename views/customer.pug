@@ -1,7 +1,24 @@
 extends layouts/app.layout.pug
 
 block content 
-    h1 Customers
+    .card-container
+        .card.green
+            .icon &#x1F464;
+            .info
+                h2=beforeTenDay
+                p User Drop OFF  
+        .sequence-card
+            table 
+                thead 
+                    tr 
+                        th Last Button 
+                        th Count 
+                tbody 
+                    each data in countBySequence
+                        tr
+                            td=data._id
+                            td=data.count
+        
     .graph-container 
         .monthly-user
             canvas(id="monthly" width="500" height="300")
@@ -9,15 +26,15 @@ block content
             canvas(id="weekly" width="500" height="300")
     .subscriber-container
         canvas(id="daily" width="500" height="150")
-    .subscriber-container
-        table#subscriberTable
-            thead
-                tr
-                th Name
-                th Phone
-                th Last Message Time 
-                th Last Sequence
-            tbody
+    //- .subscriber-container
+    //-     table#subscriberTable
+    //-         thead
+    //-             tr
+    //-             th Name
+    //-             th Phone
+    //-             th Last Message Time 
+    //-             th Last Sequence
+    //-         tbody
 block scripts 
   script. 
     const baseURL = "#{baseURL}";
@@ -211,21 +228,4 @@ block scripts
             }
         });
     }
-
-    $(document).ready(function() {
-        $('#subscriberTable').DataTable({
-          "ajax": {
-            "url": `${baseURL}/admin/all-subscribers`,
-            "type": "GET"
-          },
-          "columns": [
-            { "data": "full_name" },
-            { "data": "phone", "defaultContent": "N/A" },
-            { "data": "last_message_time" },
-            { "data": "last_sequence", "defaultContent": "N/A" }
-          ]
-        });
-      });
-    
-
     displayChart()

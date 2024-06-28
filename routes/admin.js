@@ -11,7 +11,12 @@ const UserController = require('../controllers/admin/dashboard.controller');
 const LeaderBoardService = require('../services/leaderboard.service');
 const leaderBoardService = new LeaderBoardService();
 
-const upload = multer({ dest: 'uploads/csv' });
+const upload = multer({ 
+    dest: 'uploads/csv',
+    limits: {
+        fileSize: 10 * 1024 * 1024, // 10 MB
+  },
+});
 
 router.get('/login', redirectIfAuthenticated, async(req, res) => {
     res.render('login');
@@ -47,7 +52,12 @@ router.post('/upload-csv', upload.single('file'), async (req, res) => {
     await UserController.importCustomerCSV(req, res)
 })
 router.get('/subscribers', checkAuth, async(req, res) => {
-    res.render('customer')
+    const beforeTenDayAgoCustomersCount = await UserController.beforeTenDayAgo()
+    console.log(beforeTenDayAgoCustomersCount)
+    res.render('customer', {
+        beforeTenDay: beforeTenDayAgoCustomersCount.beforeTendayCount,
+        countBySequence: beforeTenDayAgoCustomersCount.groupBySequenceBeforeTenDay
+    })
 })
 router.get('/subscribers-monthly', async(req, res) => {
     const monthly = await UserController.monthlyUsers(req, res)
@@ -59,9 +69,9 @@ router.get('/subscribers-monthly', async(req, res) => {
         daily
     })
 })
-router.get('/all-subscribers', async(req, res) => {
-    const customers = await UserController.getAllCustomer(req, res)
-    res.status(200).json({data: customers})
-})
+// router.get('/befo', async(req, res) => {
+//     const customers = await UserController.getAllCustomer(req, res)
+//     res.status(200).json({data: customers})
+// })
 
 module.exports = router;
