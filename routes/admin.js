@@ -14,7 +14,7 @@ const leaderBoardService = new LeaderBoardService();
 const upload = multer({ 
     dest: 'uploads/csv',
     limits: {
-        fileSize: 10 * 1024 * 1024, // 10 MB
+        fileSize: 50 * 1024 * 1024, // 10 MB
   },
 });
 
