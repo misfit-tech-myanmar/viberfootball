@@ -944,7 +944,7 @@ router.post('/noti-message', async(req, res)=> {
     }
     if(req.body.language === "English"){
         res.json({
-            "data": `Match Finished \n${notification.homeTeam} - ${notification.awayTeam} \nMatch Score: ${notification.homeScore}:${notification.awayScore} \nYou made the following prediction ${predict} \n${notification.predictResult==="Win"?"Congratulations!":"Try Again!"} Your prediction was ${notification.predictResult==="Win"?"correct":"incorrect"}! ${notification.predictResult==="Win"?"\n1 point added to your balance":""}`,
+            "data": `Match Finished \n${notification.homeTeam} - ${notification.awayTeam} \nMatch Score: ${notification.homeScore}:${notification.awayScore} \nYou made the following prediction ${predict} \n${notification.predictResult==="Win"?"Congratulations!":"Try Again!"} Your prediction was ${notification.predictResult==="Win"?"correct":"incorrect"}! ${notification.predictResult==="Win"?"\n2 point added to your balance":""}`,
             "success": true,
             "message": "Successful", 
             "attributes": {
@@ -953,7 +953,7 @@ router.post('/noti-message', async(req, res)=> {
         })
     }else{
         res.json({
-            "data": `${notification.homeTeam} - ${notification.awayTeam} ပွဲပြီးပါပီ \nပွဲရလဒ်: ${notification.homeScore}:${notification.awayScore} \nသင် ${predict} ကို ခန်းမှန်းခဲ့သည့် \n${notification.predictResult==="Win"?"ဂုဏ်ယူပါတယ်!":"နောက်ထပ်ကြိုးစားပါ!"} သင့်ရဲ့ခန်းမှန်းမှု ${notification.predictResult==="Win"?"မှန်ပါသည်":"မှားပါသည်"}! \n${notification.predictResult==="Win"?"သင့်ရဲ့အမှတ်ထဲ့သို့ ၁ မှတ်‌ပေါင်းထည့်ထားပါသည်":""}`,
+            "data": `${notification.homeTeam} - ${notification.awayTeam} ပွဲပြီးပါပီ \nပွဲရလဒ်: ${notification.homeScore}:${notification.awayScore} \nသင် ${predict} ကို ခန်းမှန်းခဲ့သည့် \n${notification.predictResult==="Win"?"ဂုဏ်ယူပါတယ်!":"နောက်ထပ်ကြိုးစားပါ!"} သင့်ရဲ့ခန်းမှန်းမှု ${notification.predictResult==="Win"?"မှန်ပါသည်":"မှားပါသည်"}! \n${notification.predictResult==="Win"?"သင့်ရဲ့အမှတ်ထဲ့သို့ ၂ မှတ်‌ပေါင်းထည့်ထားပါသည်":""}`,
             "success": true,
             "message": "Successful", 
             "attributes": {

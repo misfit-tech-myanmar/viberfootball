@@ -29,6 +29,7 @@ module.exports = {
         let endDate=currentDate.toISOString().slice(0, 10);
         cron.schedule('*/5 * * * *', async() => {
             // footballService.getFixtureFromApiAndPostToMyaliceDataLab('2024-06-14', '2024-06-27')
+            console.log(currentDate)
             footballService.updateFixtureAfterFinishedMatches(startDate, startDate);
             footballService.getTeams();
         });
