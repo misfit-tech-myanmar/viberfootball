@@ -241,16 +241,16 @@ NotificationService.prototype = {
             const matchHave = fixtures.find(fixture=>  `${fixture['5769']} ${fixture['5779']}`=== formattedDatetime);
             if(matchHave !== undefined){
                 const users = await self.getAllUsers();
-                // for(const user of users){
-                //     await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
-                //         "sequence_id":"147158",
-                //         "customer_id": `${user.creator_id}`
-                //     }, {
-                //         headers: {
-                //             'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
-                //         }
-                //     })
-                // }
+                for(const user of users){
+                    await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                        "sequence_id":"147158",
+                        "customer_id": `${user.creator_id}`
+                    }, {
+                        headers: {
+                            'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                        }
+                    })
+                }
                 
             }else{
                 console.log("There is no matches after 30 minutes of current time")
