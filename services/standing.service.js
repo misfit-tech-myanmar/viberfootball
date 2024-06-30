@@ -12,7 +12,7 @@ function StandingService(){
 StandingService.prototype = {
     getStanding: ()=> {
         return new Promise(async(resolve, reject) => {
-            const standings = await axios.get(`https://apiv3.apifootball.com/?action=get_standings&league_id=1&APIkey=4010abfac05575b83123fb1094fec4bbca56bea29fe6d56d95e542fc98520058`);
+            const standings = await axios.get(`https://apiv3.apifootball.com/?action=get_standings&league_id=1&APIkey=dcf5be038f4d51c638181d0de6d1fd1dfa442557194e39cdee3c4791501bc02b`);
             var mergedObj = await self.mergeObj(standings.data)
             let standingByLeagueRound = self.groupLeagueRound(mergedObj)
             resolve(standingByLeagueRound)

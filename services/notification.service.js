@@ -258,6 +258,22 @@ NotificationService.prototype = {
             resolve()
         })
     },
+    sentNotificationBefore30MinutesMatchStartManual: () => {
+        return new Promise(async(resolve, reject) => {
+            const users = await self.getAllUsers();
+            for(const user of users){
+                await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                    "sequence_id":"147158",
+                    "customer_id": `${user.creator_id}`
+                }, {
+                    headers: {
+                        'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                    }
+                })
+            }
+            resolve()
+        })
+    },
     sentNotiPredictMore: () =>{
         return new Promise(async(resolve, reject)=> {
             try{
