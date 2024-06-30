@@ -59,12 +59,12 @@ every15Minutes()
 every10Minutes();
 every30Minutes()
 sentNotiBefore30MinutesMatchStart()
-sentNotiPredictMore()
-sentNotiRound16()
-sentNotiQuatar()
-sentNotiSemi()
-sentNotiGrand()
-sentNotiMidCampain()
+// sentNotiPredictMore()
+// sentNotiRound16()
+// sentNotiQuatar()
+// sentNotiSemi()
+// sentNotiGrand()
+// sentNotiMidCampain()
 // sentNotiNoPointUser();
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1.0', indexRouter)
