@@ -7,7 +7,7 @@ const {login} = require('../services/login.service')
 const QuizService = require('../services/quiz.service');
 const StoreRedisFromDatalab = require('../services/store.redis.datalab.service');
 const CheckPredictionService = require('../services/prediction.check')
-const config = require('../configs/config')
+const moment = require('moment-timezone');
 
 const footballService = new FootBallService();
 const predictionService = new PredictionService();
@@ -19,9 +19,12 @@ const checkPredictionService = new CheckPredictionService()
 module.exports = {
     every5Minutes: () => {
         cron.schedule('*/5 * * * *', async() => {
+            const currentDate = moment.tz('Asia/Yangon').format('YYYY-MM-DD');
+            const tomorrowDate = moment.tz('Asia/Yangon').add(1, 'days').format('YYYY-MM-DD');
+            const dayAfterTomorrowDate = moment.tz('Asia/Yangon').add(2, 'days').format('YYYY-MM-DD');
             // footballService.getFixtureFromApiAndPostToMyaliceDataLab('2024-06-14', '2024-06-27')
-            console.log("current date: ", config.currentDate)
-            footballService.updateFixtureAfterFinishedMatches(config.currentDate, config.tomorrowDate);
+            console.log("current date: ", currentDate)
+            footballService.updateFixtureAfterFinishedMatches(currentDate, tomorrowDate);
             footballService.getTeams();
         });
     },
@@ -42,11 +45,11 @@ module.exports = {
         });
     },
     everyStartOfDay: () => {
-        const today = new Date();
-        const dayAfterNext = new Date();
-        dayAfterNext.setDate(today.getDate() + 2);
+        const currentDate = moment.tz('Asia/Yangon').format('YYYY-MM-DD');
+            const tomorrowDate = moment.tz('Asia/Yangon').add(1, 'days').format('YYYY-MM-DD');
+            const dayAfterTomorrowDate = moment.tz('Asia/Yangon').add(2, 'days').format('YYYY-MM-DD');
         cron.schedule('0 0 * * *', ()=> {
-            footballService.getFixtureFromApiAndPostToMyaliceDataLab(config.currentDate, config.dayAfterTomorrowDate)
+            footballService.getFixtureFromApiAndPostToMyaliceDataLab(currentDate, dayAfterTomorrowDate)
         })
     },
     everyAugest: () => {
