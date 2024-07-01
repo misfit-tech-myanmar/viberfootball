@@ -229,15 +229,11 @@ NotificationService.prototype = {
     },
     sentNotificationBefore30MinutesMatchStart: () => {
         return new Promise(async(resolve, reject) => {
-            // Get current datetime in UTC
             const currentDatetime = moment.utc();
-            //add current time to 30 minutes
             const datetimeAfter30Minutes  = currentDatetime.add(30, 'minutes')
-            // Convert to a specific timezone (Asia/Yangon for Myanmar time)
             const formattedDatetime = datetimeAfter30Minutes.tz('Asia/Yangon').format('YYYY-MM-DD HH:mm');
             const response = await self.RedisClient.get('fixtures');
             let fixtures = JSON.parse(response)
-            console.log(formattedDatetime)
             const matchHave = fixtures.find(fixture=>  `${fixture['5769']} ${fixture['5779']}`=== formattedDatetime);
             if(matchHave !== undefined){
                 const users = await self.getAllUsers();
