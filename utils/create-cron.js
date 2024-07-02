@@ -24,6 +24,7 @@ module.exports = {
             const dayAfterTomorrowDate = moment.tz('Asia/Yangon').add(2, 'days').format('YYYY-MM-DD');
             // footballService.getFixtureFromApiAndPostToMyaliceDataLab('2024-06-14', '2024-06-27')
             console.log("current date: ", currentDate)
+            console.log("tomorrow date: ", tomorrowDate)
             footballService.updateFixtureAfterFinishedMatches(currentDate, tomorrowDate);
             footballService.getTeams();
         });

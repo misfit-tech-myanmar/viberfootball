@@ -277,11 +277,12 @@ FootBallService.prototype = {
             const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=1&APIkey=dcf5be038f4d51c638181d0de6d1fd1dfa442557194e39cdee3c4791501bc02b&timezone=Asia/Yangon`);
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
+                    // console.log(match)
                     
                     const singleMatch = await self.getSingleLabFixture(match.match_id)
-                    if(match.match_status === 'Finished' && singleMatch.length >0){
+                    if((match.match_status == 'Finished' || match.match_status == 'After ET' || match.match_status == 'After Pen.' ) && singleMatch.length >0){
                         self.Axios.put(`/stable/bots/labs/2247/entries/${singleMatch[0].id}`, {
-                            "5778": match.match_status,
+                            "5778": "Finished",
                             "5781": match.match_hometeam_ft_score,
                             "5783": match.match_awayteam_ft_score
                         }).then(async response => {
@@ -289,7 +290,7 @@ FootBallService.prototype = {
                             let fixturesCache = JSON.parse(fixturesResponse)
                             fixturesCache.forEach(item => {
                                 if(item['5766'] === match.match_id){
-                                    item["5778"] =  match.match_status,
+                                    item["5778"] =  "Finished",
                                     item["5781"] =  match.match_hometeam_ft_score,
                                     item["5783"] =  match.match_awayteam_ft_score
                                 }
@@ -299,6 +300,7 @@ FootBallService.prototype = {
                         }).catch(err=> {
                             console.log('Error updating data: ')
                         })
+                        resolve("status", match.match_status)
                     }else{
                         console.log("match not finished")
                     }
