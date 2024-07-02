@@ -22,10 +22,11 @@ module.exports = {
             const currentDate = moment.tz('Asia/Yangon').format('YYYY-MM-DD');
             const tomorrowDate = moment.tz('Asia/Yangon').add(1, 'days').format('YYYY-MM-DD');
             const dayAfterTomorrowDate = moment.tz('Asia/Yangon').add(2, 'days').format('YYYY-MM-DD');
+            const yesterdayDate = moment.tz('Asia/Yangon').subtract(1, 'days').format('YYYY-MM-DD');
             // footballService.getFixtureFromApiAndPostToMyaliceDataLab('2024-06-14', '2024-06-27')
             console.log("current date: ", currentDate)
-            console.log("tomorrow date: ", tomorrowDate)
-            footballService.updateFixtureAfterFinishedMatches(currentDate, tomorrowDate);
+            console.log("tomorrow date: ", yesterdayDate)
+            footballService.updateFixtureAfterFinishedMatches(yesterdayDate, tomorrowDate);
             footballService.getTeams();
         });
     },
