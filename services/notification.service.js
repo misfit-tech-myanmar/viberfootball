@@ -280,7 +280,7 @@ NotificationService.prototype = {
                 self.user = self.user.slice(30);
                 if (self.user.length > 0) {
                     setTimeout(()=> {
-                        self.sentNotificationBefore30MinutesMatchStartManual()
+                        self.sentNotificationManual()
                     }, 10000); // Wait 1 second before starting the next batch
                 } else {
                     console.log("no user left: ", self.user.length)
