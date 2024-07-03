@@ -112,5 +112,10 @@ module.exports = {
         cron.schedule("* * 30 6 *",async() => {
             await notificationService.sentNotiByDate("147180");
         })
+    },
+    sentNotiGroupStageWinner: () => {
+        cron.schedule("* * * * * *",async() => {
+            await notificationService.sentNotificationManual();
+        })
     }
 }
