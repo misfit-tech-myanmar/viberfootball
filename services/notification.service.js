@@ -259,7 +259,7 @@ NotificationService.prototype = {
             const users = await self.getAllUsers();
             for(const user of users){
                 await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
-                    "sequence_id":"147158",
+                    "sequence_id":"147600",
                     "customer_id": `${user.creator_id}`
                 }, {
                     headers: {
@@ -267,7 +267,7 @@ NotificationService.prototype = {
                     }
                 })
             }
-            resolve()
+            resolve("sent noti finished")
         })
     },
     sentNotiPredictMore: () =>{

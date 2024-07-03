@@ -1484,9 +1484,9 @@ router.get('/update-result', async(req, res)=> {
     predictionCheck.updateScoreAndSentNoti();
     res.json("sent noti")
 })
-router.get("/before-match-start", async(req, res)=> {
-    await notiService.sentNotificationBefore30MinutesMatchStartManual();
-    res.json("sent noti before match start");
+router.get("/sent-noti-manual", async(req, res)=> {
+    const result = await notiService.sentNotificationBefore30MinutesMatchStartManual();
+    res.json(result);
 })
 
 
