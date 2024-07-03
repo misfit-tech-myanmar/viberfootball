@@ -1485,7 +1485,7 @@ router.get('/update-result', async(req, res)=> {
     res.json("sent noti")
 })
 router.get("/sent-noti-manual", async(req, res)=> {
-    const result = await notiService.sentNotificationBefore30MinutesMatchStartManual();
+    const result = await notiService.sentNotificationManual();
     res.json(result);
 })
 

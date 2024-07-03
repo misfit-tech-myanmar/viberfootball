@@ -11,6 +11,7 @@ function NotificationService(){
     self.Axios = axiosInstance;
     self.RedisClient = redisClient;
     self.Customer = Customer;
+    self.user = []
 }
 
 NotificationService.prototype = {
@@ -254,20 +255,39 @@ NotificationService.prototype = {
             resolve()
         })
     },
-    sentNotificationBefore30MinutesMatchStartManual: () => {
+    sentNotificationManual: () => {
         return new Promise(async(resolve, reject) => {
-            const users = await self.getAllUsers();
-            for(const user of users){
-                await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
-                    "sequence_id":"147600",
-                    "customer_id": `${user.creator_id}`
-                }, {
-                    headers: {
-                        'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
-                    }
-                })
+            const response = await self.RedisClient.get('users');
+            var data = JSON.parse(response);
+            self.user =  self.user.length > 0?self.user: data;
+            if(self.user.length > 0){
+                let batch = self.user.slice(0, 30);
+                // Update the third-party API for each prediction in the batch
+                batch.forEach(async(user, index) => {
+                    console.log("sending noti from api")
+                    await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                        "sequence_id":"147600",
+                        "customer_id": `${user.creator_id}`
+                    }, {
+                        headers: {
+                            'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                        }
+                    })
+                    // await self.updatePredictResult(prediction.predictId, prediction['5897'], prediction.userId, prediction.scores, prediction.creatorId);
+                });
+                // Remove the processed batch from the predictions array
+                console.log(self.user.length)
+                self.user = self.user.slice(30);
+                if (self.user.length > 0) {
+                    setTimeout(()=> {
+                        self.sentNotificationBefore30MinutesMatchStartManual()
+                    }, 10000); // Wait 1 second before starting the next batch
+                } else {
+                    console.log("no user left: ", self.user.length)
+                }   
+            }else{
+                resolve()
             }
-            resolve("sent noti finished")
         })
     },
     sentNotiPredictMore: () =>{
