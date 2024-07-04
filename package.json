@@ -33,7 +33,7 @@
     "node-gyp": "^10.0.1",
     "password-hash": "^1.2.2",
     "pug": "^3.0.2",
-    "redis": "^4.6.13",
+    "redis": "^3.1.2",
     "viber-bot": "^1.0.18",
     "winston": "^3.13.0"
   },

@@ -1,6 +1,6 @@
 const redisClient = require('../../libs/redis');
 const fs = require('fs');
-const csv = require('fast-csv');
+const csv = require('csv-parser');
 const path = require('path')
 const Customer = require('../../models/Customer');
 const moment = require('moment-timezone');
@@ -346,55 +346,29 @@ const importCustomerCSV = (req, res) => {
             message: "No file uploaded."
         })
     }
+    const promises = [];
     const filePath = path.join(__dirname, '../../' ,req.file.path);
-    try{
-        let bulkOps = [];
-        let batchSize = 0;
-        fs.createReadStream(filePath)
-        .pipe(csv.parse({headers: true}))
-        .on("data", async(data) => {
-            if(data.id){
-                bulkOps.push({
-                    updateOne: {
-                      filter: { customer_id: data.id },
-                      update: { $set: data },
-                      upsert: true
-                    }
-                });
-                batchSize++;
-    
-                // Adjust batch size based on your performance and memory constraints
-                if (batchSize === 1000) { // Example: Batch size of 1000
-                    await Customer.bulkWrite(bulkOps);
-                    bulkOps = [];
-                    batchSize = 0;
-                  }
+    let recordCount=0;
+    let results=[]
+    fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', (row) => {
+        results.push(row)
+    })
+    .on('end', async () => {
+        await redisClient.set('customers', JSON.stringify(results))
+        fs.unlink(filePath, (err) => {
+            if (err) console.error('Failed to delete the uploaded file:', err);
+        });
+        res.status(201).json({
+            success: true,
+            message: 'Success import csv',
+            data:{
+                result: results.length
             }
         })
-        .on('end', async () => {
-            if (bulkOps.length > 0) {
-              await Customer.bulkWrite(bulkOps);
-            }
-            fs.unlink(filePath, (err) => {
-                if (err) console.error('Failed to delete the uploaded file:', err);
-            });
-            res.status(200).json({
-                success: true,
-                message: "Complete imported CSV!",
-            })
-          });
-    }catch(error){
-        console.error('Error processing file:', error);
-        res.status(500).send('An error occurred while processing the file.');
-    }
-    // finally {
-    //     fs.unlink(filePath, (err) => {
-    //         if (err) console.error('Failed to delete the uploaded file:', err);
-    //     });
-    // }
-    
+    });
 }
-
 const monthlyUsers = (req, res) => {
     return new Promise(async(resolve, reject) => {
         try {

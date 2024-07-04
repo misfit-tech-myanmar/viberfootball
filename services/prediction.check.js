@@ -43,12 +43,12 @@ CheckPredictionService.prototype = {
                                                 if(user !== undefined){
                                                     if(result === predict['5862']){
                                                         userPredictionsCache = await self.filterAndMapForUpdatePrediction('Win', predict, userPredictionsCache)
-                                                        userCache = await self.updateUserScore((parseInt(user['5755']===''?0:user['5755']) + 2), user.id, userCache)
+                                                        userCache = await self.updateUserScore((parseInt(user['5755']===''?0:user['5755']) + 3), user.id, userCache)
                                                         finishedPredictionCache.push({
                                                             predictId: predict.id,
                                                             "5897": 'Win',
                                                             userId: user.id,
-                                                            scores: (parseInt(user['5755']===''?0:user['5755']) + 2),
+                                                            scores: (parseInt(user['5755']===''?0:user['5755']) + 3),
                                                             creatorId: user.creator_id
                                                         })
                                                         notificationCache.push({
