@@ -266,7 +266,7 @@ NotificationService.prototype = {
                 batch.forEach(async(user, index) => {
                     console.log("sending noti from api")
                     await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
-                        "sequence_id":"147600",
+                        "sequence_id":"147603",
                         "customer_id": `${user.creator_id}`
                     }, {
                         headers: {

@@ -1121,7 +1121,9 @@ router.get('/myanmar-leaderboard', async(req, res)=> {
         return {
             "id": index+1,
             "name": item['5751'],
-            "score": item['5755']
+            "score": item['5755'],
+            "phone": item['5752'],
+            "viber_id": item.creator_id
         }
     }))
 })
@@ -1131,7 +1133,9 @@ router.get('/international-leaderboard', async(req, res)=> {
         return {
             "id": index+1,
             "name": item['5751'],
-            "score": item['5755']
+            "score": item['5755'],
+            "phone": item['5752'],
+            "viber_id": item.creator_id
         }
     }))
 })

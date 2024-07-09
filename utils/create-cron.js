@@ -113,8 +113,8 @@ module.exports = {
             await notificationService.sentNotiByDate("147180");
         })
     },
-    sentNotiGroupStageWinner: () => {
-        cron.schedule("0 21 3 7 *",async() => {
+    sentNotiRoundWinner: () => {
+        cron.schedule("30 9 9 7 *",async() => {
             await notificationService.sentNotificationManual();
         })
     }
