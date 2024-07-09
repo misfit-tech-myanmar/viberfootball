@@ -84,7 +84,7 @@ module.exports = {
     },
     sentNotiNoPointUser: () => {
         //no point not sent
-        cron.schedule("0 15 8 7 *",async() => {
+        cron.schedule("0 15 9 7 *",async() => {
             await notificationService.sentNotiNoPointUser();
         })
     },

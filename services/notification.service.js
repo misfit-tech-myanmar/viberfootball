@@ -324,14 +324,18 @@ NotificationService.prototype = {
                     // Update the third-party API for each prediction in the batch
                     batch.forEach(async(user, index) => {
                         console.log("sending noti from api")
-                        await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
-                            "sequence_id":"147240",
-                            "customer_id": `${user.id}`
-                        }, {
-                            headers: {
-                                'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
-                            }
-                        })
+                        // console.log(JSON.parse(user.meta).registered === undefined?'No': 'Yes')
+                        // console.log(JSON.parse(user.meta))
+                        if(JSON.parse(user.meta).registered===undefined){
+                            await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                                "sequence_id":"147709",
+                                "customer_id": `${user.id}`
+                            }, {
+                                headers: {
+                                    'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                                }
+                            })
+                        }
                     });
                     // Remove the processed batch from the predictions array
                     console.log(self.user.length)
