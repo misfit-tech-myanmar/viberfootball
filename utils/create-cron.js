@@ -114,7 +114,7 @@ module.exports = {
         })
     },
     sentNotiRoundWinner: () => {
-        cron.schedule("30 9 9 7 *",async() => {
+        cron.schedule("30 13 10 7 *",async() => {
             await notificationService.sentNotificationManual();
         })
     }
