@@ -29,6 +29,7 @@ router.get('/first-fixtures', async(req, res, next) => {
     const proceedData = Promise.all(fixtures.result.map(async (fixture,index)=> {
         
         const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
+        console.log(teams)
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
             "subtitle": `${fixture['5769']} | ${fixture['5779']} (UTC +6:30)`,
@@ -36,7 +37,7 @@ router.get('/first-fixtures', async(req, res, next) => {
             "url": '',
             "buttons": [
                 {
-                    "title": teams.getHomeTeam['5848'], 
+                    "title": teams.getHomeTeam['abb'], 
                     "type": "sequence", 
                     "extra": `match_id=${fixture['5766']}&predict=W1&p_team=${fixture['5780']}`,
                     "value": "136555",
@@ -48,7 +49,7 @@ router.get('/first-fixtures', async(req, res, next) => {
                     "value": "136566",
                 },
                 {
-                    "title": teams.getAwayTeam['5848'], 
+                    "title": teams.getAwayTeam['abb'], 
                     "type": "sequence", 
                     "extra": `match_id=${fixture['5766']}&predict=W2&p_team=${fixture['5782']}`,
                     "value": "136565",
@@ -102,7 +103,7 @@ router.get('/second-fixtures', async(req, res, next) => {
             "url": '',
             "buttons": [
                 {
-                    "title": teams.getHomeTeam['5848'], 
+                    "title": teams.getHomeTeam['abb'], 
                     "type": "sequence", 
                     "extra": `match_id=${fixture['5766']}&predict=W1&p_team=${fixture['5780']}`,
                     "value": "136555",
@@ -114,7 +115,7 @@ router.get('/second-fixtures', async(req, res, next) => {
                     "value": "136566",
                 },
                 {
-                    "title": teams.getAwayTeam['5848'], 
+                    "title": teams.getAwayTeam['abb'], 
                     "type": "sequence", 
                     "extra": `match_id=${fixture['5766']}&predict=W2&p_team=${fixture['5782']}`,
                     "value": "136565",
@@ -169,7 +170,7 @@ router.get('/third-fixtures', async(req, res, next) => {
             "url": '',
             "buttons": [
                 {
-                    "title": teams.getHomeTeam['5848'], 
+                    "title": teams.getHomeTeam['abb'], 
                     "type": "sequence", 
                     "extra": `match_id=${fixture['5766']}&predict=W1&p_team=${fixture['5780']}`,
                     "value": "136555",
@@ -181,7 +182,7 @@ router.get('/third-fixtures', async(req, res, next) => {
                     "value": "136566",
                 },
                 {
-                    "title": teams.getAwayTeam['5848'], 
+                    "title": teams.getAwayTeam['abb'], 
                     "type": "sequence", 
                     "extra": `match_id=${fixture['5766']}&predict=W2&p_team=${fixture['5782']}`,
                     "value": "136565",
@@ -235,7 +236,7 @@ router.get('/fourth-fixtures', async(req, res, next) => {
             "url": '',
             "buttons": [
                 {
-                    "title": teams.getHomeTeam['5848'], 
+                    "title": teams.getHomeTeam['abb'], 
                     "type": "sequence", 
                     "extra": `match_id=${fixture['5766']}&predict=W1&p_team=${fixture['5780']}`,
                     "value": "136555",
@@ -247,7 +248,7 @@ router.get('/fourth-fixtures', async(req, res, next) => {
                     "value": "136566",
                 },
                 {
-                    "title": teams.getAwayTeam['5848'], 
+                    "title": teams.getAwayTeam['abb'], 
                     "type": "sequence", 
                     "extra": `match_id=${fixture['5766']}&predict=W2&p_team=${fixture['5782']}`,
                     "value": "136565",
