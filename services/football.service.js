@@ -3,6 +3,7 @@ const {axiosInstance} = require('../libs/axios.instance');
 const axios = require('axios')
 const moment = require('moment-timezone');
 const redisClient = require('../libs/redis');
+const { FOOTBALL_API_KEY } = require('../configs/config')
 let self;
 function FootBallService(){
     self = this;
@@ -12,7 +13,7 @@ function FootBallService(){
 
 FootBallService.prototype = {
     getFixtureFromApiAndPostToMyaliceDataLab: async(from, to) => {
-        const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=19a4896d5a2a79eee47d4b5f62c390ec94b2d9094d4a910a3aeae413240dbf6e&timezone=Asia/Yangon`);
+        const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=${FOOTBALL_API_KEY}&timezone=Asia/Yangon`);
         console.log("api football data: ", footballResponse)
         if(footballResponse.data.length > 0){
             let fixtures = footballResponse.data.filter( fixture => {
@@ -246,7 +247,7 @@ FootBallService.prototype = {
         console.log("calling add team")
         return new Promise(async(resolve, reject)=> {
             try{
-                const teamsResponse = await axios.get('https://apiv3.apifootball.com/?action=get_teams&league_id=152&APIkey=19a4896d5a2a79eee47d4b5f62c390ec94b2d9094d4a910a3aeae413240dbf6e&timezone=Asia/Yangon')
+                const teamsResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_teams&league_id=152&APIkey=${FOOTBALL_API_KEY}&timezone=Asia/Yangon`)
                 if(teamsResponse.data.length > 0){
                     console.log(teamsResponse)
                     teamsResponse.data.forEach(async team=> {
@@ -276,7 +277,7 @@ FootBallService.prototype = {
     },
     updateFixtureAfterFinishedMatches: async(from, to) => {
         return new Promise(async(resolve, reject)=>{
-            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=19a4896d5a2a79eee47d4b5f62c390ec94b2d9094d4a910a3aeae413240dbf6e&timezone=Asia/Yangon`);
+            const footballResponse = await axios.get(`https://apiv3.apifootball.com/?action=get_events&from=${from}&to=${to}&league_id=152&APIkey=${FOOTBALL_API_KEY}&timezone=Asia/Yangon`);
             if(footballResponse.data.length > 0){
                 footballResponse.data.forEach(async match=>{
                     // console.log(match)

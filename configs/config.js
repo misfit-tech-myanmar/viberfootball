@@ -8,5 +8,6 @@ module.exports = {
     dbUri: "mongodb://127.0.0.1:27017/360football",
     currentDate,
     tomorrowDate,
-    dayAfterTomorrowDate
+    dayAfterTomorrowDate,
+    FOOTBALL_API_KEY: process.env.FOOTBALL_API_KEY
 }

@@ -1,6 +1,7 @@
 const axios = require('axios')
 const {axiosInstance} = require('../libs/axios.instance');
 const redisClient = require('../libs/redis');
+const { FOOTBALL_API_KEY } = require('../configs/config')
 
 let self;
 function StandingService(){
@@ -12,7 +13,7 @@ function StandingService(){
 StandingService.prototype = {
     getStanding: ()=> {
         return new Promise(async(resolve, reject) => {
-            const standings = await axios.get(`https://apiv3.apifootball.com/?action=get_standings&league_id=152&APIkey=19a4896d5a2a79eee47d4b5f62c390ec94b2d9094d4a910a3aeae413240dbf6e`);
+            const standings = await axios.get(`https://apiv3.apifootball.com/?action=get_standings&league_id=152&APIkey=${FOOTBALL_API_KEY}`);
             var mergedObj = await self.mergeObj(standings.data)
             let standingByLeagueRound = self.groupLeagueRound(mergedObj)
             resolve(standingByLeagueRound)
