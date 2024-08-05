@@ -20,8 +20,8 @@ StoreRedisFromDatalab.prototype = {
             // const predictionResponse = await self.Axios.get(`/stable/bots/labs/2268/entries`);
             // const predictions = await self.Axios.get(`/stable/bots/labs/2268/entries?limit=${predictionResponse.data.count}`);
 
-            // const teamResponse = await self.Axios.get(`/stable/bots/labs/2261/entries`);
-            // const teams = await self.Axios.get(`/stable/bots/labs/2261/entries?limit=${teamResponse.data.count}`);
+            const teamResponse = await self.Axios.get(`/stable/bots/labs/2261/entries`);
+            const teams = await self.Axios.get(`/stable/bots/labs/2261/entries?limit=${teamResponse.data.count}`);
             
             await self.RedisClient.set("users", JSON.stringify(users.data.dataSource), function(err, reply) {
                 if (err) {
@@ -44,13 +44,13 @@ StoreRedisFromDatalab.prototype = {
             //         console.log('User prediction set to redis:', reply);
             //     }
             // })
-            // await self.RedisClient.set("teams", JSON.stringify(teams.data.dataSource), function(err, reply) {
-            //     if (err) {
-            //         console.error('Error setting key:', err);
-            //     } else {
-            //         console.log('team set to redis :', reply);
-            //     }
-            // })
+            await self.RedisClient.set("teams", JSON.stringify(teams.data.dataSource), function(err, reply) {
+                if (err) {
+                    console.error('Error setting key:', err);
+                } else {
+                    console.log('team set to redis :', reply);
+                }
+            })
             resolve("Store successful data from datalab to redis")
         })
     },

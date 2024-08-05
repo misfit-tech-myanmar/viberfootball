@@ -224,16 +224,8 @@ FootBallService.prototype = {
                 // const teamResponses = await self.Axios.get(`/stable/bots/labs/2261/entries`);
                 const teamsResponse = await self.RedisClient.get('teams');
                 const teamsCache = JSON.parse(teamsResponse)
-                const getHomeTeam = teamsCache.filter(team=>{
-                    if(team['5811'] === homeTeam){
-                        return team['5848'];
-                    }
-                })[0];
-                const getAwayTeam = teamsCache.filter(team=>{
-                    if(team['5811'] === awayTeam){
-                        return team['5848'];
-                    }
-                })[0];
+                const getHomeTeam = teamsCache.find(team=> team['5811']===homeTeam);
+                const getAwayTeam = teamsCache.find(team=> team['5811']===awayTeam);
                 resolve({
                     getHomeTeam,
                     getAwayTeam

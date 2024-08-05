@@ -27,6 +27,7 @@ const standingService= new StandingService();
 router.get('/first-fixtures', async(req, res, next) => {
     const fixtures = await footballService.getFixtures("first", req.query.customer_id);
     const proceedData = Promise.all(fixtures.result.map(async (fixture,index)=> {
+        
         const teams = await footballService.getTeamShortFormByTeamName(fixture['5956'], fixture['5957'])
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
