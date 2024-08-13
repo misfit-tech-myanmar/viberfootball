@@ -969,6 +969,7 @@ router.post('/noti-message', async(req, res)=> {
 
 router.post('/top-five-player', async(req, res, next)=>{
     const leaderboard = await leaderboardService.getTopPredictionUserScore();
+    console.log(leaderboard)
     // const proceedData = Promise.all()
     res.json({
         "data": [
@@ -987,14 +988,14 @@ router.post('/top-five-player', async(req, res, next)=>{
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[0]['5751'],
+                        "title": leaderboard.inter[0]['user-name'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[0]['5755'],
+                        "title": leaderboard.inter[0]['score'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
@@ -1009,14 +1010,14 @@ router.post('/top-five-player', async(req, res, next)=>{
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[1]['5751'],
+                        "title": leaderboard.inter[1]['user-name'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[1]['5755'],
+                        "title": leaderboard.inter[1]['score'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
@@ -1031,14 +1032,14 @@ router.post('/top-five-player', async(req, res, next)=>{
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[2]['5751'],
+                        "title": leaderboard.inter[2]['user-name'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[2]['5755'],
+                        "title": leaderboard.inter[2]['score'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
@@ -1053,14 +1054,14 @@ router.post('/top-five-player', async(req, res, next)=>{
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[3]['5751'],
+                        "title": leaderboard.inter[3]['user-name'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[3]['5755'],
+                        "title": leaderboard.inter[3]['score'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
@@ -1075,14 +1076,14 @@ router.post('/top-five-player', async(req, res, next)=>{
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[4]['5751'],
+                        "title": leaderboard.inter[4]['user-name'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[4]['5755'],
+                        "title": leaderboard.inter[4]['score'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
