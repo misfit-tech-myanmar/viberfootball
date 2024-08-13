@@ -17,8 +17,8 @@ StoreRedisFromDatalab.prototype = {
             const fixtureResponse = await self.Axios.get(`/stable/bots/labs/2247/entries`);
             const fixtures = await self.Axios.get(`/stable/bots/labs/2247/entries?limit=${fixtureResponse.data.count}`);
             
-            // const predictionResponse = await self.Axios.get(`/stable/bots/labs/2268/entries`);
-            // const predictions = await self.Axios.get(`/stable/bots/labs/2268/entries?limit=${predictionResponse.data.count}`);
+            const predictionResponse = await self.Axios.get(`/stable/bots/labs/2268/entries`);
+            const predictions = await self.Axios.get(`/stable/bots/labs/2268/entries?limit=${predictionResponse.data.count}`);
 
             const teamResponse = await self.Axios.get(`/stable/bots/labs/2261/entries`);
             const teams = await self.Axios.get(`/stable/bots/labs/2261/entries?limit=${teamResponse.data.count}`);
@@ -37,13 +37,13 @@ StoreRedisFromDatalab.prototype = {
                     console.log('Fixtures set to redis :', reply);
                 }
             })
-            // await self.RedisClient.set("user-predictions", JSON.stringify(predictions.data.dataSource), function(err, reply) {
-            //     if (err) {
-            //         console.error('Error setting key:', err);
-            //     } else {
-            //         console.log('User prediction set to redis:', reply);
-            //     }
-            // })
+            await self.RedisClient.set("user-predictions", JSON.stringify(predictions.data.dataSource), function(err, reply) {
+                if (err) {
+                    console.error('Error setting key:', err);
+                } else {
+                    console.log('User prediction set to redis:', reply);
+                }
+            })
             await self.RedisClient.set("teams", JSON.stringify(teams.data.dataSource), function(err, reply) {
                 if (err) {
                     console.error('Error setting key:', err);
