@@ -1123,9 +1123,9 @@ router.get('/myanmar-leaderboard', async(req, res)=> {
     res.json(leaderboard.myanmar.map((item, index)=> {
         return {
             "id": index+1,
-            "name": item['5751'],
-            "score": item['5755'],
-            "phone": item['5752'],
+            "name": item['user-name'],
+            "score": item['score'],
+            "phone": item['phone-number'],
             "viber_id": item.creator_id
         }
     }))
@@ -1135,9 +1135,9 @@ router.get('/international-leaderboard', async(req, res)=> {
     res.json(leaderboard.inter.map((item, index)=> {
         return {
             "id": index+1,
-            "name": item['5751'],
-            "score": item['5755'],
-            "phone": item['5752'],
+            "name": item['user-name'],
+            "score": item['score'],
+            "phone": item['phone-number'],
             "viber_id": item.creator_id
         }
     }))
