@@ -117,5 +117,10 @@ module.exports = {
         cron.schedule("30 13 10 7 *",async() => {
             await notificationService.sentNotificationManual();
         })
+    },
+    sentNotificationReSelectFavoriteTeam: () => {
+        cron.schedule('00 12 15 8 *', async()=> {
+            await notificationService.sentNotificationReSelectFavoriteTeam()
+        })
     }
 }

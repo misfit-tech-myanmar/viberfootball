@@ -6,7 +6,26 @@ const MongoStore = require('connect-mongo');
 require('dotenv').config();
 const helper = require('./helpers/helper')
 const { sessionSecret, dbUri } = require('./configs/config')
-const { every5Minutes, everyStartOfDay, everyAugest, every30Minutes,  every10Minutes, everyMonday7AM, everyFiveHour30Minutes, every15Minutes, sentNotiBefore30MinutesMatchStart, sentNotiPredictMore, sentNotiNoPointUser, sentNotiRound16, sentNotiQuatar, sentNotiSemi, sentNotiGrand, sentNotiMidCampain, sentNotiRoundWinner } = require('./utils/create-cron');
+const { 
+    every5Minutes, 
+    everyStartOfDay, 
+    everyAugest, 
+    every30Minutes,  
+    every10Minutes, 
+    everyMonday7AM, 
+    everyFiveHour30Minutes, 
+    every15Minutes, 
+    sentNotiBefore30MinutesMatchStart, 
+    sentNotiPredictMore, 
+    sentNotiNoPointUser, 
+    sentNotiRound16, 
+    sentNotiQuatar, 
+    sentNotiSemi, 
+    sentNotiGrand, 
+    sentNotiMidCampain, 
+    sentNotiRoundWinner,
+    sentNotificationReSelectFavoriteTeam
+} = require('./utils/create-cron');
 // const bot = require('./libs/viber.bot')
 const indexRouter = require('./routes/index')
 const adminRouter = require('./routes/admin')
@@ -67,6 +86,7 @@ sentNotiRoundWinner()
 // sentNotiGrand()
 // sentNotiMidCampain()
 sentNotiNoPointUser();
+sentNotificationReSelectFavoriteTeam()
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1.0', indexRouter)
 app.use('/admin', adminRouter)
@@ -76,7 +96,7 @@ app.use('/admin', adminRouter)
 app.listen(port, async(err) => {
     await login()
     await storeRedisFromDataLab.storeRedisFromDataLab()
-    await helper.createAdminUser();
+    // await helper.createAdminUser();
     if(!err) logger.info(`Server is running on ${port}`);
     // bot.setWebhook(`${process.env.EXPOSE_URL}/viber/webhook`).catch(error => {
     //     console.log('Can not set webhook on following server. Is it running?');

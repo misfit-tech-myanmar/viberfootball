@@ -318,6 +318,30 @@ router.get('/first-fav-teams', async(req, res, next) => {
         })
     })
 })
+/**Favorite Team */
+router.get('/update-fav-teams', async(req, res, next) => {
+    const teams = await teamService.getTeams('first');
+    const proceedData = Promise.all(teams.map(team=> {
+        return {
+            "title": `${team['5810']}`, 
+            "type": "basic",
+            "extra": `fav_team=${team['5810']}`,
+            "value": '', 
+        }
+    }))
+    
+    proceedData.then(response=> {
+        res.json({
+            "data": response,
+            "success": true,
+            "message": "Successful", 
+            "attributes": {
+               
+            },
+            "status": 200
+        })
+    })
+})
 
 // router.get('/last-fav-teams', async(req, res, next) => {
 //     const teams = await teamService.getTeams('last');
@@ -946,7 +970,7 @@ router.post('/noti-message', async(req, res)=> {
     }
     if(req.body.language === "English"){
         res.json({
-            "data": `Match Finished \n${notification.homeTeam} - ${notification.awayTeam} \nMatch Score: ${notification.homeScore}:${notification.awayScore} \nYou made the following prediction ${predict} \n${notification.predictResult==="Win"?"Congratulations!":"Try Again!"} Your prediction was ${notification.predictResult==="Win"?"correct":"incorrect"}! ${notification.predictResult==="Win"?"\n5 point added to your balance":""}`,
+            "data": `Match Finished \n${notification.homeTeam} - ${notification.awayTeam} \nMatch Score: ${notification.homeScore}:${notification.awayScore} \nYou made the following prediction ${predict} \n${notification.predictResult==="Win"?"Congratulations!":"Try Again!"} Your prediction was ${notification.predictResult==="Win"?"correct":"incorrect"}! ${notification.predictResult==="Win"?"\n1 point added to your balance":""}`,
             "success": true,
             "message": "Successful", 
             "attributes": {
@@ -955,7 +979,7 @@ router.post('/noti-message', async(req, res)=> {
         })
     }else{
         res.json({
-            "data": `${notification.homeTeam} - ${notification.awayTeam} ပွဲပြီးပါပီ \nပွဲရလဒ်: ${notification.homeScore}:${notification.awayScore} \nသင် ${predict} ကို ခန်းမှန်းခဲ့သည့် \n${notification.predictResult==="Win"?"ဂုဏ်ယူပါတယ်!":"နောက်ထပ်ကြိုးစားပါ!"} သင့်ရဲ့ခန်းမှန်းမှု ${notification.predictResult==="Win"?"မှန်ပါသည်":"မှားပါသည်"}! \n${notification.predictResult==="Win"?"သင့်ရဲ့အမှတ်ထဲ့သို့ ၅ မှတ်‌ပေါင်းထည့်ထားပါသည်":""}`,
+            "data": `${notification.homeTeam} - ${notification.awayTeam} ပွဲပြီးပါပီ \nပွဲရလဒ်: ${notification.homeScore}:${notification.awayScore} \nသင် ${predict} ကို ခန်းမှန်းခဲ့သည့် \n${notification.predictResult==="Win"?"ဂုဏ်ယူပါတယ်!":"နောက်ထပ်ကြိုးစားပါ!"} သင့်ရဲ့ခန်းမှန်းမှု ${notification.predictResult==="Win"?"မှန်ပါသည်":"မှားပါသည်"}! \n${notification.predictResult==="Win"?"သင့်ရဲ့အမှတ်ထဲ့သို့ ၁ မှတ်‌ပေါင်းထည့်ထားပါသည်":""}`,
             "success": true,
             "message": "Successful", 
             "attributes": {
@@ -1163,14 +1187,14 @@ router.post('/quiz-top-five-player', async(req, res) => {
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[0]['5751'],
+                        "title": leaderboard.inter[0]['user-name'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[0]['6137'],
+                        "title": leaderboard.inter[0]['score'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
@@ -1185,14 +1209,14 @@ router.post('/quiz-top-five-player', async(req, res) => {
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[1]['5751'],
+                        "title": leaderboard.inter[1]['user-name'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[1]['6137'],
+                        "title": leaderboard.inter[1]['score'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
@@ -1207,14 +1231,14 @@ router.post('/quiz-top-five-player', async(req, res) => {
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[2]['5751'],
+                        "title": leaderboard.inter[2]['user-name'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[2]['6137'],
+                        "title": leaderboard.inter[2]['score'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
@@ -1229,14 +1253,14 @@ router.post('/quiz-top-five-player', async(req, res) => {
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[3]['5751'],
+                        "title": leaderboard.inter[3]['user-name'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[3]['6137'],
+                        "title": leaderboard.inter[3]['score'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
@@ -1251,14 +1275,14 @@ router.post('/quiz-top-five-player', async(req, res) => {
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[4]['5751'],
+                        "title": leaderboard.inter[4]['user-name'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[4]['6137'],
+                        "title": leaderboard.inter[4]['score'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
@@ -1491,8 +1515,8 @@ router.get('/update-result', async(req, res)=> {
     predictionCheck.updateScoreAndSentNoti();
     res.json("sent noti")
 })
-router.get("/sent-noti-manual", async(req, res)=> {
-    const result = await notiService.sentNotiNoPointUser();
+router.get("/sent-noti-favorite-team", async(req, res)=> {
+    const result = await notiService.sentNotificationReSelectFavoriteTeam();
     res.json(result);
 })
 

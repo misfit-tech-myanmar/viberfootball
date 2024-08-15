@@ -392,6 +392,48 @@ NotificationService.prototype = {
                 }
             })
         });
+    },
+    sentNotificationReSelectFavoriteTeam: ()=> {
+        return new Promise(async(resolve, reject)=> {
+            const users = await self.getAllUsers();
+            const teamResponse = await self.RedisClient.get('teams');
+            var teams = JSON.parse(teamResponse);
+            self.user = self.user.length > 0? self.user : await self.getUsersByIncludedTeams(users, teams)
+            console.log(self.user.length)
+            if(self.user.length > 0){
+                let batch = self.user.slice(0, 100);
+                batch.forEach(async(user, index)=> {
+                    // await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                    //     "sequence_id":"144588",
+                    //     "customer_id": `${user.creator_id}`
+                    // }, {
+                    //     headers: {
+                    //         'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                    //     }
+                    // })
+                })
+                self.user = self.user.slice(100);
+                if (self.user.length > 0) {
+                    setTimeout(async()=> {
+                        await self.sentNotificationReSelectFavoriteTeam()
+                    }, 5000); // Wait 5 second before starting the next batch
+                } else {
+                    console.log("no user left: ", self.user.length)
+                } 
+            }else{
+                resolve(self.user.length)
+            }
+        })
+    },
+    getUsersByIncludedTeams: (users, teams) => {
+        return new Promise(async(resolve, reject)=> {
+            const userTeams = users.filter(user => {
+                return !teams.some(team => {
+                    return team['5811'] == user['favorite-team-id'];
+                });
+            });
+            resolve(userTeams)
+        })
     }
 }
 
