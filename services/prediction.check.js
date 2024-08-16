@@ -43,12 +43,12 @@ CheckPredictionService.prototype = {
                                                 if(user !== undefined){
                                                     if(result === predict['5862']){
                                                         userPredictionsCache = await self.filterAndMapForUpdatePrediction('Win', predict, userPredictionsCache)
-                                                        userCache = await self.updateUserScore((parseInt(user['5755']===''?0:user['5755']) + 1), user.id, userCache)
+                                                        userCache = await self.updateUserScore((parseInt(user['score']===''?0:user['score']) + 1), user.id, userCache)
                                                         finishedPredictionCache.push({
                                                             predictId: predict.id,
                                                             "5897": 'Win',
                                                             userId: user.id,
-                                                            scores: (parseInt(user['5755']===''?0:user['5755']) + 1),
+                                                            scores: (parseInt(user['score']===''?0:user['score']) + 1),
                                                             creatorId: user.creator_id
                                                         })
                                                         notificationCache.push({
@@ -67,7 +67,7 @@ CheckPredictionService.prototype = {
                                                             predictId: predict.id,
                                                             "5897": 'Lose',
                                                             userId: user.id,
-                                                            scores: (parseInt(user['5755']===''?0:user['5755'])),
+                                                            scores: (parseInt(user['score']===''?0:user['score'])),
                                                             creatorId: user.creator_id
                                                         })
                                                         notificationCache.push({
@@ -202,7 +202,7 @@ CheckPredictionService.prototype = {
             // })
             resolve(users.map(item=> {
                 if(item.id === userId){
-                    return {...item, "5755": scores}
+                    return {...item, "score": scores}
                 }else{
                     return item
                 }
@@ -242,8 +242,10 @@ CheckPredictionService.prototype = {
     updatePredictResult: (predictId, result, userId, scores, customer_id)=> {
         return new Promise(async(resolve, reject)=> {
             try{
-                await self.Axios.put(`/stable/bots/labs/2241/entries/${userId}`, {
-                    "5755": scores
+                await self.Axios.put(`/edge/form/2241/entries/${userId}`, {
+                    "changes":{
+                        "score":{"from":"0","to":scores}
+                    }
                 })
                 await self.Axios.put(`/stable/bots/labs/2268/entries/${predictId}`, {
                     "5897": result
