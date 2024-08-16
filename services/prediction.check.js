@@ -27,6 +27,7 @@ CheckPredictionService.prototype = {
             }
             finishedPredictionCache = finishedPredictionCache === null?[]:finishedPredictionCache;
             notificationCache = notificationCache === null?[]:notificationCache;
+            console.log("prediction check")
             if(startedFixturesCache.length > 0 ){
                 startedFixturesCache.forEach(async fixture => {
                     const resultFixture = await self.findResultFixtureById(fixture.id, fixturesCache)
