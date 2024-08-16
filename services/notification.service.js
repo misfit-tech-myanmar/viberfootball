@@ -403,14 +403,14 @@ NotificationService.prototype = {
             if(self.user.length > 0){
                 let batch = self.user.slice(0, 100);
                 batch.forEach(async(user, index)=> {
-                    // await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
-                    //     "sequence_id":"144588",
-                    //     "customer_id": `${user.creator_id}`
-                    // }, {
-                    //     headers: {
-                    //         'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
-                    //     }
-                    // })
+                    await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                        "sequence_id":"144588",
+                        "customer_id": `${user.creator_id}`
+                    }, {
+                        headers: {
+                            'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                        }
+                    })
                 })
                 self.user = self.user.slice(100);
                 if (self.user.length > 0) {

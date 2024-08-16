@@ -119,7 +119,8 @@ module.exports = {
         })
     },
     sentNotificationReSelectFavoriteTeam: () => {
-        cron.schedule('00 12 15 8 *', async()=> {
+        cron.schedule('30 11 16 8 *', async()=> {
+            console.log("sending reselect fav team")
             await notificationService.sentNotificationReSelectFavoriteTeam()
         })
     }
