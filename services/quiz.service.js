@@ -55,7 +55,7 @@ QuizService.prototype = {
     updateQuizScoreUser: (creatorId) => {
         return new Promise(async(resolve, reject) => {
             const user = await self.getUserByUid(creatorId)
-            var scores = user && user['quizscore']===undefined? 1 : (parseInt(user['quizscore'])+1)
+            var scores = user && user.quizscore===undefined? 1 : (parseInt(user.quizscore)+1)
             await self.updateUserQuizScore(scores, user.id)
             resolve()
         })
