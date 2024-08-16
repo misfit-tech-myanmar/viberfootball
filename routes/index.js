@@ -324,9 +324,9 @@ router.get('/update-fav-teams', async(req, res, next) => {
     const proceedData = Promise.all(teams.map(team=> {
         return {
             "title": `${team['5810']}`, 
-            "type": "basic",
+            "type": "sequence",
             "extra": `fav_team=${team['5810']}`,
-            "value": `fav_team=${team['5810']}`, 
+            "value": `136297`, 
         }
     }))
     
