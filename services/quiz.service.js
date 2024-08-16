@@ -55,7 +55,7 @@ QuizService.prototype = {
     updateQuizScoreUser: (creatorId) => {
         return new Promise(async(resolve, reject) => {
             const user = await self.getUserByUid(creatorId)
-            var scores = user && user['6137']===undefined? 1 : (parseInt(user['6137'])+1)
+            var scores = user && user['quizscore']===undefined? 1 : (parseInt(user['quizscore'])+1)
             await self.updateUserQuizScore(scores, user.id)
             resolve()
         })
@@ -69,7 +69,7 @@ QuizService.prototype = {
     updateUserQuizScore: (scores, userId) => {
         return new Promise(async(resolve, reject) => {
             self.Axios.put(`/stable/bots/labs/2241/entries/${userId}`, {
-                "6137": scores
+                "quizscore": scores
             }).then(response=> {
                 resolve()
             })

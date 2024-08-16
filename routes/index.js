@@ -945,7 +945,7 @@ router.post('/update-prediction', async(req, res, next) => {
 router.post('/profile', async(req, res, next)=> {
     const profile = await profileService.profile(req.body);
     res.json({
-        "data": `${profile['score']}`,
+        "data": `profile['score']}`,
         "success": true,
         "message": "Successful", 
         "attributes": {
