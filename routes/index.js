@@ -326,7 +326,7 @@ router.get('/update-fav-teams', async(req, res, next) => {
             "title": `${team['5810']}`, 
             "type": "basic",
             "extra": `fav_team=${team['5810']}`,
-            "value": '', 
+            "value": `fav_team=${team['5810']}`, 
         }
     }))
     
@@ -944,8 +944,9 @@ router.post('/update-prediction', async(req, res, next) => {
 /**Profile */
 router.post('/profile', async(req, res, next)=> {
     const profile = await profileService.profile(req.body);
+    console.log(profile)
     res.json({
-        "data": `${profile['5755']}`,
+        "data": `${profile['score']}`,
         "success": true,
         "message": "Successful", 
         "attributes": {
