@@ -63,7 +63,7 @@ module.exports = {
     },
     everyMonday7AM: () => {
         cron.schedule('0 7 * * 1', async()=> {
-            await notificationService.sentNotiUserFavouriteTeam();
+           // await notificationService.sentNotiUserFavouriteTeam();
             await quizService.updateQuizEntryStatus();
         })
     },
@@ -74,23 +74,23 @@ module.exports = {
     },
     sentNotiBefore30MinutesMatchStart:() => {
         cron.schedule('* * * * *', async() => {
-            await notificationService.sentNotificationBefore30MinutesMatchStart()
+            //await notificationService.sentNotificationBefore30MinutesMatchStart()
         });
     },
     sentNotiPredictMore: () => {
         cron.schedule("0 18 27 6 *",async() => {
-            await notificationService.sentNotiPredictMore();
+           // await notificationService.sentNotiPredictMore();
         })
     },
     sentNotiNoPointUser: () => {
         //no point not sent
         cron.schedule("0 15 9 7 *",async() => {
-            await notificationService.sentNotiNoPointUser();
+           // await notificationService.sentNotiNoPointUser();
         })
     },
     sentNotiRound16: () => {
         cron.schedule("0 0 28 6 *",async() => {
-            await notificationService.sentNotiByDate("147236");
+           // await notificationService.sentNotiByDate("147236");
         })
     },
     sentNotiQuatar: () => {

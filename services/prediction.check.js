@@ -250,14 +250,14 @@ CheckPredictionService.prototype = {
                 await self.Axios.put(`/stable/bots/labs/2268/entries/${predictId}`, {
                     "5897": result
                 })
-                await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
-                    "sequence_id":"138700",
-                    "customer_id": `${customer_id}`
-                }, {
-                    headers: {
-                        'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
-                    }
-                })
+                // await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                //     "sequence_id":"138700",
+                //     "customer_id": `${customer_id}`
+                // }, {
+                //     headers: {
+                //         'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                //     }
+                // })
                 console.log("caling update predict result")
             }catch(err){
                 console.log("fail update requestttt")
@@ -268,14 +268,14 @@ CheckPredictionService.prototype = {
         return new Promise(async(resolve, reject) => {
             self.data = self.data.length > 0?self.data:await self.getDataFromRedis('finished-predictions')
             if(self.data.length > 0){
-                let batch = self.data.slice(0, 30);
+                let batch = self.data.slice(0, 15);
                 // Update the third-party API for each prediction in the batch
                 batch.forEach(async(prediction, index) => {
                     await self.updatePredictResult(prediction.predictId, prediction['5897'], prediction.userId, prediction.scores, prediction.creatorId);
                 });
                 // Remove the processed batch from the predictions array
                 console.log(self.data.length)
-                self.data = self.data.slice(30);
+                self.data = self.data.slice(15);
                 if (self.data.length > 0) {
                     setTimeout(()=> {
                         self.updateScoreAndSentNoti()
@@ -290,10 +290,6 @@ CheckPredictionService.prototype = {
         })
 
         // If there are remaining predictions, schedule the next batch processing
-        
-    },
-    processNextBatch: async() => {
-        
         
     }
 }
