@@ -153,7 +153,7 @@ CheckPredictionService.prototype = {
     checkW1W2D: (fixture, userPredict) => {
         return new Promise(async(resolve, reject)=>{
             try{
-                if(fixture.match_id === userPredict['5860']){
+                if(fixture['5766'] === userPredict['5860']){
                     if(fixture['5778'] === "Finished"){
                         const homeScore = parseInt(fixture['5781']);
                         const awayScore = parseInt(fixture['5783']);
