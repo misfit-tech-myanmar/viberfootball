@@ -1,9 +1,10 @@
 const {axiosInstance} = require('../libs/axios.instance');
-const axios = require('axios')
+const redisClient = require('../libs/redis');
 let self;
 function QuizService(){
     self = this;
     self.Axios = axiosInstance;
+    self.RedisClient = redisClient;
 }
 
 QuizService.prototype = {
@@ -55,6 +56,7 @@ QuizService.prototype = {
     updateQuizScoreUser: (creatorId) => {
         return new Promise(async(resolve, reject) => {
             const user = await self.getUserByUid(creatorId)
+            console.log(user)
             var scores = user && user.quizscore===undefined? 1 : (parseInt(user.quizscore)+1)
             await self.updateUserQuizScore(scores, user.id)
             resolve()
@@ -62,17 +64,21 @@ QuizService.prototype = {
     },
     getUserByUid: (creatorId) => {
         return new Promise(async(resolve, reject)=> {
-            const userResponse = await self.Axios.get(`/stable/bots/labs/2241/entries`);
-            resolve(userResponse.data.dataSource.filter(user=> user.creator_id == creatorId)[0])
+            const userCache = await self.RedisClient.get('users')
+            const user = JSON.parse(userCache);
+            resolve(user.find(item=> item.creator_id == creatorId))
         })
     }, 
     updateUserQuizScore: (scores, userId) => {
         return new Promise(async(resolve, reject) => {
-            self.Axios.put(`/stable/bots/labs/2241/entries/${userId}`, {
-                "quizscore": scores
+            self.Axios.put(`/edge/form/2241/entries/${userId}`, {
+                "changes":{
+                        "quizscore":{"from":"0","to":scores}
+                    }
             }).then(response=> {
                 resolve()
             })
+            resolve()
         })
     },
     updateQuizEntryStatus: () => {

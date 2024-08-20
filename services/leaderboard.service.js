@@ -19,8 +19,8 @@ LeaderBoardService.prototype = {
                 const userResponse = await self.RedisClient.get('users');
                 const users = JSON.parse(userResponse);
                 resolve({
-                    inter: users.sort((a,b) =>  b['5755'] - a['5755'] ),
-                    myanmar: users.sort((a,b) =>  b['5755'] - a['5755'] ).filter(item=> item['5754'] === 'en_MM')
+                    inter: users.sort((a,b) =>  b['score'] - a['score'] ),
+                    myanmar: users.sort((a,b) =>  b['score'] - a['score'] ).filter(item=> item['5754'] === 'en_MM')
                 })
             }catch(err){
                 console.log(err)
@@ -35,8 +35,8 @@ LeaderBoardService.prototype = {
                 const userResponse = await self.RedisClient.get('users');
                 const users = JSON.parse(userResponse);
                 resolve({
-                    inter: users.sort((a,b) =>  b['6137'] - a['6137'] ),
-                    myanmar: users.sort((a,b) =>  b['6137'] - a['6137'] ).filter(item=> item['5754'] === 'en_MM')
+                    inter: users.sort((a,b) =>  b['quizscore'] - a['quizscore'] ),
+                    myanmar: users.sort((a,b) =>  b['quizscore'] - a['quizscore'] ).filter(item=> item['5754'] === 'en_MM')
                 })
             }catch(err){
                 console.log(err)
