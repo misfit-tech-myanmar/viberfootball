@@ -1210,14 +1210,14 @@ router.post('/quiz-top-five-player', async(req, res) => {
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[1]['quizscore'],
+                        "title": leaderboard.inter[1]['user-name'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[1]['score'],
+                        "title": leaderboard.inter[1]['quizscore'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
@@ -1232,7 +1232,7 @@ router.post('/quiz-top-five-player', async(req, res) => {
                         "messenger_extensions": false
                     },
                     {
-                        "title": leaderboard.inter[2]['quizscore'],
+                        "title": leaderboard.inter[2]['user-name'],
                         "type": "basic",
                         "extra": "",
                         "value": "",
