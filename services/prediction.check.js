@@ -291,6 +291,58 @@ CheckPredictionService.prototype = {
 
         // If there are remaining predictions, schedule the next batch processing
         
+    },
+    getAllPrediction: () => {
+        return new Promise(async(resolve, reject)=> {
+            try{
+                const predictionCache = await self.RedisClient.get('user-predictions')
+                const predictions = JSON.parse(predictionCache);
+                
+                const counts = await self.countPredictionIsWin(predictions)
+                const result = Object.keys(counts).map(key => {
+                    return {
+                        "5861": parseInt(key, 10),
+                        "score": counts[key]
+                    };
+                });
+                const users = await self.getAllUserId();
+                const scoreMap = result.reduce((map, item) => {
+                    map[item["5861"]] = item["score"];
+                    return map;
+                }, {});
+                const updatedUsers = users
+                .filter(user => scoreMap[user.creator_id])
+                .map(user=> ({
+                    ...user, 
+                    score: scoreMap[user.creator_id]?scoreMap[user.creator_id]:0
+                }))
+                resolve(updatedUsers)
+            }catch(err){
+                console.log(err)
+            }
+        })
+    },
+    countPredictionIsWin: (predictions)=> {
+        return new Promise(async(resolve, reject)=> {
+            const counts = {};
+            predictions.forEach((item)=> {
+                const key = item['5861'];
+                if(item['5897'] !== undefined  && item['5897'] === 'Win'){
+                    if(!counts[key]){
+                        counts[key] = 0;
+                    }
+                    counts[key]++;
+                }
+            })
+            resolve(counts)
+        })
+    },
+    getAllUserId: (viberId) => {
+        return new Promise(async(resolve, reject)=> {
+            const userCache = await self.RedisClient.get('users');
+            const user = JSON.parse(userCache);
+            resolve(user)
+        })
     }
 }
 

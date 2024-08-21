@@ -1429,7 +1429,7 @@ router.post('/check-quiz-answer', (async(req, res)=> {
             "message": "Successful", 
             "attributes": {
                 QuizScore: parseInt(req.body.QuizScore) + 1,
-                TotalQuizScore: parseInt(req.body.TotalQuizScore) + 1,
+                QuizTotalScore : parseInt(req.body.QuizTotalScore) + 1,
                 QuizTotalAnswer: parseInt(req.body.QuizTotalAnswer) + 1
             },
             "status": 200
@@ -1516,8 +1516,8 @@ router.get('/update-result', async(req, res)=> {
     predictionCheck.updateScoreAndSentNoti();
     res.json("sent noti")
 })
-router.get("/sent-noti-favorite-team", async(req, res)=> {
-    const result = await notiService.sentNotificationReSelectFavoriteTeam();
+router.get("/prediction-score", async(req, res)=> {
+    const result = await predictionCheck.getAllPrediction();
     res.json(result);
 })
 
