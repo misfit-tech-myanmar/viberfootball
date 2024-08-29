@@ -1,0 +1,213 @@
+{
+    "main_keyboard" : {
+        "Type": "keyboard",
+        "InputFieldState": "hidden",
+        "Buttons": [
+            {
+                "ActionBody": "logo",
+                "BgColor": "#14199c",
+                "Text": "<font color='#ffffff'>This is logo area</font>",
+                "Columns": 6,
+                "Rows":1,
+                "TextHAlign": "center"
+            },
+            {
+                "ActionBody": "predict",
+                "BgColor": "#14199c",
+                "Text": "<font color='#ffffff'>Predict</font>",
+                "Columns": 2,
+                "Rows":1,
+                "TextHAlign": "center"
+            },
+            {
+                "ActionBody": "http://sport-news-dev.free.nf/?i=2",
+                "ActionType": "open-url",
+                "BgColor": "#14199c",
+                "Text": "<font color='#ffffff'>Fixtures</font>",
+                "Columns": 2,
+                "Rows":1,
+                "TextHAlign": "center"
+            },
+            {
+                "ActionBody": "quiz",
+                "BgColor": "#14199c",
+                "Text": "<font color='#ffffff'>Quiz</font>",
+                "Columns": 2,
+                "Rows":1,
+                "TextHAlign": "center"
+            },
+            {
+                "ActionBody": "news",
+                "BgColor": "#14199c", 
+                "Text": "<font color='#ffffff'>News</font>",
+                "Columns": 2,
+                "Rows":1,
+                "TextHAlign": "center"
+            },
+            {
+                "ActionBody": "partners",
+                "BgColor": "#14199c",
+                "Text": "<font color='#ffffff'>Partners</font>",
+                "Columns": 2,
+                "Rows":1,
+                "TextHAlign": "center"
+            },
+            {
+                "ActionBody":"other",
+                "BgColor": "#14199c", 
+                "Text": "<font color='#ffffff'>Other</font>",
+                "Columns": 2,
+                "Rows":1,
+                "TextHAlign": "center"
+            }
+        ]
+    },
+    "predict_keyboard" : {
+        "Type": "keyboard",
+        "InputFieldState": "hidden",
+        "Buttons": [
+            {
+                "ActionBody": "back",
+                "BgColor": "#FFFFFF",
+                "Text": "Back",
+                "Columns": 2,
+                "Rows":1,
+                "TextHAlign": "center"
+            },
+            {
+                "BgColor": "#FFFFFF",
+                "Text": "England Premier League 2024",
+                "Columns": 4,
+                "ActionType": "none",
+                "Rows":1,
+                "TextHAlign": "center"
+            },
+            {
+                "ActionBody": "match_1",
+                "BgColor": "#14199c",
+                "Columns": 6,
+                "Rows":2,
+                "TextHAlign": "center",
+                "BgMedia": "https://www.sofascore.com/news/wp-content/uploads/2017/07/Int.png"
+            },
+            {
+                "ActionBody": "match_1",
+                "BgColor": "#14199c",
+                "Columns": 6,
+                "Rows":2,
+                "TextHAlign": "center",
+                "BgMedia": "https://www.sofascore.com/news/wp-content/uploads/2017/07/Int.png"
+            },
+            {
+                "ActionBody": "match_1",
+                "BgColor": "#14199c",
+                "Columns": 6,
+                "Rows":2,
+                "TextHAlign": "center",
+                "BgMedia": "https://www.sofascore.com/news/wp-content/uploads/2017/07/Int.png"
+            },
+            {
+                "ActionBody": "match_1",
+                "BgColor": "#14199c",
+                "Columns": 6,
+                "Rows":2,
+                "TextHAlign": "center",
+                "BgMedia": "https://www.sofascore.com/news/wp-content/uploads/2017/07/Int.png"
+            },
+            {
+                "ActionBody": "match_1",
+                "BgColor": "#14199c",
+                "Columns": 6,
+                "Rows":2,
+                "TextHAlign": "center",
+                "BgMedia": "https://www.sofascore.com/news/wp-content/uploads/2017/07/Int.png"
+            }
+        ]
+    },
+    "single_match_keyboard": [
+        {
+            "Type": "rich_media",
+            "ButtonsGroupColumns": 6,
+            "ButtonsGroupRows": 4,
+            "BgColor": "#FFFFFF", 
+            "BgMedia": "https://www.sofascore.com/news/wp-content/uploads/2017/07/Int.png",
+            "Buttons": [
+                {
+                    "Columns": 6,
+                    "Rows": 3,
+                    "ActionType": "none",
+                    "Text": "<b>Arsenal</b>  VS  <b>FC Bayern Munich",
+                    "TextSize": "medium",
+                    "TextVAlign": "middle",
+                    "TextHAlign": "center"
+                },
+                {
+                    "ActionBody": "w1", 
+                    "Columns": 2,
+                    "Rows": 1,
+                    "BgColor": "#5c9c14",
+                    "Text": "<font color='#ffffff'>W1</font>",
+                    "Image": "https://example.com/image_with_button.jpg"
+                },
+                {
+                    "ActionBody": "draw", 
+                    "Columns": 2,
+                    "Rows": 1,
+                    "BgColor": "#5c9c14",
+                    "Text": "<font color='#ffffff'>Draw</font>",
+                    "Image": "https://example.com/image_with_button.jpg"
+                },
+                {
+                    "ActionBody": "w2", 
+                    "Columns": 2,
+                    "Rows": 1,
+                    "BgColor": "#5c9c14",
+                    "Text": "<font color='#ffffff'>W2</font>",
+                    "Image": "https://example.com/image_with_button.jpg"
+                }
+            ]
+        },
+        {
+        "Type": "rich_media",
+        "ButtonsGroupColumns": 6,
+        "ButtonsGroupRows": 4,
+        "BgColor": "#FFFFFF", 
+        "BgMedia": "https://www.sofascore.com/news/wp-content/uploads/2017/07/Int.png",
+        "Buttons": [
+            {
+                "Columns": 6,
+                "Rows": 3,
+                "ActionType": "none",
+                "Text": "<b>Arsenal</b>  VS  <b>FC Bayern Munich",
+                "TextSize": "medium",
+                "TextVAlign": "middle",
+                "TextHAlign": "center"
+            },
+            {
+                "ActionBody": "w1", 
+                "Columns": 2,
+                "Rows": 1,
+                "BgColor": "#5c9c14",
+                "Text": "<font color='#ffffff'>W1</font>",
+                "Image": "https://example.com/image_with_button.jpg"
+            },
+            {
+                "ActionBody": "draw", 
+                "Columns": 2,
+                "Rows": 1,
+                "BgColor": "#5c9c14",
+                "Text": "<font color='#ffffff'>Draw</font>",
+                "Image": "https://example.com/image_with_button.jpg"
+            },
+            {
+                "ActionBody": "w2", 
+                "Columns": 2,
+                "Rows": 1,
+                "BgColor": "#5c9c14",
+                "Text": "<font color='#ffffff'>W2</font>",
+                "Image": "https://example.com/image_with_button.jpg"
+            }
+        ]
+    }
+    ]
+}

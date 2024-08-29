@@ -1,0 +1,106 @@
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+require('dotenv').config();
+const helper = require('./helpers/helper')
+const { sessionSecret, dbUri } = require('./configs/config')
+const { 
+    every5Minutes, 
+    everyStartOfDay, 
+    everyAugest, 
+    every30Minutes,  
+    every10Minutes, 
+    everyMonday7AM, 
+    everyFiveHour30Minutes, 
+    every15Minutes, 
+    sentNotiBefore30MinutesMatchStart, 
+    sentNotiPredictMore, 
+    sentNotiNoPointUser, 
+    sentNotiRound16, 
+    sentNotiQuatar, 
+    sentNotiSemi, 
+    sentNotiGrand, 
+    sentNotiMidCampain, 
+    sentNotiRoundWinner,
+    sentNotificationReSelectFavoriteTeam
+} = require('./utils/create-cron');
+// const bot = require('./libs/viber.bot')
+const indexRouter = require('./routes/index')
+const adminRouter = require('./routes/admin')
+const {login} = require('./services/login.service');
+const moment = require('moment-timezone');
+var cors = require('cors')
+var logger = require('./libs/logger');
+const FootBallService = require('./services/football.service')
+const StoreRedisFromDatalab = require('./services/store.redis.datalab.service');
+const footballService = new FootBallService();
+const storeRedisFromDataLab = new StoreRedisFromDatalab()
+
+// footballService.addTeamToMyalice();
+
+/**Mongodb Connect */
+require('./utils/db.connect');
+
+const app = express();
+app.use(cors())
+
+const env = process.env.NODE_ENV || 'development';
+const baseURL = env === 'development' ? process.env.BASE_URL : process.env.BASE_URL_PRODUCTION;
+app.locals.baseURL = baseURL;
+
+const port = process.env.PORT || 5000;
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(session({
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: dbUri })
+  }));
+
+app.get('/', (req, res, next)=>{
+    res.redirect('/admin/login')
+})
+
+everyStartOfDay();
+every5Minutes();
+everyAugest();
+everyMonday7AM();
+everyFiveHour30Minutes();
+every15Minutes()
+every10Minutes();
+every30Minutes()
+sentNotiBefore30MinutesMatchStart()
+sentNotiRoundWinner()
+// sentNotiPredictMore()
+// sentNotiRound16()
+// sentNotiQuatar()
+// sentNotiSemi()
+// sentNotiGrand()
+// sentNotiMidCampain()
+sentNotiNoPointUser();
+sentNotificationReSelectFavoriteTeam()
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/api/v1.0', indexRouter)
+app.use('/admin', adminRouter)
+
+// app.use("/viber/webhook", bot.middleware());
+
+app.listen(port, async(err) => {
+    await login()
+    await storeRedisFromDataLab.storeRedisFromDataLab()
+    // await helper.createAdminUser();
+    if(!err) logger.info(`Server is running on ${port}`);
+    // bot.setWebhook(`${process.env.EXPOSE_URL}/viber/webhook`).catch(error => {
+    //     console.log('Can not set webhook on following server. Is it running?');
+    //     console.error(error);
+    //     process.exit(1);
+    // });
+})
