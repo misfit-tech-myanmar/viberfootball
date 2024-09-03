@@ -95,33 +95,33 @@ module.exports = {
     },
     sentNotiQuatar: () => {
         cron.schedule("0 0 4 7 *",async() => {
-            await notificationService.sentNotiByDate("147238");
+            //await notificationService.sentNotiByDate("147238");
         })
     },
     sentNotiSemi: () => {
         cron.schedule("0 0 8 7 *",async() => {
-            await notificationService.sentNotiByDate("147240");
+            //await notificationService.sentNotiByDate("147240");
         })
     },
     sentNotiGrand: () => {
         cron.schedule("0 0 13 7 *",async() => {
-            await notificationService.sentNotiByDate("147242");
+           // await notificationService.sentNotiByDate("147242");
         })
     },
     sentNotiMidCampain: () => {
         cron.schedule("* * 30 6 *",async() => {
-            await notificationService.sentNotiByDate("147180");
+            //await notificationService.sentNotiByDate("147180");
         })
     },
     sentNotiRoundWinner: () => {
         cron.schedule("30 13 10 7 *",async() => {
-            await notificationService.sentNotificationManual();
+            //await notificationService.sentNotificationManual();
         })
     },
     sentNotificationReSelectFavoriteTeam: () => {
         cron.schedule('30 11 16 8 *', async()=> {
             console.log("sending reselect fav team")
-            await notificationService.sentNotificationReSelectFavoriteTeam()
+            //await notificationService.sentNotificationReSelectFavoriteTeam()
         })
     }
 }
