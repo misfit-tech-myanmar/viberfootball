@@ -84,7 +84,7 @@ module.exports = {
         })
     },
     sendNotificationToInactivePredictors: ()=> {
-        cron.schedule('30 14 6 9 *', async()=> {
+        cron.schedule('40 14 6 9 *', async()=> {
             await notificationService.sendNotification('customers', '158219')
         })
     }
