@@ -1516,8 +1516,8 @@ router.get('/update-result', async(req, res)=> {
     predictionCheck.updateScoreAndSentNoti();
     res.json("sent noti")
 })
-router.get("/sent-noti-favorite-team", async(req, res)=> {
-    const result = await notiService.sentNotificationReSelectFavoriteTeam();
+router.get("/test-noti", async(req, res)=> {
+    const result = await notiService.sendNotification('customers');
     res.json(result);
 })
 

@@ -290,107 +290,11 @@ NotificationService.prototype = {
             }
         })
     },
-    sentNotiPredictMore: () =>{
-        return new Promise(async(resolve, reject)=> {
-            try{
-                console.log("Sending at leaset predict once customer")
-                const customers = await self.Customer.find({});
-                for(const customer of customers){
-                    if(parseInt(customer.total_prediction) > 0){
-                        await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
-                            "sequence_id":"147172",
-                            "customer_id": `${customer.customer_id}`
-                        }, {
-                            headers: {
-                                'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
-                            }
-                        })
-                    }
-                }
-                resolve(customers);
-            }catch(err){
-                console.log("sending no point noti error")
-            }
-        })
-    },
-    sentNotiNoPointUser: () => {
-        return new Promise(async(resolve, reject)=> {
-            try{
-                const response = await self.RedisClient.get('customers');
-                const customers = JSON.parse(response)
-                self.user =  self.user.length > 0?self.user: customers;
-                if(self.user.length > 0){
-                    let batch = self.user.slice(0, 100);
-                    // Update the third-party API for each prediction in the batch
-                    batch.forEach(async(user, index) => {
-                        console.log("sending noti from api")
-                        // console.log(JSON.parse(user.meta).registered === undefined?'No': 'Yes')
-                        // console.log(JSON.parse(user.meta))
-                        if(JSON.parse(user.meta).registered===undefined){
-                            await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
-                                "sequence_id":"147709",
-                                "customer_id": `${user.id}`
-                            }, {
-                                headers: {
-                                    'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
-                                }
-                            })
-                        }
-                    });
-                    // Remove the processed batch from the predictions array
-                    console.log(self.user.length)
-                    self.user = self.user.slice(100);
-                    if (self.user.length > 0) {
-                        setTimeout(()=> {
-                            self.sentNotiNoPointUser()
-                        }, 5000); // Wait 1 second before starting the next batch
-                    } else {
-                        console.log("no user left: ", self.user.length)
-                    }   
-                }else{
-                    resolve()
-                }
-            }catch(err){
-                console.log("sending no point noti error", err)
-            }
-        })
-    },
-    sentNotiByDate: (sequence) => {
-        return new Promise(async(resolve, reject)=> {
-            try{
-                console.log("Sending round 16")
-                const customers = await self.Customer.find({});
-                for(const customer of customers){
-                    await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
-                        "sequence_id":sequence,
-                        "customer_id": `${customer.customer_id}`
-                    }, {
-                        headers: {
-                            'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
-                        }
-                    })
-                }
-                resolve(customers);
-            }catch(err){
-                console.log("sending no point noti error")
-            }
-        })
-    },
-    getAllCustomerDataFromRedis: () => {
+    getDataFromRedis: (redisKey) => {
         return new Promise(async(resolve, reject) => {
-            self.redisClient.keys('customer:*', (err, keys) => {
-                if (err) {
-                  console.error('Error fetching keys:', err);
-                  client.quit();
-                  return;
-                }
-                
-                if (keys.length === 0) {
-                  console.log('No customer data found in Redis');
-                  client.quit();
-                  return;
-                }
-            })
+            const response = await self.RedisClient.get(redisKey);
+            var users = JSON.parse(response);
+            resolve(users)
         });
     },
     sentNotificationReSelectFavoriteTeam: ()=> {
@@ -433,6 +337,38 @@ NotificationService.prototype = {
                 });
             });
             resolve(userTeams)
+        })
+    },
+    sendNotification:(redisKey, sequence) => {
+        return new Promise(async(resolve, reject)=> {
+            const data = await self.getDataFromRedis(redisKey);
+            self.user = self.user.length > 0? self.user:data
+            
+            if(self.user.length > 0){
+                let batch = self.user.slice(0, 30);
+                console.log(self.user.length)
+                batch.forEach(async(user)=> {
+                    await axios.post('https://api.myalice.ai/stable/open/customers/send-sequence',{
+                        "sequence_id":sequence,
+                        "customer_id": `${user.id}`
+                    }, {
+                        headers: {
+                            'X-Myalice-API-Key': '90831a00d45811eeb99e7ac917b1fec3'
+                        }
+                    })
+                })
+
+                self.user = self.user.slice(30);
+                if(self.user.length > 0){
+                    setTimeout(()=> {
+                        self.sendNotification(redisKey, sequence)
+                    }, 1000)
+                }else{
+                    console.log("there is no user left: ", self.user.length)
+                }
+            }else{
+                resolve("completed!")
+            }
         })
     }
 }
