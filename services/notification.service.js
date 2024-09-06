@@ -362,7 +362,7 @@ NotificationService.prototype = {
                 if(self.user.length > 0){
                     setTimeout(()=> {
                         self.sendNotification(redisKey, sequence)
-                    }, 1000)
+                    }, 10000)
                 }else{
                     console.log("there is no user left: ", self.user.length)
                 }
