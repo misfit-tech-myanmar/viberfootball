@@ -1,6 +1,5 @@
 const User = require('../models/User');
 const passwordHash = require('password-hash');
-const redisClient = require('../libs/redis')
 
 const createAdminUser = async ()=>{
     return new Promise(async(resolve, reject)=> {
@@ -29,23 +28,6 @@ const createAdminUser = async ()=>{
     })
 }
 
-const getDataFromRedis = (key) => {
-  return new Promise(async(resolve, reject)=> {
-    const response = await redisClient.get(key);
-    let data = JSON.parse(response);
-    resolve(data)
-  })
-}
-
-const setDataToRedis = (key, value) => {
-  return new Promise(async(resolve, reject)=> {
-    await redisClient.set(key, JSON.stringify(value))
-    resolve()
-  })
-}
-
 module.exports = {
-    createAdminUser,
-    getDataFromRedis,
-    setDataToRedis
+    createAdminUser
 }

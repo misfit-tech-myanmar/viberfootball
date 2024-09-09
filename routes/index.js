@@ -510,7 +510,7 @@ router.post('/active-histories-by-date-first', async(req, res,next)=> {
             return {
                 "title": `${fixture['5780']}  -  ${fixture['5782']}`,
                 "subtitle": `${fixture['5769']}\n${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
-                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
+                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/ab2c31dc52f411efab301a369304edac.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/3c92a98052f511efa67c3e6892f31133.jpeg",
                 "url": '',
                 "buttons": [
                     {
@@ -564,7 +564,7 @@ router.post('/active-histories-by-date-second', async(req, res,next)=> {
             return {
                 "title": `${fixture['5780']}  -  ${fixture['5782']}`,
                 "subtitle": `${fixture['5769']}\n${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
-                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
+                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/ab2c31dc52f411efab301a369304edac.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/3c92a98052f511efa67c3e6892f31133.jpeg",
                 "url": '',
                 "buttons": [
                     {
@@ -619,7 +619,7 @@ router.post('/active-histories-by-date-third', async(req, res,next)=> {
             return {
                 "title": `${fixture['5780']}  -  ${fixture['5782']}`,
                 "subtitle": `${fixture['5769']} \n${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
-                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
+                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/ab2c31dc52f411efab301a369304edac.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/3c92a98052f511efa67c3e6892f31133.jpeg",
                 "url": '',
                 "buttons": [
                     {
@@ -674,7 +674,7 @@ router.post('/active-histories-by-date-fourth', async(req, res,next)=> {
             return {
                 "title": `${fixture['5780']}  -  ${fixture['5782']}`,
                 "subtitle": `${fixture['5769']} \n${req.body.language==='English'?`You have predicted <font color="blue">${guest}</font>`:`သင် ${guest}  ကိုခန့်မှန်းဖြေဆိုပြီးပါပြီ`}`,
-                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
+                "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/ab2c31dc52f411efab301a369304edac.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/3c92a98052f511efa67c3e6892f31133.jpeg",
                 "url": '',
                 "buttons": [
                     {
@@ -727,7 +727,7 @@ router.post('/inactive-histories-by-date-first', async(req, res,next)=> {
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
             "subtitle": `${fixture['5769']} <font color="black">${req.body.language==="English"?'Result':'ရလဒ်'}: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
-            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/ab2c31dc52f411efab301a369304edac.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/3c92a98052f511efa67c3e6892f31133.jpeg",
             "url": '',
             "buttons": [
                 {
@@ -771,7 +771,7 @@ router.post('/inactive-histories-by-date-second', async(req, res,next)=> {
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
             "subtitle": `${fixture['5769']}  <font color="black">${req.body.language==="English"?'Result':'ရလဒ်'}: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
-            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/ab2c31dc52f411efab301a369304edac.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/3c92a98052f511efa67c3e6892f31133.jpeg",
             "url": '',
             "buttons": [
                 {
@@ -815,7 +815,7 @@ router.post('/inactive-histories-by-date-third', async(req, res,next)=> {
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
             "subtitle": `${fixture['5769']} <font color="black">${req.body.language==="English"?'Result':'ရလဒ်'}: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
-            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/ab2c31dc52f411efab301a369304edac.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/3c92a98052f511efa67c3e6892f31133.jpeg",
             "url": '',
             "buttons": [
                 {
@@ -859,7 +859,7 @@ router.post('/inactive-histories-by-date-fourth', async(req, res,next)=> {
         return {
             "title": `${fixture['5780']}  -  ${fixture['5782']}`,
             "subtitle": `${fixture['5769']}  <font color="black">${req.body.language==="English"?'Result':'ရလဒ်'}: ${fixture['5781']} - ${ fixture['5783'] }</font>`,
-            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/05c05b2e1cdf11ef822dc665e4da7031.jpeg",
+            "image": index%2===0?"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/ab2c31dc52f411efab301a369304edac.jpeg":"https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/3c92a98052f511efa67c3e6892f31133.jpeg",
             "url": '',
             "buttons": [
                 {
@@ -903,7 +903,7 @@ router.post('/edit-prediction', async(req, res, next)=> {
             {
                 "title": `${fixture.match_hometeam_name}  -  ${fixture.match_awayteam_name}`,
                 "subtitle": `${fixture.match_date} \n${req.body.language==="English"?`You predicted <font color="blue">${guest}</font>`:`သင်${guest}ကိုခန့်မှန်းထားခဲ့သည်`}`,
-                "image": "https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/047c85d01cdf11efb6a2c665e4da7031.jpeg",
+                "image": "https://s3-ap-southeast-1.amazonaws.com/myalice-live-public-bucket/misc/ab2c31dc52f411efab301a369304edac.jpeg",
                 "url": '',
                 "buttons": [
                     {
@@ -1516,13 +1516,9 @@ router.get('/update-result', async(req, res)=> {
     predictionCheck.updateScoreAndSentNoti();
     res.json("sent noti")
 })
-router.get("/sent-noti-favorite-team", async(req, res)=> {
-    const result = await notiService.sentNotificationReSelectFavoriteTeam();
+router.get("/test-noti", async(req, res)=> {
+    const result = await notiService.sendNotification('customers');
     res.json(result);
-})
-router.get('/test-api', async(req, res) => {
-    const result = await notiService.sentNotificationToRegisterUser();
-    res.json(result)
 })
 
 
