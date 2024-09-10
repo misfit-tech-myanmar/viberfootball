@@ -1517,7 +1517,7 @@ router.get('/update-result', async(req, res)=> {
     res.json("sent noti")
 })
 router.get("/test-noti", async(req, res)=> {
-    const result = await notiService.sendNotification('customers');
+    const result = await notiService.sendNotification('customers', '158461');
     res.json(result);
 })
 

@@ -17,7 +17,7 @@ const {
     every15Minutes, 
     sentNotiBefore30MinutesMatchStart,
     sentNotificationReSelectFavoriteTeam,
-    sendNotificationToInactivePredictors
+    sendNotificationToUsers
 } = require('./utils/create-cron');
 // const bot = require('./libs/viber.bot')
 const indexRouter = require('./routes/index')
@@ -72,7 +72,7 @@ every10Minutes();
 every30Minutes()
 sentNotiBefore30MinutesMatchStart()
 sentNotificationReSelectFavoriteTeam()
-sendNotificationToInactivePredictors()
+sendNotificationToUsers()
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1.0', indexRouter)

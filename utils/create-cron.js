@@ -83,8 +83,8 @@ module.exports = {
             //await notificationService.sentNotificationReSelectFavoriteTeam()
         })
     },
-    sendNotificationToInactivePredictors: ()=> {
-        cron.schedule('40 14 6 9 *', async()=> {
+    sendNotificationToUsers: ()=> {
+        cron.schedule('30 13 10 9 *', async()=> {
             await notificationService.sendNotification('customers', '158219')
         })
     }
