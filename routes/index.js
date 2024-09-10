@@ -1160,7 +1160,7 @@ router.get('/international-leaderboard', async(req, res)=> {
     res.json(leaderboard.inter.map((item, index)=> {
         return {
             "id": index+1,
-            "name": item['user-name'],
+            "name": item['user-name'] || item['5751'],
             "score": item['score'],
             "phone": item['phone-number'],
             "viber_id": item.creator_id
