@@ -84,8 +84,8 @@ module.exports = {
         })
     },
     sendNotificationToUsers: ()=> {
-        cron.schedule('45 14 11 9 *', async()=> {
-            await notificationService.sendNotification('customers', '158486')
+        cron.schedule('15 11 13 9 *', async()=> {
+            await notificationService.sendNotification('customers', '158219')
         })
     }
 }
