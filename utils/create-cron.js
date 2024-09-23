@@ -48,10 +48,9 @@ module.exports = {
     },
     everyStartOfDay: () => {
         const currentDate = moment.tz('Asia/Yangon').format('YYYY-MM-DD');
-            const tomorrowDate = moment.tz('Asia/Yangon').add(1, 'days').format('YYYY-MM-DD');
-            const dayAfterTomorrowDate = moment.tz('Asia/Yangon').add(7, 'days').format('YYYY-MM-DD');
+            const next7Day = moment.tz('Asia/Yangon').add(7, 'days').format('YYYY-MM-DD');
         cron.schedule('0 0 * * *', ()=> {
-            footballService.getFixtureFromApiAndPostToMyaliceDataLab(currentDate, dayAfterTomorrowDate)
+            footballService.getFixtureFromApiAndPostToMyaliceDataLab(currentDate, next7Day)
         })
     },
     everyAugest: () => {
