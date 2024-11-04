@@ -12,7 +12,7 @@ StoreRedisFromDatalab.prototype = {
     storeRedisFromDataLab: () => {
         return new Promise(async(resolve, reject) => {
             const userResponse = await self.Axios.get(`/stable/bots/labs/2241/entries`);
-            const users = await self.Axios.get(`/stable/bots/labs/2241/entries?limit=${userResponse.data.count}`);
+            const users = await self.Axios.get(`/stable/bots/labs/2241/entries?limit=${userResponse.data.count}`, {timeout: 10000});
 
             const fixtureResponse = await self.Axios.get(`/stable/bots/labs/2247/entries`);
             const fixtures = await self.Axios.get(`/stable/bots/labs/2247/entries?limit=${fixtureResponse.data.count}`);
